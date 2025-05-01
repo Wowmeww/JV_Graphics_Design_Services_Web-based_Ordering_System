@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+@import "tw-animate-css";
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+
+/* @custom-variant dark (&:is(.dark *)); */
+
+.montserrat {
+  font-family: "Montserrat", sans-serif, 'Instrument Sans', ui-sans-serif, system-ui,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+@layer base {}
