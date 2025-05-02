@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,12 @@ class WishlistItemFactory extends Factory
      */
     public function definition(): array
     {
+        $qty = rand(1,4) * 12;
         return [
-            //
+            'wishlist_id' => Wishlist::factory(),
+            'type' => 'normal',
+            'quantity' => $qty,
+            'total_amount' => $qty * 99
         ];
     }
 }

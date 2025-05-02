@@ -19,7 +19,7 @@ class WishlistItem extends Model
     // many to many - belongs to many
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withTimestamps();
+        return $this->belongsToMany(Product::class, 'wishlist_item_product')->withTimestamps();
     }
 
 }

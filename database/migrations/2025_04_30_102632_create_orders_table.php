@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('type')->default('normal');
             $table->integer('quantity')->default(12);
             $table->integer('total_amount')->default(12);
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->timestamps();
         });
         Schema::create('order_product', function (Blueprint $table) {

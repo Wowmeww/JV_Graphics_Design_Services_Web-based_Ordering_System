@@ -44,40 +44,37 @@
 
 - [Mailtrap](https://mailtrap.io/) — Email testing tool.
 - [NPM](https://www.npmjs.com/) — JavaScript package manager.
-
+- [GitHub Copilot](https://github.com/features/copilot) — AI-powered coding assistant.
+- [ChatGPT](https://chatgpt.com/) — AI assistant for code review, brainstorming, and writing help.
+- [Figma](https://www.figma.com/) — Collaborative interface design and prototyping tool.
 ---
 
 ### 🧩 Installation
 
 Clone the repo:
-
 ```bash
 git clone https://github.com/Wowmeww/JV_Graphics_Design_Services_Web-based_Ordering_System.git
 cd JV_Graphics_Design_Services_Web-based_Ordering_System
 ```
 
 Install dependencies:
-
 ```bash
 composer install
 npm install && npm run dev
 ```
 
-Create environment file:
-
+Create environment file `(new terminal)`:
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
 Run migrations:
-
 ```bash
 php artisan migrate --seed
 ```
 
 Serve the application:
-
 ```bash
 php artisan serve
 ```
@@ -85,6 +82,19 @@ php artisan serve
 ## 📬 Contact
 
 Developed by [@Wowmeww](https://github.com/Wowmeww) 🚀
+
+---
+
+## 🙏 Acknowledgments
+
+Thanks to [ChatGPT](https://chatgpt.com/) and [GitHub Copilot](https://github.com/features/copilot) for assisting in code generation and project planning.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
 
 <!--
 ## 🚀 Live Demo

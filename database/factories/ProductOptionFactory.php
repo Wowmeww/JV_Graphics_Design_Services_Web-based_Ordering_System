@@ -17,7 +17,9 @@ class ProductOptionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->realText(rand(10, 25)),
+            'description' => fake()->realText(rand(14, 40)),
+            'price' => (rand(1, 5) * 12) * 79
         ];
     }
 }

@@ -15,7 +15,14 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
-
+    public function productOptions()
+    {
+        return $this->hasMany(ProductOption::class);
+    }
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
 
 
     // one to many - belongs to
@@ -25,11 +32,10 @@ class Product extends Model
     }
 
 
-
     // many to many - belongs to many
     public function wishlistItems()
     {
-        return $this->belongsToMany(WishlistItem::class)->withTimestamps();
+        return $this->belongsToMany(WishlistItem::class, 'wishlist_item_product')->withTimestamps();
     }
     public function cartItems()
     {
@@ -38,17 +44,6 @@ class Product extends Model
     public function orders()
     {
         return $this->belongsToMany(Order::class)->withTimestamps();
-    }
-
-
-    // one to many - has many
-    public function productOptions()
-    {
-        return $this->hasMany(ProductOption::class);
-    }
-    public function productImages()
-    {
-        return $this->hasMany(ProductImage::class);
     }
 
     

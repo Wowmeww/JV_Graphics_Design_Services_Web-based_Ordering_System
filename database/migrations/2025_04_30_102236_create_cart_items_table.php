@@ -3,6 +3,7 @@
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\ProductOption;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(CartItem::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(ProductOption::class)->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

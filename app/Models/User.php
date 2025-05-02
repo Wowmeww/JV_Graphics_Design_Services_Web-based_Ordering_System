@@ -61,6 +61,9 @@ class User extends Authenticatable
     }
 
     public function transactions() {
+        if($this->isAdmin()) {
+            return Transaction::all();
+        }
         return $this->hasMany(Transaction::class);
     }
     public function announcements() {
