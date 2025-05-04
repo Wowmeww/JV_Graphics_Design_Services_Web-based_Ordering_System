@@ -29,7 +29,7 @@
     @inertiaHead
 </head>
 
-<body class="montserrat antialiased">
+<body class="font-montserrat antialiased text-dark dark:text-[#94A3B8] bg-[#F2F7FB] dark:bg-[#0f172a] h-full min-h-screen">
     @inertia
 </body>
 

@@ -1,10 +1,10 @@
-# 🎨 JV Graphics Design Services
+# 🎨 JV Graphics Design Services Web-based Ordering System
 
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)
 ![Made with Laravel](https://img.shields.io/badge/Made%20with-Laravel-red)
 
-> **JV Graphics Design Services** is a web-based ordering system built to simplify graphics order management, streamline client requests, and enhance administrative efficiency.
+> **JV Graphics Design Services Web-based Ordering System** is a web-based ordering system built to simplify graphics order management, streamline client requests, and enhance administrative efficiency.
 
 ---
 

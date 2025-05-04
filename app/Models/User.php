@@ -35,7 +35,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function isAdmin() {
+    protected $appends = ['is_admin'];
+    public function getIsAdminAttribute() {
         return $this->role === 'admin';
     }
 
