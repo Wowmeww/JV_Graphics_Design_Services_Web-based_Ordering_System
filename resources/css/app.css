@@ -65,4 +65,8 @@
   .btn-outline-primary {
     @apply border-primary/40 disabled:cursor-wait hover:bg-primary hover:text-white hover:border-transparent active:bg-primary active:text-white active:border-transparent dark:bg-white dark:text-primary;
   }
+
+  h3 {
+    @apply text-4xl leading-8 font-semibold;
+  }
 }

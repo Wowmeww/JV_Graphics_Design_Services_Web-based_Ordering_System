@@ -20,12 +20,17 @@ class ProductSeeder extends Seeder
 
         // RANDOM PRODUCTS
         for ($i = 1; $i <= env('PRODUCTS'); $i++) {
-            Product::factory()->create([
+            $product = Product::factory()->create([
                 'category_id' => rand(1, env('PRODUCT_CATEGORIES'))
+            ]);
+
+            
+            ProductImage::factory()->create([
+                'product_id' => $product->id
             ]);
         }
         
-        productWithOptions();
+        // productWithOptions();
     }
 }
 
