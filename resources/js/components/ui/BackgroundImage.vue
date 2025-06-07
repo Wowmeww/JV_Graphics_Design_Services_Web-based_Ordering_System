@@ -2,7 +2,7 @@
     defineProps({
         path: {
             type: String,
-            default: 'storage/images/background/homeBI.jpg'
+            default: 'images/background/homeBI.jpg'
         },
         blur: {
             type: Boolean,

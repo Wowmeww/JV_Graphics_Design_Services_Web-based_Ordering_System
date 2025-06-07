@@ -10,22 +10,28 @@
             type: String,
             default: 'button',
         },
-        variant:{
+        variant: {
             type: String,
             default: 'primary',
+        },
+        disable: {
+            type: Boolean,
+            default: false,
         }
     });
 
-    const styleClass = props.variant === 'primary'? 'btn btn-primary w-full': 'btn btn-outline-primary';
+    const styleClass = props.variant === 'primary' ? 'btn btn-primary w-full' : 'btn btn-outline-primary';
 </script>
 
 <template>
-    <Link v-if="as==='Link'" :href="href" :class="styleClass">
-        {{ label }}
-        <slot />
+    <Link :disabled="disable" v-if="as === 'Link'" :href="href" :class="styleClass">
+    {{ label }}
+    <slot />
+    <i v-show="disable" class="fa-solid fa-spinner" />
     </Link>
-    <button v-else :type="type" :class="styleClass">
+    <button v-else :type="type" :class="styleClass" :disabled="disable">
         {{ label }}
         <slot />
+        <i v-show="disable" class="fa-solid fa-spinner animate-spin" />
     </button>
 </template>

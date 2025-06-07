@@ -1,10 +1,7 @@
 @import 'tailwindcss';
 
 @import "tw-animate-css";
-/* font */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-/* @custom-variant dark (&:is(.dark *)); */
 
 @theme {
   --font-montserrat: 'Montserrat', sans-serif, 'Instrument Sans', ui-sans-serif, system-ui,
@@ -21,7 +18,17 @@
   --color-primary-800: #4d165d;
   --color-primary-900: #3b1248;
 
+  --color-secondary-50: #f1efff;
+  --color-secondary-100: #d9d2ff;
+  --color-secondary-200: #b9aaff;
+  --color-secondary-300: #9880ff;
+  --color-secondary-400: #7657ff;
+  --color-secondary-500: #4e2cf0;
+  --color-secondary-600: #3a20c3;
   --color-secondary: #2f01a6;
+  --color-secondary-800: #23007d;
+  --color-secondary-900: #170055;
+
   --color-tertiary: #9E4770;
   --color-neutral: #2E2532;
   --color-light: #FBFBFB;
@@ -29,6 +36,7 @@
   --color-link-primary: #235CF9;
   --color-lead: #575864;
   --color-muted: #95989d;
+
 
 }
 
@@ -64,6 +72,10 @@
 
   .btn-outline-primary {
     @apply border-primary/40 disabled:cursor-wait hover:bg-primary hover:text-white hover:border-transparent active:bg-primary active:text-white active:border-transparent dark:bg-white dark:text-primary;
+  }
+
+  .transition{
+    @apply duration-150 ease-in-out;
   }
 
   h3 {

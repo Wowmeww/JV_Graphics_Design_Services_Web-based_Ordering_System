@@ -59,8 +59,8 @@
                 </div>
 
                 <p class="text-sm leading-5 font-normal">
-                    You have an account?
-                    <Link :href="route('register')" v-text="'Login Now'" class="text-link-primary inline-block" />
+                    Already have account?
+                    <Link :href="route('login')" v-text="'Login Now'" class="text-link-primary inline-block" />
                 </p>
             </div>
         </div>

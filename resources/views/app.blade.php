@@ -5,6 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
     {{-- Inline script to detect system dark mode preference and apply it immediately --}}
     <script>
         (function() {
@@ -29,7 +34,8 @@
     @inertiaHead
 </head>
 
-<body class="font-montserrat antialiased text-dark dark:text-[#94A3B8] bg-[#F2F7FB] dark:bg-[#0f172a] h-full min-h-screen">
+<body
+    class="font-montserrat antialiased text-dark dark:text-[#94A3B8] bg-[#F2F7FB] dark:bg-[#0f172a] h-full min-h-screen">
     @inertia
 </body>
 
