@@ -19,7 +19,8 @@ return new class extends Migration
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->integer('price')->default(0);
+            $table->decimal('price', 10, 2)->default(0);
+            $table->integer('stock')->default(0);;
             $table->timestamps();
         });
         Schema::create('product_option_product_option_image', function (Blueprint $table) {

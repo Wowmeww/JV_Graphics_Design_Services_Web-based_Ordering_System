@@ -4,8 +4,14 @@
     import { route } from 'ziggy-js';
     import Search from '../ui/Search.vue';
     import PillPrimary from '../ui/buttons/PillPrimary.vue';
-import ProductsTable from '../tables/ProductsTable.vue';
-import Paginator from '../tables/Paginator.vue';
+    import ProductsTable from '../tables/ProductsTable.vue';
+    import Paginator from '../tables/Paginator.vue';
+
+
+    defineProps({
+        products: Object
+    });
+
     const currentDate = ref();
 
     setInterval(() => {
@@ -43,7 +49,7 @@ import Paginator from '../tables/Paginator.vue';
 
 
     <div class="flex justify-between md:items-center flex-col-reverse md:flex-row gap-3 my-6 items-stretch ">
-        <PillPrimary label="Add new product" class="text-left" >
+        <PillPrimary label="Add new product" class="text-left">
             <i class="bi bi-plus-circle"></i>
         </PillPrimary>
 
@@ -51,8 +57,8 @@ import Paginator from '../tables/Paginator.vue';
     </div>
 
     <!-- TABLE -->
-     <ProductsTable />
+    <ProductsTable :products="products" />
 
-     <!-- Paginator -->
-      <Paginator />
+    <!-- Paginator -->
+    <Paginator :products="products" />
 </template>

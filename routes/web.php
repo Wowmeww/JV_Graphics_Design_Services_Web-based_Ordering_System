@@ -23,18 +23,6 @@ Route::get('/auth/google/redirect', function (Request $request) {
 
 Route::get('/auth/google/callback', function (Request $request) {
     $googleUser = Socialite::driver("google")->user();
-    dd($googleUser);
-    // $user = User::updateOrCreate([
-    //     'google_id' => $googleUser->id,
-    //     [
-    //         'name' => $googleUser->name,
-    //         'email' => $googleUser->email,
-    //         'password' => Str::password(12)
-    //     ]
-
-    // ]);
-
-    // dd($user);
 });
 
 require __DIR__ . '/settings.php';

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->text('description');
-            $table->integer('price');
+            $table->decimal('price', 10, 2)->default(0);
+            $table->integer('stock')->default(0);
             $table->timestamps();
         });
         Schema::create('product_product_image', function (Blueprint $table) {

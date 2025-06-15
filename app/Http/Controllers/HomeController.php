@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,8 +23,11 @@ class HomeController extends Controller
         ]);
     }
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        return Inertia::render('Dashboard');
+        $products = Product::with(['images', 'category']);
+        return Inertia::render('Dashboard', [
+            'products'=> $products->paginate(10)
+        ]);
     }
 }

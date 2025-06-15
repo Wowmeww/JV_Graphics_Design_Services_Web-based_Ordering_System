@@ -27,9 +27,9 @@
 
             <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
             <div v-cloak :class="[isNavigationOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
-                class="absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 md:mt-0 md:p-0 md:top-0 md:relative md:opacity-100 md:translate-x-0 md:flex md:items-center md:justify-between">
+                class="absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 md:mt-0 md:p-0 md:top-0 md:relative md:opacity-100 md:translate-x-0 md:flex md:items-center md:justify-between border-b border-b-gray-300 dark:border-b-gray-500 md:border-0">
 
-                <div class="flex flex-col px-2 -mx-4 md:flex-row md:mx-10 md:py-0">
+                <div class="flex flex-col px-2 -mx-4 md:flex-row md:mx-10 md:py-0 ">
                     <NavLink routeName="home" label="Home" :active="component === 'Welcome'" />
                     <NavLink routeName="register" v-if="user" label="Dashboard" :active="component === 'Dashboard'" />
                     <NavLink routeName="register" label="Shop" :active="component === 'Shop'" />

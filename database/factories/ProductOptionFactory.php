@@ -19,7 +19,8 @@ class ProductOptionFactory extends Factory
         return [
             'name' => fake()->realText(rand(10, 25)),
             'description' => fake()->realText(rand(14, 40)),
-            'price' => (rand(1, 5) * 12) * 79
+            'price' => (rand(1, 5) * 12) * 79,
+            'stock' => (rand(1, 5) * 12) * 16,
         ];
     }
 }
