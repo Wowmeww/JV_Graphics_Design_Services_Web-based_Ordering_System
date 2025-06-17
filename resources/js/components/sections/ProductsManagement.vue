@@ -1,16 +1,17 @@
 <script setup>
-    import { ref, computed } from 'vue'
+    import { ref } from 'vue'
     import ContainerPrimary from "../ContainerPrimary.vue";
-    import { route } from 'ziggy-js';
-    import Search from '../ui/Search.vue';
-    import PillPrimary from '../ui/buttons/PillPrimary.vue';
     import ProductsTable from '../tables/ProductsTable.vue';
     import Paginator from '../tables/Paginator.vue';
+    import { route } from 'ziggy-js';
+    import ProductFilters from '../tables/ProductFilters.vue';
 
 
     defineProps({
-        products: Object
+        products: Object,
+        categories: Array
     });
+
 
     const currentDate = ref();
 
@@ -22,7 +23,7 @@
             hour: '2-digit',
             minute: '2-digit',
         });
-    }, 1000);
+    }, 700);
 
     const styleClass = {
         headerContainer: 'flex gap-4 justify-between items-center py-6 flex-col md:flex-row',
@@ -30,6 +31,8 @@
         refresh: 'font-semibold py-2 hidden lg:inline-block px-4 space-x-1 cursor-pointer group rounded transition hover:bg-primary-100/50 dark:hover:bg-primary-100/10',
         date: 'font-semibold border border-primary-800 w-full md:w-fit text-center dark:border-primary-200/60 py-2 px-12 rounded bg-primary-100/50 dark:bg-primary-100/10'
     };
+
+
 </script>
 
 <template>
@@ -47,18 +50,13 @@
         </div>
     </ContainerPrimary>
 
+    <!---------------------------------- FILTERS ----------------------------------------------->
+    <ProductFilters :categories="categories" />
 
-    <div class="flex justify-between md:items-center flex-col-reverse md:flex-row gap-3 my-6 items-stretch ">
-        <PillPrimary label="Add new product" class="text-left">
-            <i class="bi bi-plus-circle"></i>
-        </PillPrimary>
-
-        <Search />
-    </div>
-
-    <!-- TABLE -->
-    <ProductsTable :products="products" />
+    <!---------------------------------- TABLE ----------------------------------------------->
+    <ProductsTable :categories="categories" :products="products" />
 
     <!-- Paginator -->
+    <!---------------------------------- Paginator ----------------------------------------------->
     <Paginator :products="products" />
 </template>

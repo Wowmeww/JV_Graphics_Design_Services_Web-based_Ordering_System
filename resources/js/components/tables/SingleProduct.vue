@@ -25,7 +25,9 @@
                 <p class="leading-4 font-semibold">{{ product.name }}</p>
             </div>
             <div class="flex items-center gap-3 text-primary dark:text-primary-300">
-                <i class="bi bi-caret-down-fill cursor-pointer" @click="toggleExpand"></i>
+                <i class="bi bi-caret-down-fill cursor-pointer transition duration-500"
+                    :class="{ 'rotate-180': expanded }" @click="toggleExpand"></i>
+                <i class="fa-solid fa-eye cursor-pointer"></i>
                 <i class="bi bi-pencil-square cursor-pointer"></i>
                 <i class="bi bi-three-dots-vertical cursor-pointer"></i>
             </div>

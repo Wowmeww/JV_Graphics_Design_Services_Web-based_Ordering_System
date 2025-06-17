@@ -3,7 +3,8 @@
     import ProductsManagement from '../components/sections/ProductsManagement.vue';
 
     defineProps({
-        products: Object
+        products: Object,
+        categories: Array
     });
 </script>
 
@@ -11,6 +12,6 @@
 
     <Head title="Dashboard" />
     <div class="px-4">
-        <ProductsManagement :products="products" />
+        <ProductsManagement :products="products" :categories="categories" />
     </div>
 </template>

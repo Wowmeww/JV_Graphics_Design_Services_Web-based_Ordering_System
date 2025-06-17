@@ -48,8 +48,6 @@
 </script>
 
 <template>
-    <!-- link.includes('Previous') ? styleClass.prevNext: styleClass.link" -->
-    {{ console.log(products) }}
     <div class="flex py-6 pt-8 justify-center">
         <component 
             v-for="link of products.links"

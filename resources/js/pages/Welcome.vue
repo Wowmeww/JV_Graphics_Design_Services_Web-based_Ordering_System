@@ -5,10 +5,8 @@
     import LargeCategoryCard from '../components/ui/card/LargeCategoryCard.vue';
 
     defineProps({
-        products: {
-            type: Array,
-            default: () => []
-        }
+        products: Array,
+        categories: Array
     });
 </script>
 
@@ -31,7 +29,8 @@
         <h3 class="text-light text-center mt-5 mb-20">Products and Services</h3>
 
         <div class="grid justify-center gap-6">
-            <LargeCategoryCard v-for="(product, i) in products" :key="product.id" :product="product" :variant="i%2 === 1? 'one': 'two'" />
+            <LargeCategoryCard v-for="(product, i) in products" :key="product.id" :product="product"
+                :variant="i % 2 === 1 ? 'one' : 'two'" />
         </div>
 
     </div>

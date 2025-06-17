@@ -74,11 +74,23 @@
     @apply border-primary/40 disabled:cursor-wait hover:bg-primary hover:text-white hover:border-transparent active:bg-primary active:text-white active:border-transparent dark:bg-white dark:text-primary;
   }
 
-  .transition{
+  .transition {
     @apply duration-150 ease-in-out;
   }
 
   h3 {
     @apply text-4xl leading-8 font-semibold;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full justify-between gap-2 border border-primary dark:border-primary-100;
+  }
+
+  .badge-primary {
+    @apply bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-100 border-primary dark:border-primary-100;
+  }
+
+  .badge-secondary {
+    @apply bg-secondary/10 text-secondary dark:bg-secondary/20 dark:text-primary-100 border-secondary dark:border-secondary-100;
   }
 }

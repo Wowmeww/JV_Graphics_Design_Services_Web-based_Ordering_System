@@ -20,14 +20,20 @@ class HomeController extends Controller
         }
         return Inertia::render('Welcome', [
             'products' => $products,
+
         ]);
     }
 
     public function dashboard(Request $request)
     {
-        $products = Product::with(['images', 'category']);
+        $products = Product::with(['images', 'category'])
+            ->filter(request(['search', 'category', 'stock']))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
         return Inertia::render('Dashboard', [
-            'products'=> $products->paginate(10)
+            'products' => $products,
+            'categories' => Category::all(['id', 'name']),
         ]);
     }
 }

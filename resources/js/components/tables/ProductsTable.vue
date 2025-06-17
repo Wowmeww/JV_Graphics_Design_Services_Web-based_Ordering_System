@@ -1,23 +1,37 @@
 <script setup>
-    import SingleProduct from './SingleProduct.vue';
 
-    defineProps({
-        products: Object
+    import { ref } from 'vue';
+import SingleProduct from './SingleProduct.vue';
+
+    const props = defineProps({
+        products: Object,
     });
+
+    const sortOptionPen = ref(false);
+
+
 </script>
 
 <template>
 
+
     <div v-if="products && products.data.length">
-        <table class="container-primary rounded-xl bg-white p-8 dark:bg-[#1e293b] w-full min-w-max hidden md:table ">
+        <div class="flex gap-2 justify-between items-center md:justify-start mb-4">
+            <p class="text-lg font-semibold ">View Products</p>
+            <p>
+                <span>{{ products.from }} to {{ products.to }}</span> of <span>{{ products.total }} products</span>
+            </p>
+        </div>
+        <table class="container-primary rounded-xl bg-white p-8 dark:bg-[#1e293b] min-w-3xl md:w-full hidden md:table ">
             <thead class="border-b border-b-dark/20 dark:border-b-light/30">
                 <tr class="w-full flex justify-between items-center p-4 md:p-6 uppercase">
 
                     <th class="inline-flex items-center justify-start flex-1/12">
                         <i class="fa-solid fa-image text-2xl md:text-3xl"></i>
                     </th>
-                    <th class="inline-flex items-center justify-start flex-3/12">
+                    <th class="inline-flex items-center justify-start flex-3/12 gap-3">
                         Product Name
+                        <i class="fa-solid fa-arrow-up-z-a text-primary dark:text-primary-300 cursor-pointer"></i>
                     </th>
                     <th class="inline-flex items-center justify-start flex-2/12">
                         Category
@@ -25,10 +39,10 @@
                     <th class="inline-flex items-center justify-start flex-1/12">
                         STOCK
                     </th>
-                    <th class="inline-flex items-center justify-center flex-1/12 px-3">
+                    <th class="inline-flex items-center justify-center flex-2/12 lg:flex-1/12 px-3">
                         PRICE
                     </th>
-                    <th class="inline-flex items-center justify-start flex-3/12">
+                    <th class="inline-flex items-center justify-start flex-2/12 lg:flex-3/12">
                         DATE
                     </th>
                     <th class="inline-flex items-center justify-end flex-1/12">
@@ -52,22 +66,24 @@
                     <td class="inline-flex items-center justify-start flex-2/12">
                         {{ product.category.name }}
                     </td>
-                    <td class="inline-flex items-center justify-start flex-1/12">
+                    <td class="inline-flex items-center justify-center lg:justify-start flex-1/12 ">
                         {{ product.stock }}
                     </td>
-                    <td class="inline-flex items-center justify-center flex-1/12 px-3">
+                    <td class="inline-flex items-center justify-center flex-2/12 lg:flex-1/12 px-3">
                         {{ product.price.toLocaleString('en-PH', {
                             style: 'currency',
                             currency: 'PHP'
                         }) }}
 
                     </td>
-                    <td class="inline-flex items-center justify-between flex-wrap flex-3/12 gap-1">
+                    <td class="inline-flex items-center justify-between flex-wrap flex-2/12 lg:flex-3/12 gap-1">
                         <span>Last modified:</span>
-                        <span class="font-semibold">{{ new Date(product.updated_at).toLocaleDateString('en-GB') }}</span>
+                        <span class="font-semibold">{{ new Date(product.updated_at).toLocaleDateString('en-GB')
+                        }}</span>
                     </td>
                     <td
-                        class="inline-flex items-center justify-end flex-1/12 text-right text-xl gap-6 text-primary dark:text-primary-300">
+                        class="inline-flex items-center justify-end flex-1/12 pl-3 text-right text-xl gap-4 text-primary dark:text-primary-300">
+                        <i class="fa-solid fa-eye cursor-pointer"></i>
                         <i class="bi bi-pencil-square cursor-pointer"></i>
                         <i class="bi bi-three-dots-vertical cursor-pointer"></i>
                     </td>
