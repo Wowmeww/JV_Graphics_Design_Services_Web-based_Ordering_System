@@ -19,21 +19,13 @@ class HomeController extends Controller
             $products[] = $category->products()->with(['images', 'category'])->first();
         }
         return Inertia::render('Welcome', [
-            'products' => $products,
-
+            'products'=> $products,
+            'categories' => $categories
         ]);
     }
 
     public function dashboard(Request $request)
     {
-        $products = Product::with(['images', 'category'])
-            ->filter(request(['search', 'category', 'stock']))
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-        return Inertia::render('Dashboard', [
-            'products' => $products,
-            'categories' => Category::all(['id', 'name']),
-        ]);
+        
     }
 }

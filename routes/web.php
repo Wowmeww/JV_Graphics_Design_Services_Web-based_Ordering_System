@@ -1,18 +1,15 @@
 <?php
 
-use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\HomeController;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Str;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
 
-
+require __DIR__ . '/products.php';
 
 
 // Sign in with Google and Facebook

@@ -82,5 +82,44 @@ class Product extends Model
                     $query->where('stock', '>=', 10);
             }
         }
+
+
+        if ($filters['sort'] ?? false) {
+            switch ($filters['sort']) {
+                case 'Sort by name (A-Z)':
+                    $query->orderBy('name', 'asc');
+                    break;
+
+                case 'Sort by name (Z-A)':
+                    $query->orderBy('name', 'desc');
+                    break;
+
+                case 'Sort by price (low to high)':
+                    $query->orderBy('price', 'asc');
+                    break;
+
+                case 'Sort by price (high to low)':
+                    $query->orderBy('price', 'desc');
+                    break;
+
+                case 'Sort by stock (low to high)':
+                    $query->orderBy('stock', 'asc');
+                    break;
+
+                case 'Sort by stock (high to low)':
+                    $query->orderBy('stock', 'desc');
+                    break;
+
+                case 'Sort by date (new to old)':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+
+                case 'Sort by date (old to new)':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+
+                default: $query->latest('created_at');
+            }
+        }
     }
 }

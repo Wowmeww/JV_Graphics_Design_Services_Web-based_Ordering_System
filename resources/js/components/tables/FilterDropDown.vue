@@ -1,5 +1,7 @@
 <script setup>
-    import { ref } from 'vue';
+    import {
+        ref
+    } from 'vue';
 
     const props = defineProps({
         options: Array,
@@ -14,6 +16,7 @@
     function openDropdown() {
         expanded.value = !expanded.value;
     }
+
     function closeDropdown() {
         expanded.value = false;
     }
@@ -38,8 +41,7 @@
                 :class="expanded ? 'rotate-180' : ''" />
         </button>
 
-
-        <div class="absolute bg-white overflow-hidden dark:bg-[#1e293b] min-w-max z-30 mt-2 rounded-lg border-1 border-primary dark:border-white/40 animate__animated animate_faster animate__fadeInDown"
+        <div class="absolute bg-white overflow-hidden dark:bg-[#1e293b] min-w-max z-30 mt-2 rounded-lg border-1 border-primary dark:border-white/40 animate__animated animate_faster animate__fadeInDown !duration-150"
             v-if="expanded">
 
             <p v-for="(option, i) of options" :key="i"

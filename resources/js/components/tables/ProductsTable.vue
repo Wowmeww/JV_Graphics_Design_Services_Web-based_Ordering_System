@@ -1,23 +1,57 @@
 <script setup>
 
     import { ref } from 'vue';
-import SingleProduct from './SingleProduct.vue';
+    import { router } from '@inertiajs/vue3';
+    import SingleProduct from './SingleProduct.vue';
 
     const props = defineProps({
         products: Object,
     });
 
-    const sortOptionPen = ref(false);
+    const params = route().params;
 
+    const sortOptionOpen = ref(false);
+    const sortOptions = [
+        'Sort by name (A-Z)',
+        'Sort by name (Z-A)',
+        'Sort by price (low to high)',
+        'Sort by price (high to low)',
+        'Sort by stock (low to high)',
+        'Sort by stock (high to low)',
+        'Sort by date (new to old)',
+        'Sort by date (old to new)',
+    ];
+
+    function handleSort(sortOption) {
+        sortOptionOpen.value = false;
+        router.get(route('product.index'), { ...params, sort: sortOption }, { preserveState: false, preserveScroll: true });
+    }
 
 </script>
 
 <template>
-
+    <div v-if="sortOptionOpen" @click="sortOptionOpen = false" class=" absolute inset-0 z-30"></div>
 
     <div v-if="products && products.data.length">
         <div class="flex gap-2 justify-between items-center md:justify-start mb-4">
-            <p class="text-lg font-semibold ">View Products</p>
+            <div class="text-lg font-semibold flex gap-2 items-center ">
+                <span>View Products</span>
+                <!---------------   SORT OPTIONS  ----------------------------------------------------------->
+                <div class="relative md:hidden">
+                    <button @click="sortOptionOpen = true">
+                        <i class="fa-solid fa-arrow-up-z-a text-primary dark:text-primary-300 cursor-pointer"></i>
+                    </button>
+                    <div v-if="sortOptionOpen"
+                        class="absolute animate__animated animate__faster animate__fadeInDown font-normal text-left  lowercase bg-white overflow-hidden dark:bg-[#1e293b] min-w-max z-40 mt-2 rounded-lg border-1 border-primary dark:border-white/40 animate__animated animate_faster animate__fadeInDown">
+
+                        <p v-for="(option, i) of sortOptions" :key="i"
+                            class="px-4 py-1 hover:bg-primary-100 transition first-letter:uppercase dark:hover:bg-primary-400/10 cursor-pointer"
+                            :class="option === placeholder ? 'font-semibold' : ''" @click.prevent="handleSort(option)">
+                            {{
+                                option }}</p>
+                    </div>
+                </div>
+            </div>
             <p>
                 <span>{{ products.from }} to {{ products.to }}</span> of <span>{{ products.total }} products</span>
             </p>
@@ -31,7 +65,23 @@ import SingleProduct from './SingleProduct.vue';
                     </th>
                     <th class="inline-flex items-center justify-start flex-3/12 gap-3">
                         Product Name
-                        <i class="fa-solid fa-arrow-up-z-a text-primary dark:text-primary-300 cursor-pointer"></i>
+
+                        <!---------------   SORT OPTIONS  ----------------------------------------------------------->
+                        <!-- <div class="relative">
+                            <button @click="() => sortOptionOpen = true">
+                                <i
+                                    class="fa-solid fa-arrow-up-z-a text-primary dark:text-primary-300 cursor-pointer"></i>
+                            </button>
+                            <div v-if="sortOptionOpen"
+                                class="absolute animate__animated animate__faster animate__fadeInDown font-normal text-left  lowercase bg-white overflow-hidden dark:bg-[#1e293b] min-w-max z-40 mt-2 rounded-lg border-1 border-primary dark:border-white/40 animate__animated animate_faster animate__fadeInDown">
+
+                                <p v-for="(option, i) of sortOptions" :key="i"
+                                    class="px-4 py-1 hover:bg-primary-100 transition first-letter:uppercase dark:hover:bg-primary-400/10 cursor-pointer"
+                                    :class="option === placeholder ? 'font-semibold' : ''"
+                                    @click.prevent="handleSort(option)">{{
+                                        option }}</p>
+                            </div>
+                        </div> -->
                     </th>
                     <th class="inline-flex items-center justify-start flex-2/12">
                         Category

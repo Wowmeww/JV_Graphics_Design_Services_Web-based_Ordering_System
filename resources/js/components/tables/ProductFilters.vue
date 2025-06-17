@@ -19,18 +19,18 @@
 
 
     function handleSearch(search) {
-        router.get(route('dashboard', { ...params, ...filter, search, page: null }), {}, { preserveState: false, preserveScroll: true });
+        router.get(route('product.index', { ...params, ...filter, search, page: null }), {}, { preserveState: false, preserveScroll: true });
     }
 
     function handleFilter() {
-        router.get(route('dashboard', { ...params, ...filter, page: null }), {}, { preserveState: false, preserveScroll: true });
+        router.get(route('product.index', { ...params, ...filter, page: null }), {}, { preserveState: false, preserveScroll: true });
     }
     function clearFilter() {
         filter.stock = null;
         filter.category = null;
         filter.search = null;
 
-        router.get(route('dashboard', { ...params, ...filter }), {}, { preserveState: false, preserveScroll: true });
+        router.get(route('product.index', { ...params, ...filter }), {}, { preserveState: false, preserveScroll: true });
     }
 
     const dropdownOptions = {

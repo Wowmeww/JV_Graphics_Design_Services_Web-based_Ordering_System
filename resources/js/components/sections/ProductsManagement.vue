@@ -1,17 +1,15 @@
 <script setup>
     import { ref } from 'vue'
+
     import ContainerPrimary from "../ContainerPrimary.vue";
     import ProductsTable from '../tables/ProductsTable.vue';
     import Paginator from '../tables/Paginator.vue';
-    import { route } from 'ziggy-js';
-    import ProductFilters from '../tables/ProductFilters.vue';
-
+       import ProductFilters from '../tables/ProductFilters.vue';
 
     defineProps({
         products: Object,
         categories: Array
     });
-
 
     const currentDate = ref();
 
@@ -32,7 +30,6 @@
         date: 'font-semibold border border-primary-800 w-full md:w-fit text-center dark:border-primary-200/60 py-2 px-12 rounded bg-primary-100/50 dark:bg-primary-100/10'
     };
 
-
 </script>
 
 <template>
@@ -40,12 +37,12 @@
         <h2 :class="styleClass.title">Products Management</h2>
 
         <div class="flex gap-4 justify-center md:justify-between items-center w-full md:w-fit">
-            <Link :href="route('dashboard')" :class="styleClass.refresh">
+            <Link :href="route('product.index')" :class="styleClass.refresh">
             <span>Data Refresh </span>
             <i class="fa-solid fa-rotate group-hover:animate-spin" />
             </Link>
             <p class="form-control px-14 font-semibold text-center">
-                {{ currentDate }}
+                {{ currentDate ? currentDate : 'Date' }}
             </p>
         </div>
     </ContainerPrimary>

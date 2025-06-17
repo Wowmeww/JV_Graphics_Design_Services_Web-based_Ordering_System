@@ -32,6 +32,8 @@
                 <div class="flex flex-col px-2 -mx-4 md:flex-row md:mx-10 md:py-0 ">
                     <NavLink routeName="home" label="Home" :active="component === 'Welcome'" />
                     <NavLink routeName="register" v-if="user" label="Dashboard" :active="component === 'Dashboard'" />
+                    <NavLink routeName="product.index" v-if="user ? user.is_admin : false" label="Products Management"
+                        :active="component === 'product/Index'" />
                     <NavLink routeName="register" label="Shop" :active="component === 'Shop'" />
                     <NavLink routeName="register" label="About" :active="component === 'About'" />
                 </div>
