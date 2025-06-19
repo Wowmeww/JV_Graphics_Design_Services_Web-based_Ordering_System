@@ -22,7 +22,7 @@ class ProductFactory extends Factory
             'name' => fake()->realText(rand(10, 25)),
             'description' => fake()->realText(rand(14, 40)),
             'price' => rand(1, 5) * 89,
-            'stock' => rand(1, 5) * 99,
+            'stock' => (rand(0, 5) * 8) * rand(1, 20),
         ];
     }
 }

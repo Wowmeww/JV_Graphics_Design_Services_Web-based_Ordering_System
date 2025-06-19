@@ -5,15 +5,17 @@
 
     const props = defineProps({
         options: Array,
-        placeholder: String,
         variant: {
             type: String,
             default: 'primary'
-        }
+        },
+        label: { type: String, default: '' },
+        error: { type: String, default: '' },
+        required: { type: Boolean, default: true },
+        value: { type: String, default: '' },
+        placeholder: { type: String, default: 'Select' },
     });
 
-
-    const placeholder = ref(props.placeholder);
 
     const expanded = ref(false);
 
@@ -28,24 +30,31 @@
     const emit = defineEmits(['select']);
 
     function handleOptionClick(option) {
-        placeholder.value = option;
         closeDropdown();
         emit('select', option);
     }
 </script>
 
 <template>
-    <div class="relative capitalize min-w-[280px] lg:max-w-xs ">
+    <div class="relative form-group flex flex-col">
+        <label class="input-label">
+            {{ label }}
+            <span v-show="required" class="text-red-600 dark:text-red-500 font-black">*</span>
+        </label>
         <button @click.prevent="openDropdown"
             :class="`form-control-${variant}  bg-white w-full flex cursor-pointer items-center justify-between text-start dark:bg-transparent capitalize`">
-            <span>
+            <span v-if="value">
+                {{ value }}
+            </span>
+            <span v-else class="text-primary/40 dark:text-[#b4cff7] leading-normal lg:leading-normal sm:leading-3  ">
                 {{ placeholder }}
             </span>
-            <i class="bi bi-caret-down-fill transition  leading-0  duration-500  text-primary dark:text-primary-300"
-                :class="expanded ? 'rotate-180' : ''" />
-        </button>
+            <i
+                :class="(expanded ? 'rotate-180' : '') + ` fa-solid fa-chevron-down transition  leading-0  duration-500  text-${variant} dark:text-${variant}-300`" />
 
-        <div class="absolute bg-white overflow-hidden dark:bg-[#1e293b] min-w-max z-30 mt-2 rounded-lg border-1 border-primary dark:border-white/40 animate__animated animate_faster animate__fadeInDown !duration-150"
+        </button>
+        <small v-show="error" class="form-control-error">{{ error }}</small>
+        <div :class="`absolute bg-white overflow-hidden dark:bg-[#1e293b] min-w-max z-30 mt-2 top-20 rounded-lg border-1 border-${variant}-200 dark:border-white/40 animate__animated animate_faster animate__fadeInDown !duration-150`"
             v-if="expanded">
 
             <p v-for="(option, i) of options" :key="i"

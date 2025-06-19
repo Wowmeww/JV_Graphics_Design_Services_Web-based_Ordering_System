@@ -28,14 +28,14 @@
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
     {{-- favicon --}}
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon" />
     @routes
     @vite(['resources/js/app.js'])
     @inertiaHead
 </head>
 
 <body
-    class="font-montserrat antialiased text-dark dark:text-[#94A3B8] bg-[#F2F7FB] dark:bg-[#0f172a] h-full min-h-screen">
+    class="font-montserrat antialiased text-sm text-dark dark:text-[#fafcfe] bg-[#F2F7FB] dark:bg-[#0f172a] h-full min-h-screen">
     @inertia
 </body>
 

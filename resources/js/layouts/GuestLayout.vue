@@ -1,4 +1,4 @@
-<script setup>
+<script setup>    ;
     import Navbar from '../components/ui/navbar/Navbar.vue';
     import Footer from '../components/ui/footer/Footer.vue';
 
@@ -6,8 +6,7 @@
 
 <template>
     <Navbar />
-
-    <main class="px-[4px] py-8 h-full min-h-screen">
+    <main class="px-[4px] py-8 h-full min-h-screen relative">
         <slot />
     </main>
     <Footer />

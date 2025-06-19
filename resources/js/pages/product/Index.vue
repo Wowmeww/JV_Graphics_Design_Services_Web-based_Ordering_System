@@ -11,7 +11,5 @@
 <template>
 
     <Head title="Products Management" />
-    <div class="px-4">
-        <ProductsManagement :products="products" :categories="categories" />
-    </div>
+    <ProductsManagement :products="products" :categories="categories" />
 </template>

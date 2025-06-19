@@ -28,9 +28,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
@@ -49,7 +46,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return Inertia::render('product/Show', [
+            'product' => $product->load(['category', 'images']),
+        ]);
     }
 
     /**
