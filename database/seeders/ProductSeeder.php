@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductOption;
+use App\Models\ProductOptionImage;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,21 +17,26 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory(env('PRODUCT_CATEGORIES'))->create();
+        // Create categories first
+        $categories = Category::factory(env('PRODUCT_CATEGORIES'))->create();
 
-        // RANDOM PRODUCTS
-        for ($i = 1; $i <= env('PRODUCTS'); $i++) {
-            $product = Product::factory()->create([
-                'category_id' => rand(1, env('PRODUCT_CATEGORIES'))
-            ]);
-
-            
-            ProductImage::factory()->create([
-                'product_id' => $product->id
-            ]);
-        }
-        
-        // productWithOptions();
+        // Create products
+        Product::factory()
+            ->count(env('PRODUCTS'))
+            ->state(function () use ($categories) {
+                return [
+                    'type' => 'main product with variant',
+                    'category_id' => $categories->random()->id,
+                ];
+            })
+            ->has(
+                ProductOption::factory()
+                    ->count(rand(1, env('PRODUCTS_OPTIONS')))
+                    ->has(ProductOptionImage::factory()->count(rand(1, 3)), 'images'),
+                'options'
+            )
+            ->has(ProductImage::factory()->count(3), 'images')
+            ->create();
     }
 }
 

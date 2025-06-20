@@ -60,12 +60,16 @@
     @apply text-sm leading-5 font-bold mb-2.5;
   }
 
-  .form-control-primary,  .form-control {
-    @apply py-3.5 px-[1.375rem] leading-5 bg-transparent rounded-xl border placeholder:text-primary/40 dark:placeholder:text-[#4a5d79] border-primary dark:border-[#324055] focus:border-primary dark:focus:border-primary/80 focus:outline-none focus:ring focus:ring-primary transition-all duration-200 ease-in-out;
+  .form-control-primary,
+  .form-control {
+    @apply py-3.5 px-[1.375rem] leading-5 bg-transparent rounded-xl border placeholder:text-primary/40 dark:placeholder:text-[#4a5d79] border-primary dark:border-[#324055] focus:border-primary dark:focus:border-primary/80 focus:outline-none focus:ring focus:ring-primary transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 disabled:text-primary/60 disabled:border-primary/30 dark:disabled:text-[#adc5e9] dark:disabled:border-[#2f3c4f];
   }
+
   .form-control-secondary {
-    @apply py-3.5 px-[1.375rem] leading-5 bg-transparent rounded-xl border placeholder:text-secondary/40 dark:placeholder:text-[#b4cff7] border-secondary dark:border-[#324055] focus:border-secondary dark:focus:border-secondary-300/30 focus:outline-none focus:ring focus:ring-secondary-400 transition-all duration-200 ease-in-out;
+    @apply py-3.5 px-[1.375rem] leading-5 bg-transparent rounded-xl border placeholder:text-secondary/40 dark:placeholder:text-[#b4cff7] border-secondary dark:border-[#324055] focus:border-secondary dark:focus:border-secondary-300/30 focus:outline-none focus:ring focus:ring-secondary-400 transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-70 disabled:text-secondary disabled:border-secondary/30 dark:disabled:text-[#f2f5fb] dark:disabled:border-[#425270];
   }
+
+
 
   .form-control-error {
     @apply text-red-500 font-semibold;

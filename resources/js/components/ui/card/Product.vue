@@ -1,39 +1,59 @@
 <script setup>
+
     import { ref } from 'vue';
 
-    defineProps({
-        product: Object
+    const props = defineProps({
+        product: Object,
+        option: Object,
     });
+
+    const is_option = Boolean(props.option);
+
+    const product = ref({ ...props.product });
+
+    if (is_option) {
+        product.value = { ...props.option, category: props.product.category };
+    }
+
+    console.dir(product.value);
+
+
     const expanded = ref(false);
 
     const toggleExpand = () => {
         expanded.value = !expanded.value;
     };
+
 </script>
 
 <template>
-    <div class="container-primary rounded-xl bg-white p-4 dark:bg-[#1e293b] w-full min-w-fit text-wrap transition duration-1000"
+
+    <div class="container-primary border-2 border-secondary dark:border-white/10 rounded-xl bg-white p-4 dark:bg-[#1e293b] w-full min-w-fit text-wrap transition duration-1000"
         :class="{ 'dark:!bg-secondary-100/10 !bg-secondary-100/40': expanded }">
         <div class="flex justify-between gap-4">
             <div class="flex justify-between items-center gap-3" @click="toggleExpand">
                 <div
                     class="border min-h-12 min-w-12 h-12 w-12 rounded-lg overflow-hidden border-primary-200 dark:border-light">
                     <img v-if="product.images[0]" :src="product.images[0].image_path" alt="Product Image"
-                        class="h-full w-full object-cover">
+                        class="h-full w-full object-cover" />
                     <i v-else class="fa-solid fa-image text-2xl text-gray-400"></i>
                 </div>
-                <p class="leading-4 font-semibold">{{ product.name }}</p>
+                <p class="leading-4 font-semibold">
+                    {{ product.name }}
+                </p>
             </div>
             <div class="flex items-center gap-3 text-primary dark:text-primary-300">
                 <i class="bi bi-caret-down-fill cursor-pointer transition duration-500"
                     :class="{ 'rotate-180': expanded }" @click="toggleExpand"></i>
+                <Link :href="route('product.show', { product: props.product, option: props.option })">
                 <i class="fa-solid fa-eye cursor-pointer"></i>
+                </Link>
                 <i class="bi bi-pencil-square cursor-pointer"></i>
                 <i class="bi bi-three-dots-vertical cursor-pointer"></i>
             </div>
         </div>
 
-        <!-- Transition wrapper -->
+        <!------- Transition wrapper --------------------------------------------------->
         <Transition name="expand">
             <div v-if="expanded" class="mt-4 space-y-3">
                 <div class="flex justify-between items-center">
@@ -58,12 +78,15 @@
                 </div>
                 <div class="flex justify-between items-center">
                     <span>Last modified</span>
-                    <span class="font-semibold">{{ new Date(product.updated_at).toLocaleDateString('en-GB') }}</span>
+                    <span class="font-semibold">{{ new Date(product.updated_at).toLocaleDateString('en-GB')
+                        }}</span>
                 </div>
             </div>
         </Transition>
     </div>
+
 </template>
+
 
 <style scoped>
 

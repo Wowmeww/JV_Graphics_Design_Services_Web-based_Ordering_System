@@ -11,7 +11,7 @@ class ProductOptionImage extends Model
     use HasFactory;
 
     // one to many - belongs to
-    public function productOption()
+    public function option()
     {
         return $this->belongsTo(ProductOption::class);
     }

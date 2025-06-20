@@ -14,28 +14,36 @@ class MessageSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::where('role', 'admin')->get('id')->first();
-        $users = User::where('role', 'customer')->get('id');
+        $adminId = User::where('role', 'admin')->pluck('id')->first();
+        $userIds = User::where('role', 'customer')->pluck('id');
 
-        foreach ($users as $user) {
+        foreach ($userIds as $userId) {
             for ($i = 0; $i < env('MESSAGES_SENT'); $i++) {
                 if (rand(0, 1)) {
                     Message::factory()->create([
-                        'sender_id' => $user->id,
-                        'receiver_id' => $admin->id
+                        'sender_id' => $userId,
+                        'receiver_id' => $adminId,
+                        'content' => fake()->sentence(),
+                        'created_at' => now()->subMinutes(rand(1, 1000)),
                     ]);
                     Message::factory()->create([
-                        'sender_id' => $admin->id,
-                        'receiver_id' => $user->id
+                        'sender_id' => $adminId,
+                        'receiver_id' => $userId,
+                        'content' => fake()->sentence(),
+                        'created_at' => now()->subMinutes(rand(1, 1000)),
                     ]);
                 } else {
                     Message::factory()->create([
-                        'sender_id' => $admin->id,
-                        'receiver_id' => $user->id
+                        'sender_id' => $adminId,
+                        'receiver_id' => $userId,
+                        'content' => fake()->sentence(),
+                        'created_at' => now()->subMinutes(rand(1, 1000)),
                     ]);
                     Message::factory()->create([
-                        'sender_id' => $user->id,
-                        'receiver_id' => $admin->id
+                        'sender_id' => $userId,
+                        'receiver_id' => $adminId,
+                        'content' => fake()->sentence(),
+                        'created_at' => now()->subMinutes(rand(1, 1000)),
                     ]);
                 }
             }

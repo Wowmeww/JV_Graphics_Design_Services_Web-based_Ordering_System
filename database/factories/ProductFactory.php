@@ -23,6 +23,7 @@ class ProductFactory extends Factory
             'description' => fake()->realText(rand(14, 40)),
             'price' => rand(1, 5) * 89,
             'stock' => (rand(0, 5) * 8) * rand(1, 20),
+            'size' => rand(1, 10) . "*" . rand(1, 20) . "*" . rand(1, 15) . "," . fake()->randomElement(['inc', 'cm', 'foot', 'miter']),
         ];
     }
 }

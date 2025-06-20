@@ -14,13 +14,16 @@
         required: { type: Boolean, default: true },
         value: { type: String, default: '' },
         placeholder: { type: String, default: 'Select' },
+        disabled: { type: Boolean, default: false },
     });
 
 
     const expanded = ref(false);
 
     function openDropdown() {
-        expanded.value = !expanded.value;
+        if (!props.disabled) {
+            expanded.value = !expanded.value;
+        }
     }
 
     function closeDropdown() {
@@ -30,6 +33,7 @@
     const emit = defineEmits(['select']);
 
     function handleOptionClick(option) {
+
         closeDropdown();
         emit('select', option);
     }
@@ -42,7 +46,7 @@
             <span v-show="required" class="text-red-600 dark:text-red-500 font-black">*</span>
         </label>
         <button @click.prevent="openDropdown"
-            :class="`form-control-${variant}  bg-white w-full flex cursor-pointer items-center justify-between text-start dark:bg-transparent capitalize`">
+            :class="`form-control-${variant}  bg-white w-full flex cursor-pointer items-center justify-between text-start dark:bg-transparent capitalize ${disabled ? '!cursor-not-allowed opacity-60' : ''}`">
             <span v-if="value">
                 {{ value }}
             </span>
@@ -50,7 +54,7 @@
                 {{ placeholder }}
             </span>
             <i
-                :class="(expanded ? 'rotate-180' : '') + ` fa-solid fa-chevron-down transition  leading-0  duration-500  text-${variant} dark:text-${variant}-300`" />
+                :class="(expanded ? 'rotate-180' : '') + ` fa-solid fa-chevron-down transition  leading-0  duration-500  text-${variant} dark:text-${variant}-200`" />
 
         </button>
         <small v-show="error" class="form-control-error">{{ error }}</small>
@@ -59,7 +63,7 @@
 
             <p v-for="(option, i) of options" :key="i"
                 class="px-4 py-1 hover:bg-primary-100 transition dark:hover:bg-primary-400/10 cursor-pointer"
-                :class="option === placeholder ? 'font-semibold' : ''" @click.prevent="handleOptionClick(option)">{{
+                :class="option === value ? 'font-semibold' : ''" @click.prevent="handleOptionClick(option)">{{
                     option }}</p>
         </div>
     </div>

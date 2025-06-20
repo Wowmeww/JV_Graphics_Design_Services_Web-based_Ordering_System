@@ -1,9 +1,9 @@
 <script setup>
     import { useForm } from '@inertiajs/vue3';
-    import ContainerPrimary from '../../components/ContainerPrimary.vue';
-    import TextInputPrimary from '../../components/ui/TextInputPrimary.vue';
-    import GuestLayout from '../../layouts/GuestLayout.vue';
-    import ButtonPrimary from '../../components/ui/buttons/ButtonPrimary.vue';
+    import ContainerPrimary from '@/components/ContainerPrimary.vue';
+    import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
+    import GuestLayout from '@/layouts/GuestLayout.vue';
+    import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary.vue';
 
     const props = defineProps({
         status: String

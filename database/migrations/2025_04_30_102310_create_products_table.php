@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('price', 10, 2)->default(0);
             $table->integer('stock')->default(0);
-            $table->string('type')->default('single');
+            $table->string('type')->default('single product'); //-> main product with variant, single product
             $table->string('size')->nullable();
             $table->timestamps();
         });

@@ -22,11 +22,12 @@ class UserSeeder extends Seeder
             'email' => 'nicobernardfirmanes@gmail.com',
             'sex' => 'male',
             'birth_date' => '02-25-2004',
-            'password' => 123
+            'password' => bcrypt(123),
+            'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
         ]);
 
         // CREATE USER WITH CART AND WISHLIST
-        for($i = 1; $i <= env('USERS', 14) ; $i++) {
+        for ($i = 1; $i <= env('USERS', 14); $i++) {
             $user = User::factory()->create();
             Cart::create(['user_id' => $user->id]);
             Wishlist::create(['user_id' => $user->id]);

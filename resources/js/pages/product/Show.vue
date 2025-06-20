@@ -1,36 +1,55 @@
 <script setup>
     import { useForm } from '@inertiajs/vue3';
-    import ContainerPrimary from '../../components/ContainerPrimary.vue';
-    import PillPrimary from '../../components/ui/buttons/PillPrimary.vue';
-    import Dropdown from '../../components/ui/input/Dropdown.vue';
-    import PageTitleHeader from '../../components/ui/PageTitleHeader.vue';
-    import TextInputPrimary from '../../components/ui/TextInputPrimary.vue';
+    import ContainerPrimary from '@/components/ContainerPrimary.vue';
+    import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
+    import Dropdown from '@/components/ui/input/Dropdown.vue';
+    import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
+    import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
+    import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
+    import Product from '@/components/ui/card/Product.vue';
+    import { ref } from 'vue';
 
     const props = defineProps({
-        product: Object
+        product: Object,
+        option: Object
     });
 
-    const form = useForm({
+    const product = ref({
         name: props.product.name,
         category: props.product.category.name,
         price: props.product.price,
         type: props.product.type,
         stock: props.product.stock,
         size: props.product.size,
+        unit: props.product.unit,
         description: props.product.description,
         images: props.product.images
     });
+    const is_option = Boolean(props.option);
 
-    function submit() {
-        console.dir(form);
+    if (is_option) {
+        const option = props.option;
+        product.value.name = option.name;
+        product.value.price = option.price;
+        product.value.type = option.type;
+        product.value.stock = option.stock;
+        product.value.size = option.size;
+        product.value.unit = option.unit;
+        product.value.description = option.description;
+        product.value.images = [...option.images];
     }
 
-    const styleClass = {
-        imageContainer: 'border border-secondary dark:border-white overflow-hidden border-dashed relative inline-block rounded min-h-26 min-w-26',
-        fileInputLabel: 'absolute cursor-pointer  z-20 inset-0 grid place-content-center text-center text-secondary-600 hover:text-secondary dark:text-secondary-200 dark:hover:text-secondary-300',
-        image: 'z-10 absolute w-full h-full object-cover',
-        icon: 'fa-solid fa-image text-2xl md:text-3xl'
-    };
+    const images = ref([null, null, null]);
+
+    function submit() {
+        form.images = [...images.value];
+
+        console.log(form.images);
+    }
+
+    function handleImagesChange(data) {
+        images.value = [...data.images]
+    }
 
 
 </script>
@@ -44,83 +63,82 @@
         <ContainerPrimary title="Product Setting">
             <div class="pt-2 grid md:grid-cols-2 gap-6">
                 <div class="space-y-3">
+
                     <!---------- Product Images Section ------------------------------------------------------->
-                    <div>
-                        <p class="input-label">Product Images</p>
-
-                        <div
-                            class="pt-1 grid grid-cols-2 grid- gap-3 justify-center items-center md:grid-cols-12 md:grid-rows-2">
-                            <span :class="styleClass.imageContainer"
-                                class="md:col-span-8 md:row-span-2 self-stretch justify-self-end sm:justify-self-stretch">
-                                <label for="img1" :class="styleClass.fileInputLabel">
-                                    <i :class="styleClass.icon"></i>
-                                    <span class="font-medium text-xs">Browse image</span>
-                                </label>
-                                <img src="/images/img-placeholder.jpg" alt="" :class="styleClass.image" />
-                                <input type="file" id="img1" hidden />
-                            </span>
-                            <span :class="styleClass.imageContainer"
-                                class="md:col-span-4 md:row-span-1 justify-self-start sm:justify-self-stretch">
-                                <label for="img3" :class="styleClass.fileInputLabel">
-                                    <i :class="styleClass.icon"></i>
-                                    <span class="font-medium text-xs">Browse image</span>
-                                </label>
-                                <img src="/images/img-placeholder.jpg" alt="" :class="styleClass.image" />
-                                <input type="file" id="img2" hidden />
-                            </span>
-                            <span :class="styleClass.imageContainer"
-                                class="col-span-2 md:col-span-4 md:row-span-1 justify-self-center sm:justify-self-stretch">
-                                <label for="img3" :class="styleClass.fileInputLabel">
-                                    <i :class="styleClass.icon"></i>
-                                    <span class="font-medium text-xs">Browse image</span>
-                                </label>
-                                <img src="/images/img-placeholder.jpg" alt="" :class="styleClass.image" />
-                                <input type="file" id="img3" hidden />
-                            </span>
-
-                        </div>
-
-
-                    </div>
+                    <ProductImagesInput disabled :images="product.images" @changed="handleImagesChange" />
 
                     <div class="grid grid-cols-12 gap-2 gap-y-3 pt-2">
                         <div class="col-span-8">
-                            <TextInputPrimary :required="false" type="number" label="Size L*W*H, W*H "
-                                placeholder="L*W*H" variant="secondary" />
+                            <div class="form-group flex flex-col">
+                                <p class="input-label">Size</p>
+                                <p class="form-control-secondary">{{ product.size }}</p>
+                            </div>
                         </div>
                         <div class="col-span-4">
-                            <Dropdown  label="Unit" :value="null" placeholder="Unit" variant="secondary"
-                                :options="['inc', 'cm', 'foot', 'miter']" />
+                            <div class="form-group flex flex-col">
+                                <p class="input-label">Unit</p>
+                                <p class="form-control-secondary">{{ product.unit }}</p>
+                            </div>
                         </div>
                     </div>
-                    <TextInputPrimary v-model="form.description" :error="form.errors.description"  :required="false" type="textarea" label="Product Description"
-                        placeholder="Enter product description" variant="secondary" />
+                    <div class="form-group flex flex-col">
+                        <p class="input-label">Product Description</p>
+                        <p class="form-control-secondary">{{ product.unit }}</p>
+                    </div>
                 </div>
 
                 <!-- Another Column -->
                 <div class="space-y-3">
-                    <TextInputPrimary v-model="form.name" :error="form.errors.name" label="Product Name"
-                        placeholder="Enter product name" variant="secondary" />
-
+                    <div class="form-group flex flex-col">
+                        <p class="input-label">Product Name</p>
+                        <p class="form-control-secondary">{{ product.name }}</p>
+                    </div>
                     <div class="grid sm:grid-cols-2 gap-2 gap-y-3">
-                        <Dropdown :value="form.category" :error="form.errors.category" label="Category"
-                            placeholder="Select category" variant="secondary" :options="['Option I', 'OptionII']" />
+                        <div class="form-group flex flex-col">
+                            <p class="input-label">Category</p>
+                            <p class="form-control-secondary">{{ product.category }}</p>
+                        </div>
 
-                        <TextInputPrimary v-model="form.price" :error="form.errors.price" type="number" label="Price"
-                            placeholder="Enter product price" variant="secondary" />
+                        <div class="form-group flex flex-col">
+                            <p class="input-label">Price</p>
+                            <p class="form-control-secondary">{{ product.price }}</p>
+                        </div>
 
-                        <Dropdown :value="form.type" :error="form.errors.type" label="Product Type" placeholder="Select type" variant="secondary"
-                            :options="['Option I', 'OptionII']" />
+                        <div class="form-group flex flex-col">
+                            <p class="input-label">Product Type</p>
+                            <p class="form-control-secondary">{{ product.type }}</p>
+                        </div>
 
-                        <TextInputPrimary v-model="form.stock" :error="form.errors.stock"  type="number" label="Stock" placeholder="Enter product stocks"
-                            variant="secondary" />
+                        <div class="form-group flex flex-col">
+                            <p class="input-label">Stock</p>
+                            <p class="form-control-secondary">{{ product.stock }}</p>
+                        </div>
                     </div>
 
-                    <div class="py-6 grid grid-cols-2 gap-3">
-                        <PillPrimary label="Update product" variant="secondary" type="submit" />
-                        <PillPrimary label="Cancel" variant="outlineSecondary" />
+                    <div>
+                        <label class="input-label mb-2 mt-2 inline-block">
+                            {{ is_option ? 'Parent product' : 'Variant/s' }}
+                        </label>
+                        <div class="max-h-90 h-fit overflow-y-scroll space-y-2 rounded-xl pr-3">
+                            <Product v-if="!is_option" v-for="opt of props.product.options" :key="opt.id"
+                                :product="props.product" :option="opt" />
+                            <Product v-else :product="props.product" />
+
+                            <button v-if="!is_option" type="button"
+                                class="container-primary border-2 text-secondary border-secondary dark:border-white/10 rounded-xl bg-white p-4 text-4xl dark:text-secondary-100 :text-6xl dark:bg-[#1e293b] w-full min-w-fit text-wrap transition duration-1000 hover:bg-secondary-200/60 dark:hover:bg-secondary-200/10">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
+
+
                 </div>
+            </div>
+            <div class="py-6 pt-8 grid md:grid-cols-3 gap-3 max-w-3xl mx-auto ">
+                <PillPrimary label="Edit" variant="secondary" type="button" />
+                <PillPrimary label="Cancel" variant="outlineSecondary" />
+                <PillPrimary label="Delete" variant="outlineSecondary"
+                    :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'" />
             </div>
         </ContainerPrimary>
     </form>

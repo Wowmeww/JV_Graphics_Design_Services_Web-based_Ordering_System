@@ -19,7 +19,7 @@ class ProductOption extends Model
 
 
     // one to many - has many
-    public function productOptionImages()
+    public function images()
     {
         return $this->hasMany(ProductOptionImage::class);
     }

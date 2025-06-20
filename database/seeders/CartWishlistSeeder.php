@@ -22,16 +22,23 @@ class CartWishlistSeeder extends Seeder
 
         foreach ($carts as $cart) {
             for ($i = 0; $i < env('CART_ITEMS'); $i++) {
-                CartItem::factory()->create([
+                $cartItem = CartItem::factory()->create([
                     'cart_id' => $cart->id
-                ])->products()->attach(rand(1, env('PRODUCTS')));
+                ]);
+
+                // Attach random product(s)
+                $cartItem->products()->attach(rand(1, env('PRODUCTS')));
             }
         }
+
         foreach ($wishlists as $wishlist) {
             for ($i = 0; $i < env('WISHLIST_ITEMS'); $i++) {
-                WishlistItem::factory()->create([
+                $wishlistItem = WishlistItem::factory()->create([
                     'wishlist_id' => $wishlist->id
-                ])->products()->attach(rand(1, env('PRODUCTS')));
+                ]);
+
+                // Attach random product(s)
+                $wishlistItem->products()->attach(rand(1, env('PRODUCTS')));
             }
         }
     }

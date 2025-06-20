@@ -19,7 +19,7 @@ class ProductOptionImageFactory extends Factory
     {
         return [
             'product_option_id' => ProductOption::factory(),
-            'image_path' => fake()->image()
+            'image_path' => 'https://picsum.photos/id/' . rand(1, 400) . '/300/300'
         ];
     }
 }

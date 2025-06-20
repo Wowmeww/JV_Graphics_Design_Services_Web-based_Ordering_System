@@ -1,8 +1,8 @@
 <script setup>
     import { useForm } from '@inertiajs/vue3';
-    import ContainerPrimary from '../../components/ContainerPrimary.vue';
-    import ButtonPrimary from '../../components/ui/buttons/ButtonPrimary.vue';
-    import TextInputPrimary from '../../components/ui/TextInputPrimary.vue';
+    import ContainerPrimary from '@/components/ContainerPrimary.vue';
+    import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary.vue';
+    import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
 
     const props = defineProps({
         token: String,

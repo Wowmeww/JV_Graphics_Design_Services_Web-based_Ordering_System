@@ -7,12 +7,7 @@
 
     const asideExpanded = ref(false);
 
-    function expandAside() {
-        asideExpanded.value = true;
-    }
-    function uneExpandAside() {
-        asideExpanded.value = false;
-    }
+    
 
     function toggleExpand() {
         asideExpanded.value = !asideExpanded.value;
@@ -25,7 +20,7 @@
 
         <AuthNavbar @toggle="toggleExpand" />
 
-        <AuthAside :expanded="asideExpanded" />
+        <AuthAside :expanded="asideExpanded" @close="toggleExpand" />
 
         <div class="p-2 pt-8 sm:px-4 md:p-8 min-h-[98vh]">
             <div

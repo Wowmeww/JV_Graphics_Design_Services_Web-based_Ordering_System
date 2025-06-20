@@ -17,10 +17,12 @@ return new class extends Migration
         Schema::create('product_options', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2)->default(0);
-            $table->integer('stock')->default(0);;
+            $table->integer('stock')->default(0);
+            $table->string('type')->default('variant');
+            $table->string('size')->nullable();
             $table->timestamps();
         });
         Schema::create('product_option_product_option_image', function (Blueprint $table) {

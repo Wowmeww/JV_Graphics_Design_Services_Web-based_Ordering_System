@@ -58,14 +58,13 @@
             </p>
         </div>
         <table
-            class="container-primary text-sm rounded-xl bg-white p-8 dark:bg-[#1e293b] min-w-3xl md:w-full hidden md:table ">
+            class="container-primary text-sm rounded-xl bg-white p-8 dark:bg-[#1e293b] min-w-3xl md:w-full hidden md:table md:min-w-4xl ">
             <thead class="border-b border-b-dark/20 dark:border-b-light/30">
-                <tr class="w-full  flex justify-between items-center p-4 md:p-6 uppercase">
-
-                    <th class="inline-flex items-center justify-start flex-1/12">
+                <tr class="grid grid-cols-12 items-center p-6 justify-items-start">
+                    <th class="justify-self-start col-span-1">
                         <i class="fa-solid fa-image text-2xl md:text-3xl"></i>
                     </th>
-                    <th class="inline-flex items-center justify-start flex-3/12 gap-3">
+                    <th class="flex gap-3 col-span-3">
                         Product Name
 
                         <!---------------   SORT OPTIONS  ----------------------------------------------------------->
@@ -85,26 +84,30 @@
                             </div>
                         </div>
                     </th>
-                    <th class="inline-flex items-center justify-start flex-2/12">
+                    <th class="col-span-2 justify-self-start ">
                         Category
                     </th>
-                    <th class="inline-flex items-center justify-start flex-1/12">
+                    <th class="col-span-1">
                         STOCK
                     </th>
-                    <th class="inline-flex items-center justify-center flex-2/12 lg:flex-1/12 px-3">
+                    <th class="col-span-1">
                         PRICE
                     </th>
-                    <th class="inline-flex items-center justify-start flex-2/12 lg:flex-3/12">
+                    <th class="col-span-1 justify-self-start">
+                        Size
+                    </th>
+                    <th class="col-span-2 justify-self-start">
                         DATE
                     </th>
-                    <th class="inline-flex items-center justify-end flex-1/12">
+                    <th class="justify-self-end col-span-1">
                         ACTION
                     </th>
                 </tr>
             </thead>
+
             <tbody>
                 <tr v-for="product of products.data" :key="product.id"
-                    class="w-full flex justify-between items-center p-4 md:p-6 font-medium leading-4 hover:bg-secondary-100/60 dark:hover:bg-secondary-100/10 transition">
+                    class="grid grid-cols-12 items-center p-6 font-medium justify-items-start leading-4 hover:bg-secondary-100/60 dark:hover:bg-secondary-100/10 transition">
                     <td class="inline-flex items-center justify-start flex-1/12">
                         <div class="border h-12 w-12 rounded-lg border-primary-200 dark:border-light overflow-hidden">
                             <img v-if="product.images[0]" :src="product.images[0].image_path" alt="Product Image"
@@ -112,30 +115,32 @@
                             <i v-else class="fa-solid fa-image text-2xl text-gray-400"></i>
                         </div>
                     </td>
-                    <td class="inline-flex items-center justify-start flex-3/12 ">
+                    <td class="col-span-3">
                         {{ product.name }}
                     </td>
-                    <td class="inline-flex items-center justify-start flex-2/12">
+                    <td class="col-span-2">
                         {{ product.category.name }}
                     </td>
-                    <td class="inline-flex items-center justify-center lg:justify-start flex-1/12 ">
+                    <td class="flex-1/12 flex justify-center pl-3">
                         {{ product.stock }}
                     </td>
-                    <td class="inline-flex items-center justify-center flex-2/12 lg:flex-1/12 px-3">
+                    <td class="flex-1/12 flex justify-center">
                         {{ product.price.toLocaleString('en-PH', {
                             style: 'currency',
                             currency: 'PHP'
                         }) }}
 
                     </td>
-                    <td class="inline-flex items-center justify-between flex-wrap flex-2/12 lg:flex-3/12 gap-1">
+                    <td class="">
+                        {{ product.size.replaceAll(",", " ") }}
+                    </td>
+                    <td class="col-span-2 flex justify-between flex-wrap justify-self-stretch">
                         <span>Last modified:</span>
                         <span class="font-semibold">{{ new Date(product.updated_at).toLocaleDateString('en-GB')
-                            }}</span>
+                        }}</span>
                     </td>
-                    <td
-                        class="inline-flex items-center justify-end flex-1/12 pl-3 text-right text-base gap-4 text-primary dark:text-primary-300">
-                        <Link :href="route('product.show', product)">
+                    <td class=" justify-self-end space-x-3 text-primary dark:text-primary-300">
+                        <Link :href="route('product.show', { product })">
                         <i class="fa-solid fa-eye cursor-pointer"></i>
                         </Link>
                         <i class="bi bi-pencil-square cursor-pointer"></i>
@@ -144,6 +149,7 @@
                 </tr>
 
             </tbody>
+
         </table>
 
         <div class="md:hidden space-y-2.5">

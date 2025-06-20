@@ -1,9 +1,9 @@
 <script setup>
     import { Head, Link, usePage } from '@inertiajs/vue3';
-    import BackgroundImage from '../components/ui/BackgroundImage.vue';
-    import LargePill from '../components/ui/buttons/LargePill.vue';
-    import LargeCategoryCard from '../components/ui/card/LargeCategoryCard.vue';
-    import Layout from '../composables/layout.js';
+    import BackgroundImage from '@/components/ui/BackgroundImage.vue';
+    import LargePill from '@/components/ui/buttons/LargePill.vue';
+    import LargeCategoryCard from '@/components/ui/card/LargeCategoryCard.vue';
+    import Layout from '@/composables/layout.js';
 
     defineOptions({
         layout: Layout
