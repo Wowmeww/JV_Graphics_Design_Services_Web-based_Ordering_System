@@ -3,7 +3,7 @@
     import PillPrimary from '../ui/buttons/PillPrimary.vue';
     import Search from '../ui/Search.vue';
     import FilterDropDown from './FilterDropDown.vue';
-    import { router } from '@inertiajs/vue3'
+    import { router } from '@inertiajs/vue3';
 
     const params = route().params;
 
@@ -90,7 +90,7 @@
         </div>
 
         <div class="col-span-2 inline-flex justify-stretch md:justify-center md:grid-">
-            <PillPrimary label="Add new product" class="w-full md:max-w-xs">
+            <PillPrimary is="Link" :href="route('product.create')" label="Add new product" class="w-full md:max-w-xs">
                 <i class="bi bi-plus-circle"></i>
             </PillPrimary>
         </div>
@@ -99,7 +99,7 @@
     <!--------------------------- LARGE SCREEN ----------------------------------------------->
     <div class="lg:flex hidden flex-col-reverse md:flex-col my-6 gap-3">
         <div class="flex justify-between md:items-center flex-col-reverse md:flex-row gap-3  items-stretch ">
-            <PillPrimary label="Add new product" class="text-left">
+            <PillPrimary is="Link" :href="route('product.create')" label="Add new product" class="text-left">
                 <i class="bi bi-plus-circle"></i>
             </PillPrimary>
 

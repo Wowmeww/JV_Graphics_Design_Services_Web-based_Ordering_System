@@ -9,6 +9,14 @@
     const toggleExpand = () => {
         expanded.value = !expanded.value;
     };
+
+    function imageUrl(path) {
+        if (path.includes('product_images')) {
+            return `/storage/${path}`;
+        }
+
+        return path;
+    }
 </script>
 
 <template>
@@ -18,7 +26,7 @@
             <div class="flex justify-between items-center gap-3" @click="toggleExpand">
                 <div
                     class="border min-h-12 min-w-12 h-12 w-12 rounded-lg overflow-hidden border-primary-200 dark:border-light">
-                    <img v-if="product.images[0]" :src="product.images[0].image_path" alt="Product Image"
+                    <img v-if="product.images[0]" :src="imageUrl(product.images[0].image_path)" alt="Product Image"
                         class="h-full w-full object-cover">
                     <i v-else class="fa-solid fa-image text-2xl text-gray-400"></i>
                 </div>
@@ -27,8 +35,14 @@
             <div class="flex items-center gap-3 text-primary dark:text-primary-300">
                 <i class="bi bi-caret-down-fill cursor-pointer transition duration-500"
                     :class="{ 'rotate-180': expanded }" @click="toggleExpand"></i>
+
+                <Link :href="route('product.show', product)">
                 <i class="fa-solid fa-eye cursor-pointer"></i>
+                </Link>
+
+                <Link :href="route('product.edit', product)">
                 <i class="bi bi-pencil-square cursor-pointer"></i>
+                </Link>
                 <i class="bi bi-three-dots-vertical cursor-pointer"></i>
             </div>
         </div>

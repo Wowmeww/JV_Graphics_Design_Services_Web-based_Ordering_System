@@ -10,34 +10,8 @@
     import { ref } from 'vue';
 
     const props = defineProps({
-        product: Object,
-        option: Object
+        product: Object
     });
-
-    const product = ref({
-        name: props.product.name,
-        category: props.product.category.name,
-        price: props.product.price,
-        type: props.product.type,
-        stock: props.product.stock,
-        size: props.product.size,
-        unit: props.product.unit,
-        description: props.product.description,
-        images: props.product.images
-    });
-    const is_option = Boolean(props.option);
-
-    if (is_option) {
-        const option = props.option;
-        product.value.name = option.name;
-        product.value.price = option.price;
-        product.value.type = option.type;
-        product.value.stock = option.stock;
-        product.value.size = option.size;
-        product.value.unit = option.unit;
-        product.value.description = option.description;
-        product.value.images = [...option.images];
-    }
 
     const images = ref([null, null, null]);
 
@@ -55,12 +29,12 @@
 </script>
 <template>
 
-    <Head title="Edit Product" />
+    <Head title="View Product" />
 
     <form class="space-y-3 md:space-y-8" @submit.prevent="submit">
-        <PageTitleHeader title="Product Editor" />
+        <PageTitleHeader title="Product View" />
 
-        <ContainerPrimary title="Product Setting">
+        <ContainerPrimary title="Product Information VIew">
             <div class="pt-2 grid md:grid-cols-2 gap-6">
                 <div class="space-y-3">
 
@@ -77,13 +51,13 @@
                         <div class="col-span-4">
                             <div class="form-group flex flex-col">
                                 <p class="input-label">Unit</p>
-                                <p class="form-control-secondary">{{ product.unit }}</p>
+                                <p class="form-control-secondary ">{{ product.unit }}</p>
                             </div>
                         </div>
                     </div>
                     <div class="form-group flex flex-col">
                         <p class="input-label">Product Description</p>
-                        <p class="form-control-secondary">{{ product.unit }}</p>
+                        <p class="form-control-secondary min-h-26 h-fit">{{ product.description }}</p>
                     </div>
                 </div>
 
@@ -96,7 +70,7 @@
                     <div class="grid sm:grid-cols-2 gap-2 gap-y-3">
                         <div class="form-group flex flex-col">
                             <p class="input-label">Category</p>
-                            <p class="form-control-secondary">{{ product.category }}</p>
+                            <p class="form-control-secondary">{{ product.category.name }}</p>
                         </div>
 
                         <div class="form-group flex flex-col">
@@ -117,14 +91,12 @@
 
                     <div>
                         <label class="input-label mb-2 mt-2 inline-block">
-                            {{ is_option ? 'Parent product' : 'Variant/s' }}
+                            Variant/s
                         </label>
                         <div class="max-h-90 h-fit overflow-y-scroll space-y-2 rounded-xl pr-3">
-                            <Product v-if="!is_option" v-for="opt of props.product.options" :key="opt.id"
-                                :product="props.product" :option="opt" />
-                            <Product v-else :product="props.product" />
+                            <Product v-for="opt of product.options" :key="opt.id" :product="opt" />
 
-                            <button v-if="!is_option" type="button"
+                            <button type="button"
                                 class="container-primary border-2 text-secondary border-secondary dark:border-white/10 rounded-xl bg-white p-4 text-4xl dark:text-secondary-100 :text-6xl dark:bg-[#1e293b] w-full min-w-fit text-wrap transition duration-1000 hover:bg-secondary-200/60 dark:hover:bg-secondary-200/10">
                                 <i class="fa-solid fa-plus"></i>
                             </button>
@@ -134,11 +106,11 @@
 
                 </div>
             </div>
-            <div class="py-6 pt-8 grid md:grid-cols-3 gap-3 max-w-3xl mx-auto ">
-                <PillPrimary label="Edit" variant="secondary" type="button" />
-                <PillPrimary label="Cancel" variant="outlineSecondary" />
-                <PillPrimary label="Delete" variant="outlineSecondary"
-                    :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'" />
+            <div class="py-6 pt-8 grid grid-cols-2 gap-3 max-w-3xl mx-auto ">
+                <PillPrimary is="Link" :href="route('product.edit', product)" label="Edit" variant="secondary"
+                    type="button" />
+                <PillPrimary is="Link" :href="route('product.index')" label="Back" variant="outlineSecondary" />
+
             </div>
         </ContainerPrimary>
     </form>

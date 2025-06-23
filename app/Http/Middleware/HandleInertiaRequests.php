@@ -50,6 +50,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'isCartOpen' => $request->session()->get('cartOpen', false),
             'isWishlistOpen' => $request->session()->get('wishlistOpen', false),
+            'status' => session('status'),
 
         ];
     }

@@ -6,7 +6,7 @@
             type: Array,
             default: () => []
         },
-        error: String,
+        errors: String,
         disabled: { type: Boolean, default: false }
     });
 
@@ -44,7 +44,8 @@
 
         // THIS is what restores the original image
         if (props.images[index]?.image_path) {
-            return props.images[index].image_path;
+            const path = props.images[index]?.image_path;
+            return path.includes('product_images') ? `/storage/${path}` : path;
         }
 
         return imagePlaceholder;
@@ -112,11 +113,9 @@
 
         emit('changed', {
             images: [...tempImage.value],
-            error: '',
-            index
+            error: ''
         });
     }
-
 
 
     const styleClass = {
@@ -129,6 +128,7 @@
 </script>
 
 <template>
+
     <div>
         <p class="input-label">Product Images</p>
 
@@ -173,8 +173,11 @@
             </span>
         </div>
 
-        <small v-if="localError || error" class="form-control-error">
-            {{ localError || error }}
+        <small v-if="!disabled" class="form-control-error flex gap-0.5 flex-wrap">
+            {{ localError }}
+            <span v-for="er of errors" :key="er">
+                {{ er }}
+            </span>
         </small>
 
 

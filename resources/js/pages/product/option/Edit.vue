@@ -9,39 +9,28 @@
     import SingleProduct from '@/components/tables/SingleProduct.vue';
     import Product from '@/components/ui/card/Product.vue';
     import { ref } from 'vue';
+    import { route } from 'ziggy-js';
 
     const props = defineProps({
         option: Object,
-        product: Object
     });
 
     const form = useForm({
-        name: props.option.name,
-        category: props.product.category.name,
-        price: props.option.price,
-        type: props.option.type,
-        stock: props.option.stock,
-        size: props.option.size,
-        unit: props.option.unit,
-        description: props.option.description,
-        images: props.option.images
+        ...props.option, category: props.option.product.category,
+        _method: 'PATCH'
     });
 
     const images = ref([null, null, null]);
 
     function submit() {
+        const temp = {
+            images: [...props.option.images]
+        }
         form.images = [...images.value];
 
-        console.log(form.images);
-        // form.post(route('products.update', props.product.id), {
-        //     preserveScroll: true,
-        //     onSuccess: () => {
-        //         console.log('Product updated');
-        //     },
-        //     onError: (errors) => {
-        //         console.error('Validation failed:', errors);
-        //     }
-        // });
+        form.post(route('option.update', props.option));
+        form.images = [...temp.images];
+
     }
 
     function handleImagesChange(data) {
@@ -82,18 +71,19 @@
 
                 <!-- Another Column -->
                 <div class="space-y-3">
-                    <TextInputPrimary v-model="form.name" :error="form.errors.name" label="Product Name"
+                    <TextInputPrimary v-model="form.name" :error="form.errors.name" label="Product Option Name"
                         placeholder="Enter product name" variant="secondary" />
 
                     <div class="grid sm:grid-cols-2 gap-2 gap-y-3">
-                        <Dropdown :value="form.category" :error="form.errors.category" label="Category"
+                        <Dropdown disabled :value="form.category.name" :error="form.errors.category" label="Category"
                             placeholder="Select category" variant="secondary" :options="['Option I', 'OptionII']" />
 
                         <TextInputPrimary v-model="form.price" :error="form.errors.price" type="number" label="Price"
                             placeholder="Enter product price" variant="secondary" />
 
-                        <Dropdown :value="form.type" :error="form.errors.type" @select="(option) => form.type = option"
-                            label="Product Type" placeholder="Select type" variant="secondary"
+                        <Dropdown disabled :value="form.type" :error="form.errors.type"
+                            @select="(option) => form.type = option" label="Product Type" placeholder="Select type"
+                            variant="secondary"
                             :options="['single product', 'main product with variant', 'unavailable']" />
 
                         <TextInputPrimary v-model="form.stock" :error="form.errors.stock" type="number" label="Stock"
@@ -101,7 +91,7 @@
                     </div>
 
                     <div class="max-h-90 h-fit overflow-y-scroll space-y-2 rounded-xl pr-3">
-                        <Product :type="product.type" :product="product" />
+                        <Product :product="option.product" />
                     </div>
 
 
@@ -109,7 +99,9 @@
             </div>
             <div class="py-6 pt-8 grid grid-cols-2 gap-3 max-w-3xl mx-auto">
                 <PillPrimary label="Update product" variant="secondary" type="submit" />
-                <PillPrimary label="Cancel" variant="outlineSecondary" />
+                <PillPrimary label="Cancel" variant="outlineSecondary"
+                    @click="$inertia.visit(route('option.show', option))" />
+
             </div>
         </ContainerPrimary>
     </form>

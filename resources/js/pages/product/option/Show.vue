@@ -6,96 +6,103 @@
     import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
     import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
     import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
-    import SingleProduct from '@/components/tables/SingleProduct.vue';
     import Product from '@/components/ui/card/Product.vue';
-import { ref } from 'vue';
+    import { ref } from 'vue';
+    import { route } from 'ziggy-js';
 
     const props = defineProps({
-        option: Object,
-        product: Object
-    });
-
-    // const product
-
-    const form = useForm({
-        name: props.option.name,
-        category: props.product.category.name,
-        price: props.option.price,
-        type: props.option.type,
-        stock: props.option.stock,
-        size: props.option.size,
-        unit: props.option.unit,
-        description: props.option.description,
-        images: props.option.images
+        option: Object
     });
 
     const images = ref([null, null, null]);
+
 
     function handleImagesChange(data) {
         images.value = [...data.images]
     }
 
+
 </script>
 <template>
+    <!-- {{ console.dir(option) }} -->
 
-    <Head title="Edit Product" />
+    <Head title="View Product Option" />
 
     <form class="space-y-3 md:space-y-8" @submit.prevent="submit">
-        <PageTitleHeader title="Product Editor" />
+        <PageTitleHeader title="Product Option View" />
 
-        <ContainerPrimary title="Product Setting">
+        <ContainerPrimary title="Product Option Information View">
             <div class="pt-2 grid md:grid-cols-2 gap-6">
                 <div class="space-y-3">
 
                     <!---------- Product Images Section ------------------------------------------------------->
-                    <ProductImagesInput :images="form.images" :error="form.errors.images"
-                        @changed="handleImagesChange" />
+                    <ProductImagesInput disabled :images="option.images" @changed="handleImagesChange" />
 
                     <div class="grid grid-cols-12 gap-2 gap-y-3 pt-2">
                         <div class="col-span-8">
-                            <TextInputPrimary v-model="form.size" :required="false" label="Size L*W*H, W*H "
-                                placeholder="L*W*H" variant="secondary" />
+                            <div class="form-group flex flex-col">
+                                <p class="input-label">Size</p>
+                                <p class="form-control-secondary">{{ option.size }}</p>
+                            </div>
                         </div>
                         <div class="col-span-4">
-                            <Dropdown :disabled="true" label="Unit" :value="form.unit" @select="(option) => form.unit = option"
-                                placeholder="Unit" variant="secondary" :options="['inc', 'cm', 'foot', 'miter']" />
+                            <div class="form-group flex flex-col">
+                                <p class="input-label">Unit</p>
+                                <p class="form-control-secondary ">{{ option.unit }}</p>
+                            </div>
                         </div>
                     </div>
-                    <TextInputPrimary v-model="form.description" :error="form.errors.description" :required="false"
-                        type="textarea" label="Product Description" placeholder="Enter product description"
-                        variant="secondary" />
+                    <div class="form-group flex flex-col">
+                        <p class="input-label">Product Description</p>
+                        <p class="form-control-secondary min-h-26 h-fit">{{ option.description }}</p>
+                    </div>
                 </div>
 
                 <!-- Another Column -->
                 <div class="space-y-3">
-                    <TextInputPrimary v-model="form.name" :error="form.errors.name" label="Product Name"
-                        placeholder="Enter product name" variant="secondary" />
-
+                    <div class="form-group flex flex-col">
+                        <p class="input-label">Product Name</p>
+                        <p class="form-control-secondary">{{ option.name }}</p>
+                    </div>
                     <div class="grid sm:grid-cols-2 gap-2 gap-y-3">
-                        <Dropdown :value="form.category" :error="form.errors.category" label="Category"
-                            placeholder="Select category" variant="secondary" :options="['Option I', 'OptionII']" />
+                        <div class="form-group flex flex-col">
+                            <p class="input-label">Category</p>
+                            <p class="form-control-secondary">{{ option.product.category.name }}</p>
+                        </div>
 
-                        <TextInputPrimary v-model="form.price" :error="form.errors.price" type="number" label="Price"
-                            placeholder="Enter product price" variant="secondary" />
+                        <div class="form-group flex flex-col">
+                            <p class="input-label">Price</p>
+                            <p class="form-control-secondary">{{ option.price }}</p>
+                        </div>
 
-                        <Dropdown :value="form.type" :error="form.errors.type" @select="(option) => form.type = option"
-                            label="Product Type" placeholder="Select type" variant="secondary"
-                            :options="['single product', 'main product with variant', 'unavailable']" />
+                        <div class="form-group flex flex-col">
+                            <p class="input-label">Product Type</p>
+                            <p class="form-control-secondary">{{ option.type }}</p>
+                        </div>
 
-                        <TextInputPrimary v-model="form.stock" :error="form.errors.stock" type="number" label="Stock"
-                            placeholder="Enter product stocks" variant="secondary" />
+                        <div class="form-group flex flex-col">
+                            <p class="input-label">Stock</p>
+                            <p class="form-control-secondary">{{ option.stock }}</p>
+                        </div>
                     </div>
 
-                    <div class="max-h-90 h-fit overflow-y-scroll space-y-2 rounded-xl pr-3">
-                        <Product :type="product.type" :product="product" />
+                    <div>
+                        <label class="input-label mb-2 mt-2 inline-block">
+                            Parent/owner Product
+                        </label>
+                        <div class="max-h-90 h-fit overflow-y-scroll space-y-2 rounded-xl pr-3">
+                            <Product :product="option.product" />
+                        </div>
                     </div>
 
 
                 </div>
             </div>
-            <div class="py-6 pt-8 grid grid-cols-2 gap-3 max-w-3xl mx-auto">
-                <PillPrimary label="Update product" variant="secondary" type="submit" />
+            <div class="py-6 pt-8 grid md:grid-cols-3 gap-3 max-w-3xl mx-auto ">
+                <PillPrimary is="Link" :href="route('option.edit', option)" label="Edit" variant="secondary" type="button" />
                 <PillPrimary label="Cancel" variant="outlineSecondary" />
+                <PillPrimary label="Delete" variant="outlineSecondary"
+                    :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'" />
             </div>
         </ContainerPrimary>
     </form>

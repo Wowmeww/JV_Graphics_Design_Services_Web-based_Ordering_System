@@ -46,7 +46,7 @@
             <button type="button" @click.stop="toggleDropdown" :class="styleClass.profile"
                 :aria-expanded="isDropdownOpen.toString()">
                 <span class="sr-only">Open user menu</span>
-                <img :class="styleClass.image" :src="user.avatar_url" alt="user photo" />
+                <img :class="styleClass.image" :src="user?.avatar_url" alt="user photo" />
             </button>
         </div>
 

@@ -4,12 +4,13 @@
 
     defineProps({
         products: Object,
-        categories: Array
+        categories: Array,
+        status: Object
     });
 </script>
 
 <template>
 
     <Head title="Products Management" />
-    <ProductsManagement :products="products" :categories="categories" />
+    <ProductsManagement :status="status" :products="products" :categories="categories" />
 </template>

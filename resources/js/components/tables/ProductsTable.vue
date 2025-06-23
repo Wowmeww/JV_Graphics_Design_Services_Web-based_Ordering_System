@@ -27,6 +27,13 @@
         sortOptionOpen.value = false;
         router.get(route('product.index'), { ...params, sort: sortOption }, { preserveState: false, preserveScroll: true });
     }
+    function imageUrl(path) {
+        if (path.includes('product_images')) {
+            return `/storage/${path}`;
+        }
+
+        return path;
+    }
 
 </script>
 
@@ -110,8 +117,8 @@
                     class="grid grid-cols-12 items-center p-6 font-medium justify-items-start leading-4 hover:bg-secondary-100/60 dark:hover:bg-secondary-100/10 transition">
                     <td class="inline-flex items-center justify-start flex-1/12">
                         <div class="border h-12 w-12 rounded-lg border-primary-200 dark:border-light overflow-hidden">
-                            <img v-if="product.images[0]" :src="product.images[0].image_path" alt="Product Image"
-                                class="h-full w-full object-cover">
+                            <img v-if="product.images[0]" :src="imageUrl(product.images[0].image_path)"
+                                alt="Product Image" class="h-full w-full object-cover">
                             <i v-else class="fa-solid fa-image text-2xl text-gray-400"></i>
                         </div>
                     </td>
@@ -137,13 +144,15 @@
                     <td class="col-span-2 flex justify-between flex-wrap justify-self-stretch">
                         <span>Last modified:</span>
                         <span class="font-semibold">{{ new Date(product.updated_at).toLocaleDateString('en-GB')
-                        }}</span>
+                            }}</span>
                     </td>
                     <td class=" justify-self-end space-x-3 text-primary dark:text-primary-300">
                         <Link :href="route('product.show', { product })">
                         <i class="fa-solid fa-eye cursor-pointer"></i>
                         </Link>
+                        <Link :href="route('product.edit', { product })">
                         <i class="bi bi-pencil-square cursor-pointer"></i>
+                        </Link>
                         <i class="bi bi-three-dots-vertical cursor-pointer"></i>
                     </td>
                 </tr>

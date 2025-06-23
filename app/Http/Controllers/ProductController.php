@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductOption;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -17,17 +18,21 @@ class ProductController extends Controller
     {
         $products = Product::with(['images', 'category'])
             ->filter(request(['search', 'category', 'stock', 'sort']))
-            ->paginate(10)
+            ->paginate(8)
             ->withQueryString();
         return Inertia::render('product/Index', [
             'products' => $products,
             'categories' => Category::all(['id', 'name']),
+            'status' => session('status')
         ]);
     }
 
     public function create()
     {
-        //
+
+        return Inertia::render('product/Create', [
+            'categories' => Category::all()
+        ]);
     }
 
     /**
@@ -35,24 +40,64 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'type' => ['required', 'string'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'size' => ['nullable', 'string'],
+            'unit' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],
+            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240', 'object'],
+        ]);
+        // dd($request->images);
+        Category::firstOrCreate([
+            'name' => $validated['category']
+        ]);
+        // Store product
+        $product = Product::create([
+            'name' => $validated['name'],
+            'category_id' => Category::where('name', $validated['category'])->value('id'),
+            'price' => $validated['price'],
+            'type' => $validated['type'],
+            'stock' => $validated['stock'],
+            'size' => $validated['size'] . ',' . $validated['unit'],
+            'description' => $validated['description'],
+        ]);
+
+        // Store images if provided
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+
+                $path = $image->store('product_images', 'public');
+
+                $product->images()->create([
+                    'image_path' => $path,
+                ]);
+            }
+        }
+
+        return redirect()->route('product.index')->with(
+            'status',
+            [
+                'type' => 'success',
+                'message' => 'Product created successfully.'
+            ]
+        );
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product, ?ProductOption $option = null)
+    public function show(Product $product)
     {
         $product->load(['category', 'options', 'images', 'options.images']);
         [$product->size, $product->unit] = $this->splitSize($product->size);
-        if ($option?->id) {
-            $option->load(['images']);
-            [$option->size, $option->unit] = $this->splitSize($option->size);
-        }
-        // dump($option);
         return Inertia::render('product/Show', [
             'product' => $product,
-            'option' => $option,
         ]);
     }
 
@@ -69,18 +114,14 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product, ?ProductOption $option = null)
+    public function edit(Product $product)
     {
         $product->load(['category', 'options', 'images', 'options.images']);
         [$product->size, $product->unit] = $this->splitSize($product->size);
-        if ($option?->id) {
-            $option->load(['images']);
-            [$option->size, $option->unit] = $this->splitSize($option->size);
-        }
-        // dump($option);
+        
         return Inertia::render('product/Edit', [
             'product' => $product,
-            'option' => $option,
+            'categories' => Category::pluck('name')->toArray(),
         ]);
     }
 
@@ -89,8 +130,61 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        // sleep(1);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'type' => ['required', 'string'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'size' => ['nullable', 'string'],
+            'unit' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],
+            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
+        ]);
+
+        // Update product
+        $product->update([
+            'name' => $validated['name'],
+            'category_id' => Category::where('name', $validated['category'])->value('id'),
+            'price' => $validated['price'],
+            'type' => $validated['type'],
+            'stock' => $validated['stock'],
+            'size' => $validated['size'] . "," .  $validated['unit'],
+            'description' => $validated['description'],
+        ]);
+
+        // dd($product->images);
+
+        // If images are provided, optionally replace them
+        $newImages = $request->file('images');
+        if ($newImages) {
+            foreach ($newImages as $key => $newImage) {
+                if ($newImage) {
+                    $oldImage = $product->images->get($key) ?? null;
+                    Storage::disk('public')->delete($oldImage?->image_path ?? '');
+                    $path = $newImage->store('product_images', 'public');
+                    if ($path) {
+                        $oldImage ? $oldImage->update(['image_path' => $path]) :
+                            $product->images()->create([
+                                'image_path' => $path,
+                            ]);
+                    }
+                }
+            }
+        }
+
+        // dd($product->images);
+        return redirect()->route('product.edit', $product)->with(
+            'status',
+            [
+                'type' => 'success',
+                'message' => 'Product updated successfully.'
+            ]
+        );
     }
+
 
     /**
      * Remove the specified resource from storage.
