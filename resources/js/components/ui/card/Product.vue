@@ -6,13 +6,13 @@
         product: Object,
     });
 
-    const is_option = Boolean(props.product.type === 'variant');
+    const is_option = Boolean(props.product.type === 'Variant');
 
     // console.log(is_option);
 
     const product = ref({ ...props.product });
     if (is_option) {
-        product.value.category = props.product.category;
+        product.value.category = props.product.product.category;
     }
 
     const expanded = ref(false);
@@ -49,10 +49,15 @@
             <div class="flex items-center gap-3 text-primary dark:text-primary-300">
                 <i class="bi bi-caret-down-fill cursor-pointer transition duration-500"
                     :class="{ 'rotate-180': expanded }" @click="toggleExpand"></i>
-                <Link :href="is_option ? route('option.show', { option: product }) : route('product.show', product)">
+                <Link
+                    :href=" is_option?
+                        route('option.show', {product: props.product.product, option: props.product }):
+                        route('product.show', {product: props.product })">
                 <i class="fa-solid fa-eye cursor-pointer"></i>
                 </Link>
-                <Link :href="is_option ? route('option.edit', { option: product }) : route('product.edit', product)">
+                <Link :href=" is_option?
+                        route('option.edit', {product: props.product.product, option: props.product }):
+                        route('product.edit', {product: props.product })">
                 <i class="bi bi-pencil-square cursor-pointer"></i>
                 </Link>
                 <i class="bi bi-three-dots-vertical cursor-pointer"></i>
@@ -64,7 +69,7 @@
             <div v-if="expanded" class="mt-4 space-y-3">
                 <div class="flex justify-between items-center">
                     <span>Category</span>
-                    <span class="font-semibold">{{ product.category.name }}</span>
+                    <span class="font-semibold">{{product.category.name }}</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span>Price</span>

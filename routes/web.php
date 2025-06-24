@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,13 +15,8 @@ require __DIR__ . '/products.php';
 
 // Sign in with Google and Facebook
 
-Route::get('/auth/google/redirect', function (Request $request) {
-    return Socialite::driver("google")->redirect();
-})->name('google.rediret');
-
-Route::get('/auth/google/callback', function (Request $request) {
-    $googleUser = Socialite::driver("google")->user();
-});
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

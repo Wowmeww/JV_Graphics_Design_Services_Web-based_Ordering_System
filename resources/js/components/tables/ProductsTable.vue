@@ -139,7 +139,9 @@
 
                     </td>
                     <td class="">
-                        {{ product.size.replaceAll(",", " ") }}
+                        <span v-if="product.size">
+                            {{ product.size.replaceAll(",", " ") }}
+                        </span>
                     </td>
                     <td class="col-span-2 flex justify-between flex-wrap justify-self-stretch">
                         <span>Last modified:</span>
@@ -165,7 +167,7 @@
             <SingleProduct v-for="product of products.data" :key="product.id" :product="product" />
         </div>
     </div>
-    <div v-else class="container-primary rounded-xl bg-white p-8 dark:bg-[#1e293b] w-full min-w-max text-center">
+    <div v-else class="container-primary mt-5 rounded-xl bg-white p-8 dark:bg-[#1e293b] w-full min-w-max text-center">
         <p class="text-lg font-semibold">No products available.</p>
         <p class="text-sm text-gray-500">Please add some products to manage them.</p>
     </div>

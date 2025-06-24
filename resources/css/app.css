@@ -87,6 +87,15 @@
     @apply border-primary/40 dark:border-white dark:text-white disabled:cursor-wait hover:bg-primary hover:text-white hover:border-transparent active:bg-primary hover:dark:border-white active:text-white active:border-white dark:bg-primary/20;
   }
 
+  .btn-secondary {
+    @apply bg-secondary text-white font-bold border border-secondary hover:bg-white hover:text-secondary hover:border-secondary dark:hover:bg-secondary/80 dark:hover:text-white active:bg-white active:text-secondary active:border-secondary dark:active:bg-secondary/80 dark:active:text-white disabled:cursor-wait transition-all duration-200 ease-in-out;
+  }
+
+  .btn-outline-secondary {
+    @apply border-secondary/40 text-secondary font-bold hover:bg-secondary hover:text-white hover:border-transparent active:bg-secondary active:text-white active:border-secondary dark:border-white dark:text-white dark:hover:bg-secondary/20 dark:active:bg-secondary/30 disabled:cursor-wait transition-all duration-200 ease-in-out;
+  }
+
+
   .transition {
     @apply duration-150 ease-in-out;
   }

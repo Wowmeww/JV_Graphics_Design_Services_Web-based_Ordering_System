@@ -1,50 +1,54 @@
 <script setup>
-    import { useForm } from '@inertiajs/vue3';
-    import ContainerPrimary from '@/components/ContainerPrimary.vue';
-    import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
-    import GuestLayout from '@/layouts/GuestLayout.vue';
-    import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary.vue';
+import ContainerPrimary from '@/components/ContainerPrimary.vue';
+import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary.vue';
+import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
+import GuestLayout from '@/layouts/GuestLayout.vue';
+import { useForm } from '@inertiajs/vue3';
 
-    const props = defineProps({
-        status: String
+const props = defineProps({
+    status: String,
+});
+const form = useForm({
+    email: null,
+    password: null,
+    remember: false,
+});
+defineOptions({
+    layout: GuestLayout,
+});
+function submit() {
+    form.post(route('login'), {
+        onFinish: () => form.reset('password'),
     });
-    const form = useForm({
-        email: null,
-        password: null,
-        remember: false
-    });
-    defineOptions({
-        layout: GuestLayout,
-    });
-    function submit() {
-        form.post(route('login'), {
-            onFinish: () => form.reset('password'),
-        });
-    }
+}
 </script>
 
 <template>
-
     <Head title="Sign in" />
-    <ContainerPrimary class="mx-auto max-w-xl animate__animated animate__slideInUp" title="Login to account"
-        lead="Enter your email & password to login">
+    <ContainerPrimary
+        class="animate__animated animate__slideInUp mx-auto max-w-xl"
+        title="Login to account"
+        lead="Enter your email & password to login"
+    >
         <div class="mt-8">
             <form class="flex flex-col gap-4" @submit.prevent="submit">
-                <small v-if="props.status" class="text-xs font-semibold text-green-700 dark:text-green-600">{{
-                    props.status }}</small>
-                <TextInputPrimary v-model="form.email" label="Email address" :error="form.errors.email" type="email"
-                    placeholder="example@mail.com" />
+                <small v-if="props.status" class="text-xs font-semibold text-green-700 dark:text-green-600">{{ props.status }}</small>
+                <TextInputPrimary v-model="form.email" label="Email address" :error="form.errors.email" type="email" placeholder="example@mail.com" />
 
-                <TextInputPrimary v-model="form.password" label="Password" :error="form.errors.password" type="password"
-                    placeholder="ke45heb5hre4l" />
+                <TextInputPrimary
+                    v-model="form.password"
+                    label="Password"
+                    :error="form.errors.password"
+                    type="password"
+                    placeholder="ke45heb5hre4l"
+                />
 
-                <div class="flex justify-between items-center">
-                    <div class="checkbox-container flex gap-2 items-center">
-                        <input v-model="form.remember" type="checkbox" id="remember" class="w-5 h-5 accent-primary" />
-                        <label for="remember" class="text-sm font-normal cursor-pointer">Remember me</label>
+                <div class="flex items-center justify-between">
+                    <div class="checkbox-container flex items-center gap-2">
+                        <input v-model="form.remember" type="checkbox" id="remember" class="accent-primary h-5 w-5" />
+                        <label for="remember" class="cursor-pointer text-sm font-normal">Remember me</label>
                     </div>
-                    <Link :href="route('password.request')" class="forgot-password-link text-sm text-link-primary">
-                    Forgot password?</Link>
+                    <Link :href="route('password.request')" class="forgot-password-link text-link-primary text-sm"> Forgot password?</Link>
                 </div>
 
                 <div class="mt-2">
@@ -53,16 +57,11 @@
             </form>
 
             <div class="mt-8 text-center">
-                <small class="mb-4 inline-block text-xs text-muted">Or continue with social
-                    account</small>
+                <small class="text-muted mb-4 inline-block text-xs">Or continue with social account</small>
 
                 <div class="mb-7 flex flex-col justify-center gap-3.5 md:flex-row">
-                    <ButtonPrimary as="Link" href="/auth/google/redirect">
-                        <i class="fa-brands fa-google" /> Login with
-                        Google
-                    </ButtonPrimary>
-                    <ButtonPrimary><i class="fa-brands fa-facebook" /> Login with
-                        Facebook</ButtonPrimary>
+                    <a :href="route('google.login')" class="btn btn-outline-primary"> <i class="fa-brands fa-google" /> Login with Google </a>
+                    <a :href="route('google.login')" class="btn btn-outline-primary"><i class="fa-brands fa-facebook" /> Login with Facebook</a>
                 </div>
 
                 <p class="text-sm leading-5 font-normal">

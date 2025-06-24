@@ -64,7 +64,7 @@
                 </div>
                 <div class="flex justify-between items-center">
                     <span>Size</span>
-                    <span class="font-semibold">{{ product.size.replaceAll(",", " ") }}</span>
+                    <span v-if="product.size" class="font-semibold">{{ product.size.replaceAll(",", " ") }}</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span>Stock</span>

@@ -40,9 +40,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        // Validate form input
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:products,name'],
             'category' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'type' => ['required', 'string'],
@@ -50,43 +50,49 @@ class ProductController extends Controller
             'size' => ['nullable', 'string'],
             'unit' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240', 'object'],
+            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'], // max:10MB
         ]);
-        // dd($request->images);
-        Category::firstOrCreate([
+
+        // Find or create the category
+        $category = Category::firstOrCreate([
             'name' => $validated['category']
         ]);
+
+        $size = $validated['size'] ?
+            ($validated['unit'] ?? null ?
+                $validated['size'] . ',' . $validated['unit'] :
+                $validated['size']) : null;
+
         // Store product
         $product = Product::create([
             'name' => $validated['name'],
-            'category_id' => Category::where('name', $validated['category'])->value('id'),
+            'category_id' => $category->id,
             'price' => $validated['price'],
             'type' => $validated['type'],
             'stock' => $validated['stock'],
-            'size' => $validated['size'] . ',' . $validated['unit'],
+            'size' => $size,
             'description' => $validated['description'],
         ]);
 
-        // Store images if provided
+        // Handle images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
+                if ($image) {
+                    $path = $image->store('product_images', 'public');
 
-                $path = $image->store('product_images', 'public');
-
-                $product->images()->create([
-                    'image_path' => $path,
-                ]);
+                    $product->images()->create([
+                        'image_path' => $path,
+                    ]);
+                }
             }
         }
 
-        return redirect()->route('product.index')->with(
-            'status',
-            [
-                'type' => 'success',
-                'message' => 'Product created successfully.'
-            ]
-        );
+        return redirect()->route('product.index')->with('status', [
+            'type' => 'success',
+            'message' => 'Product created successfully.',
+        ]);
     }
+
 
 
     /**
@@ -94,7 +100,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['category', 'options', 'images', 'options.images']);
+        $product->load(['category', 'options', 'images', 'options.images', 'options.product.category']);
         [$product->size, $product->unit] = $this->splitSize($product->size);
         return Inertia::render('product/Show', [
             'product' => $product,
@@ -118,7 +124,7 @@ class ProductController extends Controller
     {
         $product->load(['category', 'options', 'images', 'options.images']);
         [$product->size, $product->unit] = $this->splitSize($product->size);
-        
+
         return Inertia::render('product/Edit', [
             'product' => $product,
             'categories' => Category::pluck('name')->toArray(),
@@ -131,6 +137,13 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         // sleep(1);
+        //   dd($request->all());
+        $deleteImages = $request->images;
+
+        $request['images'] = array_map(function ($image) {
+            return $image === 'delete' ? null : $image;
+        }, $request->images);
+
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -144,6 +157,10 @@ class ProductController extends Controller
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
         ]);
 
+        $size = $validated['size'] ?
+            ($validated['unit'] ?? null ?
+                $validated['size'] . ',' . $validated['unit'] :
+                $validated['size']) : null;
         // Update product
         $product->update([
             'name' => $validated['name'],
@@ -151,11 +168,21 @@ class ProductController extends Controller
             'price' => $validated['price'],
             'type' => $validated['type'],
             'stock' => $validated['stock'],
-            'size' => $validated['size'] . "," .  $validated['unit'],
+            'size' => $size,
             'description' => $validated['description'],
         ]);
 
-        // dd($product->images);
+
+        // Handle deleted images (from frontend 'delete' flags)
+        foreach (($deleteImages ?? []) as $key => $val) {
+            if ($val === 'delete') {
+                $oldImage = $product->images->get($key);
+                if ($oldImage) {
+                    Storage::disk('public')->delete($oldImage->image_path);
+                    $oldImage->delete(); // Remove DB record too
+                }
+            }
+        }
 
         // If images are provided, optionally replace them
         $newImages = $request->file('images');
@@ -176,7 +203,7 @@ class ProductController extends Controller
         }
 
         // dd($product->images);
-        return redirect()->route('product.edit', $product)->with(
+        return redirect()->route('product.show', $product)->with(
             'status',
             [
                 'type' => 'success',
@@ -191,6 +218,20 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        // Delete image files from storage
+        foreach ($product->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+
+        // Delete image records
+        $product->images()->delete();
+
+        // Delete the product
+        $product->delete();
+
+        return redirect()->route('product.index')->with('status', [
+            'type' => 'success',
+            'message' => 'Product deleted successfully.'
+        ]);
     }
 }

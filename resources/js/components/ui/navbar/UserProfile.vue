@@ -1,7 +1,8 @@
 <script setup>
     import { usePage } from '@inertiajs/vue3';
-    import { ref, onMounted, onBeforeUnmount } from 'vue';
+    import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
     import ThemToggler from './ThemeToggler.vue';
+    import { router } from '@inertiajs/vue3'
 
     const page = usePage();
     const user = page.props.auth?.user;
@@ -18,7 +19,7 @@
 
         isDropdownOpen.value = false;
     }
-    
+
 
     onMounted(() => {
         document.addEventListener('click', closeDropdown);
@@ -28,18 +29,33 @@
         document.removeEventListener('click', closeDropdown);
     });
 
+    function logout() {
+        page.props.confirm = {
+            show: true,
+            message: 'Do you want to logout?',
+            confirmed: false,
+            action: 'logout',
+        }
+
+        watch(page, () => {
+            if (page.props.confirm.confirmed && page.props.confirm.action === 'logout') {
+                router.post(route('logout'));
+            }
+        });
+    }
+
     const styleClass = {
         name: 'text-sm text-gray-900 dark:text-white',
         email: 'text-sm font-medium text-gray-900 truncate dark:text-gray-300',
         profile: 'flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600',
         image: 'w-10 h-10 rounded-full ring-1 ring-secondary-400 dark:ring-secondary-200',
         dropdown: 'absolute right-0 z-50 mt-4 min-w-56 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600',
-        dropdownButton: 'flex justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white'
+        dropdownButton: 'flex w-full cursor-pointer justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white'
     }
 </script>
 
 <template>
-    <div class="relative">
+    <div v-if="user" class="relative">
         <!-- Toggle Button -->
         <div class="flex gap-3 items-center">
             <ThemToggler />
@@ -61,25 +77,30 @@
                     {{ user.email }}
                 </p>
             </div>
-            <ul class="py-1" role="none">
-                <li>
-                    <a href="#" :class="styleClass.dropdownButton" role="menuitem">
-                        Dashboard
-                        <i class="fa-solid fa-chart-pie"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" :class="styleClass.dropdownButton" role="menuitem">
-                        Settings <i class="fa-solid fa-gear"></i>
-                    </a>
-                </li>
+            <div class="py-1" role="none">
 
-                <li>
-                    <a href="#" :class="styleClass.dropdownButton" role="menuitem">
-                        Sign out <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    </a>
-                </li>
-            </ul>
+                <Link :href="route('dashboard')" :class="styleClass.dropdownButton" role="menuitem">
+                Dashboard
+                <i class="fa-solid fa-chart-pie"></i>
+                </Link>
+                <Link :href="route('dashboard')" :class="styleClass.dropdownButton" role="menuitem">
+                Cart
+                <i class="fa-solid fa-cart-shopping"></i>
+                </Link>
+                <Link :href="route('dashboard')" :class="styleClass.dropdownButton" role="menuitem">
+                Wishlist
+                <i class="fa-solid fa-heart"></i>
+                </Link>
+
+                <a href="#" :class="styleClass.dropdownButton" role="menuitem">
+                    Settings <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button @click="logout" :class="styleClass.dropdownButton" role="menuitem">
+                    Sign out <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+
+            </div>
         </div>
     </div>
 </template>

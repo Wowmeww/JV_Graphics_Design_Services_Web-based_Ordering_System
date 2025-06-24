@@ -1,10 +1,7 @@
-import { usePage } from "@inertiajs/vue3";
+// resolveLayout.js
 import AuthLayout from "../layouts/AuthLayout.vue";
 import GuestLayout from "../layouts/GuestLayout.vue";
 
-const page = usePage();
-const user = page.props
-
-const layout = user ? AuthLayout : GuestLayout;
-
-export default layout;
+export default function resolveLayout(page) {
+    return page.props?.auth?.user ? AuthLayout : GuestLayout;
+}

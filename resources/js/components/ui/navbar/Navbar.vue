@@ -46,29 +46,23 @@
 
                 </div>
 
-                <div class="flex items-center flex-col md:flex-row gap-2 mt-2">
-                    <!------------ GUEST --------------------------------------------------------------------->
-                    <ButtonLink v-if="!user" as="Link" :href="route('login')" :active="component === 'auth/Login'">
+                <!------------ GUEST --------------------------------------------------------------------->
+                <div v-if="!user" class="flex items-center flex-col md:flex-row gap-2 mt-2">
+                    <ButtonLink as="Link" :href="route('login')" :active="component === 'auth/Login'">
                         Login</ButtonLink>
-                    <ButtonLink v-if="!user" as="Link" :href="route('register')"
-                        :active="component === 'auth/Register'">
+                    <ButtonLink as="Link" :href="route('register')" :active="component === 'auth/Register'">
                         Register</ButtonLink>
-
-                    <!------------ AUTH USER non ADMIN --------------------------------------------------------------------->
-
-                    <ButtonLink v-else-if="!user.is_admin" :active="component === 'auth/Login'">
+                </div>
+                <!------------ AUTH USER non ADMIN --------------------------------------------------------------------->
+                <div v-else class="flex items-center flex-col md:flex-row gap-2 mt-2">
+                    <ButtonLink v-if="!user.is_admin" :active="component === 'auth/Login'">
                         <i class="fa-solid fa-cart-shopping" />
                         Cart
                     </ButtonLink>
-                    <ButtonLink v-else-if="!user.is_admin" :active="component === 'auth/Register'">
+                    <ButtonLink v-if="!user.is_admin" :active="component === 'auth/Register'">
                         <i class="fa-solid fa-heart" />
                         Wishlist
                     </ButtonLink>
-
-                    <!------------ THEME TOGGLER BUTTON DROPDOWN --------------------------------------------------------------------->
-                    <!-- <div class=" items-center hidden md:flex">
-                        <ThemeToggler />
-                    </div> -->
                 </div>
             </div>
         </div>

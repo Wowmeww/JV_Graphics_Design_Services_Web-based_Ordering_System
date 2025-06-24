@@ -10,7 +10,8 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
 
-import AuthLayout from './layouts/AuthLayout.vue';
+// import AuthLayout from './layouts/AuthLayout.vue';
+import SolveLayout from './layouts/SolveLayout.vue';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -18,7 +19,7 @@ createInertiaApp({
     title: (title) => title ? `${title} - ${appName}` : appName,
     resolve: async (name) => {
         const page = await resolvePageComponent(`./pages/${name}.vue`, import.meta.glob('./pages/**/*.vue'));
-        page.default.layout = page.default.layout ?? AuthLayout;
+        page.default.layout = page.default.layout ?? SolveLayout;
         return page;
     },
     setup({ el, App, props, plugin }) {

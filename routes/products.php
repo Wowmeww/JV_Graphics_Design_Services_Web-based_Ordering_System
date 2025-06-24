@@ -12,7 +12,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('products', ProductController::class)->names('product');
 
     // Nested Product Option Routes
-    Route::prefix('product')->group(function () {
+    Route::prefix('products/{product}')->group(function () {
         Route::get('options/create', [ProductOptionController::class, 'create'])->name('option.create');
         Route::post('options', [ProductOptionController::class, 'store'])->name('option.store');
         Route::get('options/{option}', [ProductOptionController::class, 'show'])->name('option.show');

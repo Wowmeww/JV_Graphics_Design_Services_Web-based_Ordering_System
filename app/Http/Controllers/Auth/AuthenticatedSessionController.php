@@ -30,22 +30,26 @@ class AuthenticatedSessionController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email'=> ['required', 'email'],
-            'password'=> ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
         ]);
 
-        
-        if(Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('dashboard'));
         }
-        else if(User::where('email', $request->email)->exists()) {
+
+        if (User::where('email', $request->email)->exists()) {
             return back()->withErrors([
                 'password' => 'The provided password is incorrect.',
-            ])->onlyInput('password');
+            ])->onlyInput('email');
         }
-        return back();
+
+        return back()->withErrors([
+            'email' => 'No account found with this email address.',
+        ])->onlyInput('email');
     }
+
 
     /**
      * Destroy an authenticated session.
@@ -57,6 +61,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('login');
     }
 }

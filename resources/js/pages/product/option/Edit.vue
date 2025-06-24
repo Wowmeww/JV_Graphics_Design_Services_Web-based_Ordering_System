@@ -1,107 +1,197 @@
 <script setup>
-    import { useForm } from '@inertiajs/vue3';
-    import ContainerPrimary from '@/components/ContainerPrimary.vue';
-    import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
-    import Dropdown from '@/components/ui/input/Dropdown.vue';
-    import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
-    import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
-    import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
-    import SingleProduct from '@/components/tables/SingleProduct.vue';
-    import Product from '@/components/ui/card/Product.vue';
-    import { ref } from 'vue';
-    import { route } from 'ziggy-js';
+import Status from '@/components/alert/Status.vue';
+import ContainerPrimary from '@/components/ContainerPrimary.vue';
+import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
+import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
+import Dropdown from '@/components/ui/input/Dropdown.vue';
+import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
+import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
+import { router, useForm, usePage } from '@inertiajs/vue3';
+import { onMounted, ref, watch } from 'vue';
 
-    const props = defineProps({
-        option: Object,
+const props = defineProps({
+    option: Object,
+});
+
+const page = usePage();
+
+const form = useForm({
+    name: props.option.name,
+    category: props.option.product.category.name,
+    price: props.option.price,
+    type: props.option.type,
+    stock: props.option.stock,
+    size: props.option.size,
+    unit: props.option.unit,
+    description: props.option.description,
+    images: props.option.images,
+    _method: 'PATCH',
+});
+const is_unchanged = ref(true);
+
+const images = ref([null, null, null]);
+
+onMounted(() => {
+    images.value = [...form.images];
+    is_unchanged.value = true;
+    watch(form, () => (is_unchanged.value = false));
+});
+
+function submit() {
+    const uploadedFiles = images.value.map((img, i) => {
+        return img instanceof File || img == 'delete' ? img : null;
     });
+    form.images = uploadedFiles;
+    // form.images = [...images.value];
 
-    const form = useForm({
-        ...props.option, category: props.option.product.category,
-        _method: 'PATCH'
-    });
+    form.post(route('option.update', { product: props.option.product, option: props.option }), {});
+}
 
-    const images = ref([null, null, null]);
+function handleImagesChange(data) {
+    images.value = [...data.images];
+    is_unchanged.value = false;
+}
 
-    function submit() {
-        const temp = {
-            images: [...props.option.images]
-        }
-        form.images = [...images.value];
+function resetForm() {
+    form.reset();
+    images.value = [...props.product.images];
+    is_unchanged.value = true;
+}
 
-        form.post(route('option.update', props.option));
-        form.images = [...temp.images];
+function handleDelete() {
+    page.props.confirm = {
+        ...page.props.confirm,
+        show: true,
+        message: `Do you to delete ${props.product.name}?`,
+        action: 'delete product',
+    };
 
-    }
-
-    function handleImagesChange(data) {
-        images.value = [...data.images]
-    }
-
+    watch(
+        () => page.props.confirm.confirmed,
+        () => {
+            if (page.props.confirm.confirmed && page.props.confirm.action === 'delete product') {
+                router.delete(route('product.destroy', props.product));
+            }
+        },
+    );
+}
+function goBack() {
+    window.history.back();
+}
 </script>
-<template>
 
+<template>
     <Head title="Edit Product" />
 
     <form class="space-y-3 md:space-y-8" @submit.prevent="submit">
-        <PageTitleHeader title="Product Editor" />
+        <PageTitleHeader title="Product Variant Editor" />
+        <!---------- STATUS ALERT ------------------------------------------------------->
+        <Status :status="$page.props.status" @close="() => ($page.props.status = null)" />
 
-        <ContainerPrimary title="Product Setting">
-            <div class="pt-2 grid md:grid-cols-2 gap-6">
+        <ContainerPrimary title="Product Variant Setting">
+            <div class="grid gap-6 pt-2 md:grid-cols-2">
                 <div class="space-y-3">
-
                     <!---------- Product Images Section ------------------------------------------------------->
-                    <ProductImagesInput :images="form.images" :error="form.errors.images"
-                        @changed="handleImagesChange" />
+                    <ProductImagesInput
+                        :images="images"
+                        :errors="[form.errors['images.0'], form.errors['images.1'], form.errors['images.2']]"
+                        @changed="handleImagesChange"
+                        :default-images="form.images"
+                        allow-delete
+                    />
 
                     <div class="grid grid-cols-12 gap-2 gap-y-3 pt-2">
                         <div class="col-span-8">
-                            <TextInputPrimary v-model="form.size" :required="false" label="Size L*W*H, W*H "
-                                placeholder="L*W*H" variant="secondary" />
+                            <TextInputPrimary
+                                v-model="form.size"
+                                :required="false"
+                                label="Size L*W*H, W*H "
+                                placeholder="L*W*H"
+                                variant="secondary"
+                            />
                         </div>
                         <div class="col-span-4">
-                            <Dropdown :disabled="true" label="Unit" :value="form.unit"
-                                @select="(option) => form.unit = option" placeholder="Unit" variant="secondary"
-                                :options="['inc', 'cm', 'foot', 'miter']" />
+                            <Dropdown
+                                label="Unit"
+                                :value="form.unit"
+                                @select="(option) => (form.unit = option)"
+                                placeholder="Unit"
+                                variant="secondary"
+                                :options="['inc', 'cm', 'foot', 'miter']"
+                            />
                         </div>
                     </div>
-                    <TextInputPrimary v-model="form.description" :error="form.errors.description" :required="false"
-                        type="textarea" label="Product Description" placeholder="Enter product description"
-                        variant="secondary" />
+                    <TextInputPrimary
+                        v-model="form.description"
+                        :error="form.errors.description"
+                        :required="false"
+                        type="textarea"
+                        label="Variant Description"
+                        placeholder="Enter variant description"
+                        variant="secondary"
+                    />
                 </div>
 
                 <!-- Another Column -->
                 <div class="space-y-3">
-                    <TextInputPrimary v-model="form.name" :error="form.errors.name" label="Product Option Name"
-                        placeholder="Enter product name" variant="secondary" />
+                    <TextInputPrimary
+                        v-model="form.name"
+                        :error="form.errors.name"
+                        label="Product Variant Name"
+                        placeholder="Enter product name"
+                        variant="secondary"
+                    />
 
-                    <div class="grid sm:grid-cols-2 gap-2 gap-y-3">
-                        <Dropdown disabled :value="form.category.name" :error="form.errors.category" label="Category"
-                            placeholder="Select category" variant="secondary" :options="['Option I', 'OptionII']" />
-
-                        <TextInputPrimary v-model="form.price" :error="form.errors.price" type="number" label="Price"
-                            placeholder="Enter product price" variant="secondary" />
-
-                        <Dropdown disabled :value="form.type" :error="form.errors.type"
-                            @select="(option) => form.type = option" label="Product Type" placeholder="Select type"
+                    <div class="grid gap-2 gap-y-3 sm:grid-cols-2">
+                        <Dropdown
+                            :value="form.category"
+                            :error="form.errors.category"
+                            label="Category"
+                            placeholder="Select category"
                             variant="secondary"
-                            :options="['single product', 'main product with variant', 'unavailable']" />
+                            disabled
+                            allow-custom-value
+                        />
 
-                        <TextInputPrimary v-model="form.stock" :error="form.errors.stock" type="number" label="Stock"
-                            placeholder="Enter product stocks" variant="secondary" />
+                        <TextInputPrimary
+                            v-model="form.price"
+                            :error="form.errors.price"
+                            type="number"
+                            label="Price"
+                            placeholder="Enter product price"
+                            variant="secondary"
+                        />
+
+                        <Dropdown
+                            :value="form.type"
+                            :error="form.errors.type"
+                            label="Product Type"
+                            placeholder="Select type"
+                            variant="secondary"
+                            disabled
+                        />
+
+                        <TextInputPrimary
+                            v-model="form.stock"
+                            :error="form.errors.stock"
+                            type="number"
+                            label="Stock"
+                            placeholder="Enter product stocks"
+                            variant="secondary"
+                        />
                     </div>
-
-                    <div class="max-h-90 h-fit overflow-y-scroll space-y-2 rounded-xl pr-3">
-                        <Product :product="option.product" />
-                    </div>
-
-
                 </div>
             </div>
-            <div class="py-6 pt-8 grid grid-cols-2 gap-3 max-w-3xl mx-auto">
-                <PillPrimary label="Update product" variant="secondary" type="submit" />
-                <PillPrimary label="Cancel" variant="outlineSecondary"
-                    @click="$inertia.visit(route('option.show', option))" />
-
+            <div class="mx-auto grid max-w-3xl gap-3 py-6 pt-8 sm:grid-cols-2 md:grid-cols-4">
+                <PillPrimary :disabled="is_unchanged || form.processing" label="Update variant" variant="secondary" type="submit" />
+                <PillPrimary
+                    @click="handleDelete"
+                    label="Delete"
+                    variant="outlineSecondary"
+                    :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'"
+                />
+                <PillPrimary @click="resetForm" label="Reset" variant="outlineSecondary" />
+                <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>
     </form>

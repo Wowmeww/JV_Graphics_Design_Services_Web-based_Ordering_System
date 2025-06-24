@@ -1,6 +1,6 @@
 <script setup>
     const props = defineProps({
-        as: {
+        is: {
             type: String,
             default: 'button',
         },
@@ -24,14 +24,9 @@
 </script>
 
 <template>
-    <Link :disabled="disable" v-if="as === 'Link'" :href="href" :class="styleClass">
-    {{ label }}
-    <slot />
-    <i v-show="disable" class="fa-solid fa-spinner" />
-    </Link>
-    <button v-else :type="type" :class="styleClass" :disabled="disable">
+    <component :is="is" :type="type" :href="href" :class="styleClass" :disabled="disable">
         {{ label }}
         <slot />
         <i v-show="disable" class="fa-solid fa-spinner animate-spin" />
-    </button>
+    </component>
 </template>
