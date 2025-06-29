@@ -23,10 +23,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
-        Model::preventLazyLoading();
+        // Model::preventLazyLoading();
         Model::automaticallyEagerLoadRelationships();
-        
-        
-         Gate::policy(Product::class, ProductPolicy::class);
+
+
+        Gate::policy(Product::class, ProductPolicy::class);
     }
 }

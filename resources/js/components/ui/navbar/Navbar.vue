@@ -17,11 +17,11 @@
 </script>
 
 <template>
-    <nav class="relative bg-white shadow dark:bg-gray-800">
+    <nav class="relative bg-white shadow dark:bg-gray-800 z-50">
         <div class="container px-6 py-3 mx-auto md:flex">
             <div class="flex items-center justify-between pr-6">
                 <Link :href="route('home')">
-                <img class="w-auto h-6 sm:h-7" src="favicon.png" alt="logo">
+                <img class="w-auto h-6 sm:h-7" src="/favicon.png" alt="logo">
 
                 </Link>
                 <MobileMenuButton :isNavigationOpen="isNavigationOpen" @toggleNavigation="toggleNavigation" />
@@ -35,7 +35,7 @@
                     <NavLink routeName="register" v-if="user" label="Dashboard" :active="component === 'Dashboard'" />
                     <NavLink routeName="product.index" v-if="user ? user.is_admin : false" label="Products"
                         :active="component === 'product/Index'" />
-                    <NavLink routeName="register" label="Shop" :active="component === 'Shop'" />
+                    <NavLink routeName="shop.index" label="Shop" :active="component === 'shop/Index'" />
                     <NavLink routeName="register" label="About" :active="component === 'About'" />
 
                     <!------------ THEME TOGGLER BUTTON DROPDOWN --------------------------------------------------------------------->

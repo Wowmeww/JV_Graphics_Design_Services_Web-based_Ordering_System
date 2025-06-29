@@ -25,14 +25,15 @@ class ProductSeeder extends Seeder
             ->count(env('PRODUCTS'))
             ->state(function () use ($categories) {
                 return [
-                    'type' => 'main product with variant',
+                    'type' => 'Main product with variant',
                     'category_id' => $categories->random()->id,
                 ];
             })
             ->has(
                 ProductOption::factory()
                     ->count(rand(1, env('PRODUCTS_OPTIONS')))
-                    ->has(ProductOptionImage::factory()->count(rand(1, 3)), 'images'),
+                    ->has(ProductOptionImage::factory()->count(rand(1, 3)), 'images')
+                    ->count(env('PRODUCTS_OPTIONS')),
                 'options'
             )
             ->has(ProductImage::factory()->count(3), 'images')

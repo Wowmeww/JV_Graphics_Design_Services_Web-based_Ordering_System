@@ -19,12 +19,10 @@
             default: false,
         }
     });
-
-    const styleClass = props.variant === 'primary' ? 'btn btn-primary w-full' : 'btn btn-outline-primary';
 </script>
 
 <template>
-    <component :is="is" :type="type" :href="href" :class="styleClass" :disabled="disable">
+    <component :is="is" :type="type" :href="href" :class="`btn w-full btn-${variant}`" :disabled="disable">
         {{ label }}
         <slot />
         <i v-show="disable" class="fa-solid fa-spinner animate-spin" />

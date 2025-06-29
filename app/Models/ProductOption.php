@@ -10,6 +10,16 @@ class ProductOption extends Model
     /** @use HasFactory<\Database\Factories\ProductOptionFactory> */
     use HasFactory;
 
+    protected $appends = ['rating'];
+    public function getRatingAttribute()
+    {
+        $ratings = $this->ratings->pluck('stars');
+        $total = $ratings->sum();
+        $count = $ratings->count();
+
+        return $count > 0 ? $total / $count : 0;
+    }
+
     // one to many - belongs to
     public function product()
     {
@@ -22,5 +32,9 @@ class ProductOption extends Model
     public function images()
     {
         return $this->hasMany(ProductOptionImage::class);
+    }
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'option_id');
     }
 }

@@ -36,7 +36,7 @@ class ProductOptionController extends Controller
         ]);
 
         $size = $validated['size'] ?
-            ($validated['unit']?? null ?
+            ($validated['unit'] ?? null ?
                 $validated['size'] . ',' . $validated['unit'] :
                 $validated['size']) : null;
 
@@ -97,8 +97,8 @@ class ProductOptionController extends Controller
      */
     public function edit(Product $product, ProductOption $option)
     {
-        $option->load(['product.category', 'images']);
-        [$product->size, $product->unit] = $this->splitSize($product->size);
+        $option->load(['product.category', 'images', 'product']);
+        [$option->size, $option->unit] = $this->splitSize($product->size);
 
         return Inertia::render('product/option/Edit', [
             'option' => $option,
@@ -132,7 +132,7 @@ class ProductOptionController extends Controller
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
         ]);
         $size = $validated['size'] ?
-            ($validated['unit']?? null ?
+            ($validated['unit'] ?? null ?
                 $validated['size'] . ',' . $validated['unit'] :
                 $validated['size']) : null;
 
@@ -194,8 +194,22 @@ class ProductOptionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductOption $option)
+    public function destroy(Product $product,  ProductOption $option)
     {
-        //
+        // Delete image files from storage
+        foreach ($option->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+
+        // Delete image records
+        $option->images()->delete();
+
+        // Delete the product
+        $option->delete();
+
+        return redirect()->route('product.show', $product)->with('status', [
+            'type' => 'success',
+            'message' => 'Product variant named '. $option->name .'deleted successfully.'
+        ]);
     }
 }

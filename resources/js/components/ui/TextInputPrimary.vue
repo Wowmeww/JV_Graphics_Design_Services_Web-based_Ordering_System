@@ -24,10 +24,10 @@
         </label>
 
         <textarea :disabled="disabled" v-if="type === 'textarea'" v-model="model" :type="type" :id="label" :rows="row"
-            :class="[error ? `form-control-${variant} !border-red-500` : `form-control-${variant}`, 'pb-8']"
+            :class="[error ? `form-control form-control-${variant} !border-red-500` : `form-control form-control-${variant}`, 'pb-8']"
             :placeholder="placeholder" :required="required"></textarea>
         <input  :disabled="disabled" v-else v-model="model" :type="type" :id="label"
-            :class="[error ? `form-control-${variant} !border-red-500` : `form-control-${variant}`]"
+            :class="[error ? `form-control form-control-${variant} !border-red-500` : `form-control form-control-${variant}`]"
             :placeholder="placeholder" :required="required" />
         <small v-show="error" class="form-control-error">{{ error }}</small>
     </div>

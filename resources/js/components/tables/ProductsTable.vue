@@ -65,7 +65,7 @@
             </p>
         </div>
         <table
-            class="container-primary text-sm rounded-xl bg-white p-8 dark:bg-[#1e293b] min-w-3xl md:w-full hidden md:table md:min-w-4xl ">
+            class="container-primary text-sm rounded-xl bg-white p-8 dark:bg-[#1e293b] min-w-3xl md:w-full hidden md:table md:min-w-6xl ">
             <thead class="border-b border-b-dark/20 dark:border-b-light/30">
                 <tr class="grid grid-cols-12 items-center p-6 justify-items-start">
                     <th class="justify-self-start col-span-1">
@@ -91,7 +91,10 @@
                             </div>
                         </div>
                     </th>
-                    <th class="col-span-2 justify-self-start ">
+                    <th class="col-span-1 justify-self-start ">
+                        Type
+                    </th>
+                    <th class="col-span-1 justify-self-start ">
                         Category
                     </th>
                     <th class="col-span-1">
@@ -125,7 +128,10 @@
                     <td class="col-span-3">
                         {{ product.name }}
                     </td>
-                    <td class="col-span-2">
+                    <td class="col-span-1">
+                        {{ product.type }}
+                    </td>
+                    <td class="col-span-1">
                         {{ product.category.name }}
                     </td>
                     <td class="flex-1/12 flex justify-center pl-3">

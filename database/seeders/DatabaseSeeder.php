@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             NotificationSeeder::class,
             MessageSeeder::class,
             TransactionSeeder::class,
+            RatingSeeder::class
         ]);
         Announcement::factory(env('ANNOUNCEMENTS'))->create();
     }

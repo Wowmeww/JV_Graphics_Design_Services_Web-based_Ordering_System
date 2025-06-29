@@ -1,30 +1,31 @@
 <script setup>
-    import ProductsTable from '../tables/ProductsTable.vue';
-    import Paginator from '../tables/Paginator.vue';
-    import ProductFilters from '../tables/ProductFilters.vue';
-    import PageTitleHeader from '../ui/PageTitleHeader.vue';
-    import Status from '../alert/Status.vue';
+import Status from '../alert/Status.vue';
+import Paginator from '../tables/Paginator.vue';
+import ProductFilters from '../tables/ProductFilters.vue';
+import ProductsTable from '../tables/ProductsTable.vue';
+import PageTitleHeader from '../ui/PageTitleHeader.vue';
 
-    defineProps({
-        products: Object,
-        categories: Array,
-        status: Object
-    });
-
+defineProps({
+    products: Object,
+    categories: Array,
+    status: Object,
+});
 </script>
 
 <template>
-    <PageTitleHeader title="Product Management" />
+    <div class="pt-8 px-2">
+        <PageTitleHeader title="Product Management" />
 
-    <!---------------------------------- FILTERS ----------------------------------------------->
-    <ProductFilters :categories="categories" />
+        <!---------------------------------- FILTERS ----------------------------------------------->
+        <ProductFilters :categories="categories" />
 
-    <!---------------------------------- Status ----------------------------------------------->
-    <Status :status="$page.props.status" @close="$page.props.status = null" />
-    <!---------------------------------- TABLE ----------------------------------------------->
-    <ProductsTable :products="products" />
+        <!---------------------------------- Status ----------------------------------------------->
+        <Status :status="$page.props.status" @close="$page.props.status = null" />
+        <!---------------------------------- TABLE ----------------------------------------------->
+        <ProductsTable :products="products" />
 
-    <!-- Paginator -->
-    <!---------------------------------- Paginator ----------------------------------------------->
-    <Paginator :products="products" />
+        <!-- Paginator -->
+        <!---------------------------------- Paginator ----------------------------------------------->
+        <Paginator :products="products" />
+    </div>
 </template>

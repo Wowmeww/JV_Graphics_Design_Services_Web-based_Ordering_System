@@ -25,7 +25,7 @@
 <template>
 
     <Head title="Sign up" />
-    <ContainerPrimary class="mx-auto max-w-xl animate__animated animate__slideInUp mb-6" title="Create your account"
+    <ContainerPrimary class="mx-auto mt-10 max-w-xl animate__animated animate__slideInUp mb-6" title="Create your account"
         lead="Enter your personal details to create account">
         <div class="mt-8">
             <form class="flex flex-col gap-4" @submit.prevent="submit">
@@ -50,12 +50,8 @@
                     account</small>
 
                 <div class="mb-7 flex flex-col justify-center gap-3.5 md:flex-row">
-                    <ButtonPrimary>
-                        <i class="fa-brands fa-google" /> Login with
-                        Google
-                    </ButtonPrimary>
-                    <ButtonPrimary><i class="fa-brands fa-facebook" /> Login with
-                        Facebook</ButtonPrimary>
+                     <a :href="route('google.login')" class="btn btn-outline-primary"> <i class="fa-brands fa-google" /> Login with Google </a>
+                    <a :href="route('facebook.login')" class="btn btn-outline-primary"><i class="fa-brands fa-facebook" /> Login with Facebook</a>
                 </div>
 
                 <p class="text-sm leading-5 font-normal">

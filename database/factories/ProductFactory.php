@@ -20,7 +20,7 @@ class ProductFactory extends Factory
         return [
             'category_id' => Category::factory(),
             'name' => fake()->realText(rand(10, 25)),
-            'description' => fake()->realText(rand(14, 40)),
+            'description' => fake()->realText(rand(40, 200)),
             'price' => rand(1, 5) * 89,
             'stock' => (rand(0, 5) * 8) * rand(1, 20),
             'size' => rand(1, 10) . "*" . rand(1, 20) . "*" . rand(1, 15) . "," . fake()->randomElement(['inc', 'cm', 'foot', 'miter']),

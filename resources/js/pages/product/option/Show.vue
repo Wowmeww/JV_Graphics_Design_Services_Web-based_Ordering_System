@@ -31,19 +31,19 @@ function goBack() {
                         <div class="col-span-8">
                             <div class="form-group flex flex-col">
                                 <p class="input-label">Size</p>
-                                <p class="form-control-secondary">{{ option.size }}</p>
+                                <p class="form-control form-control-secondary">{{ option.size }}</p>
                             </div>
                         </div>
                         <div class="col-span-4">
                             <div class="form-group flex flex-col">
                                 <p class="input-label">Unit</p>
-                                <p class="form-control-secondary">{{ option.unit }}</p>
+                                <p class="form-control form-control-secondary">{{ option.unit }}</p>
                             </div>
                         </div>
                     </div>
                     <div class="form-group flex flex-col">
                         <p class="input-label">Product Description</p>
-                        <p class="form-control-secondary h-fit min-h-26">{{ option.description }}</p>
+                        <p class="form-control form-control-secondary h-fit min-h-26">{{ option.description }}</p>
                     </div>
                 </div>
 
@@ -51,27 +51,27 @@ function goBack() {
                 <div class="space-y-3">
                     <div class="form-group flex flex-col">
                         <p class="input-label">Product Variant Name</p>
-                        <p class="form-control-secondary">{{ option.name }}</p>
+                        <p class="form-control form-control-secondary">{{ option.name }}</p>
                     </div>
                     <div class="grid gap-2 gap-y-3 sm:grid-cols-2">
                         <div class="form-group flex flex-col">
                             <p class="input-label">Category</p>
-                            <p class="form-control-secondary">{{ option.product.category.name }}</p>
+                            <p class="form-control form-control-secondary">{{ option.product.category.name }}</p>
                         </div>
 
                         <div class="form-group flex flex-col">
                             <p class="input-label">Price</p>
-                            <p class="form-control-secondary">{{ option.price }}</p>
+                            <p class="form-control form-control-secondary">{{ option.price }}</p>
                         </div>
 
                         <div class="form-group flex flex-col">
                             <p class="input-label">Product Type</p>
-                            <p class="form-control-secondary">{{ option.type }}</p>
+                            <p class="form-control form-control-secondary">{{ option.type }}</p>
                         </div>
 
                         <div class="form-group flex flex-col">
                             <p class="input-label">Stock</p>
-                            <p class="form-control-secondary">{{ option.stock }}</p>
+                            <p class="form-control form-control-secondary">{{ option.stock }}</p>
                         </div>
                     </div>
 

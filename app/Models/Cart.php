@@ -17,7 +17,7 @@ class Cart extends Model
     }
 
     // one to many - has many
-    function cartItems()
+    public function items()
     {
         return $this->hasMany(CartItem::class);
     }

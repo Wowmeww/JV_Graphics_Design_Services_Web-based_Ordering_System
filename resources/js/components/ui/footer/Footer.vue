@@ -1,13 +1,12 @@
-<script
-    setup
-    lang="ts"
->
-    import FooterLink from './FooterLink.vue';
+<script setup>
 
+    import { usePage } from '@inertiajs/vue3';
+    import FooterLink from './FooterLink.vue';
+    const page = usePage();
 </script>
 
 <template>
-    <footer class="bg-white dark:bg-gray-900 animate__animated animate__slideInUp">
+    <footer class="bg-white dark:bg-gray-900 animate__animated animate__slideInUp z-50">
         <div class="container px-6 py-8 mx-auto">
 
             <div class="flex flex-wrap justify-center mt-3 -mx-4">
@@ -23,9 +22,11 @@
                 <p class="text-sm text-gray-500 dark:text-gray-300">© 2025 JV Graphics Design Services. All rights
                     reserved.</p>
 
-                <div class="flex gap-3 -mx-2 text-xl">
+                <div class="flex items-center gap-3 -mx-2 text-xl">
                     <i class="fa-brands fa-facebook" />
-                    <i class="fa-brands fa-github" />
+                    <a :href="page.props.github" target="_blank" >
+                        <i class="fa-brands fa-github" />
+                    </a>
                 </div>
             </div>
         </div>

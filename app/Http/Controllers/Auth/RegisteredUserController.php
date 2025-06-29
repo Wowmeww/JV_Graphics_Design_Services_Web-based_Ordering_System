@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\User;
+use App\Models\Wishlist;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,21 +32,21 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        
-        $credentials =  $request->validate([
+        $credentials = $request->validate([
+            'role' => 'customer',
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', 'min:6'],
         ]);
 
-        // dd($credentials);
-
         $user = User::create($credentials);
 
-        event(new Registered($user));
+        Cart::create(['user_id' => $user->id]);
+        Wishlist::create(['user_id' => $user->id]);
 
+        event(new Registered($user));
         Auth::login($user);
 
-        return to_route('register');
+        return redirect()->intended('shop'); // or intended page
     }
 }

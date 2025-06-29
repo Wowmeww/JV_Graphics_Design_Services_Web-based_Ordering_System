@@ -65,18 +65,20 @@ function handleDelete() {
         ...page.props.confirm,
         show: true,
         message: `Do you to delete ${props.product.name}?`,
-        action: 'delete product',
-    };
-
-    watch(
-        () => page.props.confirm.confirmed,
-        () => {
-            if (page.props.confirm.confirmed && page.props.confirm.action === 'delete product') {
-                router.delete(route('product.destroy', props.product));
-            }
+        action: {
+            delete_product: true,
         },
-    );
+    };
 }
+
+watch(
+    () => page.props.confirm.confirmed,
+    () => {
+        if (page.props.confirm.confirmed && page.props.confirm.action?.delete_product) {
+            router.delete(route('product.destroy', props.product));
+        }
+    },
+);
 function goBack() {
     window.history.back();
 }

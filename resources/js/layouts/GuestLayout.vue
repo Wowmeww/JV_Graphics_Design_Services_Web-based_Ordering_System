@@ -6,7 +6,7 @@
 
 <template>
     <Navbar />
-    <main class="px-[4px] py-8 h-full min-h-screen relative">
+    <main class="min-h-screen relative">
         <slot />
     </main>
     <Footer />

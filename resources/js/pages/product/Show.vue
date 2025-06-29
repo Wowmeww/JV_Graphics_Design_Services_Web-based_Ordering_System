@@ -31,19 +31,19 @@ function goBack() {
                         <div class="col-span-8">
                             <div class="form-group flex flex-col">
                                 <p class="input-label">Size</p>
-                                <p class="form-control-secondary">{{ product.size }}</p>
+                                <p class="form-control form-control-secondary">{{ product.size }}</p>
                             </div>
                         </div>
                         <div class="col-span-4">
                             <div class="form-group flex flex-col">
                                 <p class="input-label">Unit</p>
-                                <p class="form-control-secondary">{{ product.unit }}</p>
+                                <p class="form-control form-control-secondary">{{ product.unit }}</p>
                             </div>
                         </div>
                     </div>
                     <div class="form-group flex flex-col">
                         <p class="input-label">Product Description</p>
-                        <p class="form-control-secondary h-fit min-h-26">{{ product.description }}</p>
+                        <p class="form-control form-control-secondary h-fit min-h-26">{{ product.description }}</p>
                     </div>
                 </div>
 
@@ -51,31 +51,31 @@ function goBack() {
                 <div class="space-y-3">
                     <div class="form-group flex flex-col">
                         <p class="input-label">Product Name</p>
-                        <p class="form-control-secondary">{{ product.name }}</p>
+                        <p class="form-control form-control-secondary">{{ product.name }}</p>
                     </div>
                     <div class="grid gap-2 gap-y-3 sm:grid-cols-2">
                         <div class="form-group flex flex-col">
                             <p class="input-label">Category</p>
-                            <p class="form-control-secondary">{{ product.category.name }}</p>
+                            <p class="form-control form-control-secondary">{{ product.category.name }}</p>
                         </div>
 
                         <div class="form-group flex flex-col">
                             <p class="input-label">Price</p>
-                            <p class="form-control-secondary">{{ product.price }}</p>
+                            <p class="form-control form-control-secondary">{{ product.price }}</p>
                         </div>
 
                         <div class="form-group flex flex-col">
                             <p class="input-label">Product Type</p>
-                            <p class="form-control-secondary">{{ product.type }}</p>
+                            <p class="form-control form-control-secondary">{{ product.type }}</p>
                         </div>
 
                         <div class="form-group flex flex-col">
                             <p class="input-label">Stock</p>
-                            <p class="form-control-secondary">{{ product.stock }}</p>
+                            <p class="form-control form-control-secondary">{{ product.stock }}</p>
                         </div>
                     </div>
 
-                    <div>
+                    <div v-if="product.type === 'Main product with variant'">
                         <label class="input-label mt-2 mb-2 inline-block"> Variant/s </label>
                         <div class="h-fit max-h-90 space-y-2 overflow-y-scroll rounded-xl pr-3">
                             <Product v-for="opt of product.options" :key="opt.id" :product="opt" />
@@ -90,11 +90,16 @@ function goBack() {
                             </Link>
                         </div>
                     </div>
+                    <div v-else class=" h-30 flex items-center justify-center text-wrap px-5 flex-wrap">
+                        <label class="input-label mt-2 mb-2 font-semibold inline-block">
+                            To add a variant update the "type" of this product to (Main product with variant)
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="mx-auto grid max-w-3xl grid-cols-2 gap-3 py-6 pt-8">
                 <PillPrimary is="Link" :href="route('product.edit', product)" label="Edit" variant="secondary" type="button" />
-                <PillPrimary @click="goBack()" label="Back" variant="outlineSecondary" />
+                <PillPrimary is="Link" :href="route('product.index')" label="Back" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>
     </div>

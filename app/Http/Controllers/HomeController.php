@@ -25,5 +25,9 @@ class HomeController extends Controller
 
 
 
-    public function dashboard(Request $request) {}
+    public function dashboard(Request $request)
+    {
+
+        return Inertia::render('Dashboard');
+    }
 }

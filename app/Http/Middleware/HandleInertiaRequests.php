@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -55,7 +56,8 @@ class HandleInertiaRequests extends Middleware
                 'show' => false,
                 'message' => '',
                 'confirmed' => false,
-            ]
+            ],
+            'github' => env('GITHUB_REPO')
         ];
     }
 }

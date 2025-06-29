@@ -67,6 +67,7 @@ Create environment file `(new terminal)`:
 ```bash
 cp .env.example .env
 php artisan key:generate
+ php artisan storage:link
 ```
 
 Run migrations:

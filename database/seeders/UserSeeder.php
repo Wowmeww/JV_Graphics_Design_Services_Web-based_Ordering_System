@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Wishlist;
+use Database\Factories\WishlistFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -25,6 +26,23 @@ class UserSeeder extends Seeder
             'password' => bcrypt(123),
             'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
         ]);
+        $customer = User::factory()->create([
+            'name' => 'Nico Bernard B. Firmanes',
+            'email' => 'nbfirmanes@sorsu.edu.ph',
+            'sex' => 'male',
+            'birth_date' => '02-25-2004',
+            'password' => bcrypt(123),
+            'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
+        ]);
+
+        Cart::create([
+            'user_id' => $customer->id
+        ]);
+        Wishlist::create([
+            'user_id' => $customer->id
+        ]);
+
+        
 
         // CREATE USER WITH CART AND WISHLIST
         for ($i = 1; $i <= env('USERS', 14); $i++) {

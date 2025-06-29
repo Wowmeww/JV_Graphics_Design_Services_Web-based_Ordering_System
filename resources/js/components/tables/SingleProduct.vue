@@ -51,6 +51,10 @@
         <Transition name="expand">
             <div v-if="expanded" class="mt-4 space-y-3">
                 <div class="flex justify-between items-center">
+                    <span>Type</span>
+                    <span class="font-semibold">{{ product.type }}</span>
+                </div>
+                <div class="flex justify-between items-center">
                     <span>Category</span>
                     <span class="font-semibold">{{ product.category.name }}</span>
                 </div>

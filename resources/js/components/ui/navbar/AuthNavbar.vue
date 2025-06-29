@@ -36,10 +36,10 @@
                             </path>
                         </svg>
                     </button>
-                    <Link :href="route('home')" class="flex gap-3 items-center ms-4 md:me-24">
+                    <Link :href="route('home')" class="flex gap-3 items-center ms-2 md:me-24">
                     <img class="w-auto h-6 sm:h-7" src="/favicon.png" alt="logo">
                     <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">JV Graphics DeSer</span>
+                        class="self-center text-lg font-semibold sm:text-2xl whitespace-nowrap dark:text-white">JV Graphics DeSer</span>
                     </Link>
                 </div>
                 <div class="flex items-center">

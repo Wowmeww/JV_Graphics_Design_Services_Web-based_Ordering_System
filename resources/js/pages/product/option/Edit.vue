@@ -44,7 +44,7 @@ function submit() {
     form.images = uploadedFiles;
     // form.images = [...images.value];
 
-    form.post(route('option.update', { product: props.option.product, option: props.option }), {});
+    form.post(route('option.update', { product: props.option.product_id, option: props.option }));
 }
 
 function handleImagesChange(data) {
@@ -62,25 +62,27 @@ function handleDelete() {
     page.props.confirm = {
         ...page.props.confirm,
         show: true,
-        message: `Do you to delete ${props.product.name}?`,
-        action: 'delete product',
-    };
-
-    watch(
-        () => page.props.confirm.confirmed,
-        () => {
-            if (page.props.confirm.confirmed && page.props.confirm.action === 'delete product') {
-                router.delete(route('product.destroy', props.product));
-            }
+        message: `Do you to delete ${props.option.name}?`,
+        action: {
+            delete_product: true,
         },
-    );
+    };
 }
+watch(
+    () => page.props.confirm.confirmed,
+    () => {
+        if (page.props.confirm.confirmed && page.props.confirm.action?.delete_product) {
+            router.delete(route('option.destroy',  { product: props.option.product, option: props.option }));
+        }
+    },
+);
 function goBack() {
     window.history.back();
 }
 </script>
 
 <template>
+
     <Head title="Edit Product" />
 
     <form class="space-y-3 md:space-y-8" @submit.prevent="submit">

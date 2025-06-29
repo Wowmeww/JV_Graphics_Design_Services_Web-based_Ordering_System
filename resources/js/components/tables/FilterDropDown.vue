@@ -37,7 +37,7 @@
 <template>
     <div class="relative capitalize min-w-[280px] lg:max-w-xs ">
         <button @click.prevent="openDropdown"
-            :class="`form-control-${variant}  bg-white w-full flex cursor-pointer items-center justify-between text-start dark:bg-transparent capitalize`">
+            :class="`form-control form-control-${variant}  bg-white w-full flex cursor-pointer items-center justify-between text-start dark:bg-transparent capitalize`">
             <span>
                 {{ placeholder }}
             </span>

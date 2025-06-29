@@ -21,12 +21,12 @@ const props = defineProps({
         </div>
     </div>
 
-    <div v-if="Object.keys(products).length" class="relative bottom-0 -mx-2 -mt-13 -mb-7 overflow-hidden px-3 py-10 sm:-mx-44 md:-mx-12">
+    <div v-if="Object.keys(products).length" class="relative bottom-0-mx-2 -mb-7 py-8 pb-20 overflow-hidden ">
         <BackgroundImage path="images/background/blob.jpg" class="h-full" />
 
         <h3 class="text-light mt-5 mb-20 text-center">Products and Services</h3>
 
-        <div class="grid justify-center gap-6">
+        <div class="grid justify-center gap-6 px-2">
             <LargeCategoryCard v-for="(product, i) in products" :key="i" :product="product" :variant="Number(i)" />
         </div>
     </div>

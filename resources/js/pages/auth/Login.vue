@@ -26,13 +26,13 @@ function submit() {
 <template>
     <Head title="Sign in" />
     <ContainerPrimary
-        class="animate__animated animate__slideInUp mx-auto max-w-xl"
+        class="animate__animated animate__slideInUp mx-auto max-w-xl mt-10"
         title="Login to account"
         lead="Enter your email & password to login"
     >
         <div class="mt-8">
             <form class="flex flex-col gap-4" @submit.prevent="submit">
-                <small v-if="props.status" class="text-xs font-semibold text-green-700 dark:text-green-600">{{ props.status }}</small>
+                <small v-if="props?.status" class="text-xs font-semibold text-green-700 dark:text-green-600">{{ props.status }}</small>
                 <TextInputPrimary v-model="form.email" label="Email address" :error="form.errors.email" type="email" placeholder="example@mail.com" />
 
                 <TextInputPrimary
@@ -61,7 +61,7 @@ function submit() {
 
                 <div class="mb-7 flex flex-col justify-center gap-3.5 md:flex-row">
                     <a :href="route('google.login')" class="btn btn-outline-primary"> <i class="fa-brands fa-google" /> Login with Google </a>
-                    <a :href="route('google.login')" class="btn btn-outline-primary"><i class="fa-brands fa-facebook" /> Login with Facebook</a>
+                    <a :href="route('facebook.login')" class="btn btn-outline-primary"><i class="fa-brands fa-facebook" /> Login with Facebook</a>
                 </div>
 
                 <p class="text-sm leading-5 font-normal">

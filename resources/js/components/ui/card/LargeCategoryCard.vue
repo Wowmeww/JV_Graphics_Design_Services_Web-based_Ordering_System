@@ -21,7 +21,7 @@
 
 
     const styleClass = {
-        card: "bg-secondary-400/20 transition hover:bg-secondary-400/30 flex flex-col-reverse  items-center gap-4 p-4 max-w-5xl rounded-xl shadow text-white dark:bg-dark/70 dark:hover:bg-dark/40 dark:shadow-xs dark:shadow-white"
+        card: "bg-secondary-400/20 transition hover:bg-secondary-400/30 flex flex-col-reverse  items-center gap-4 p-4 rounded-xl shadow text-white dark:bg-dark/70 dark:hover:bg-dark/40 dark:shadow-xs dark:shadow-white max-w-4xl"
     }
 
 </script>

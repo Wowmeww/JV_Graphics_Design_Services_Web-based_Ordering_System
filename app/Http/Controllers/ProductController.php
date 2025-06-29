@@ -17,7 +17,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $products = Product::with(['images', 'category'])
-            ->filter(request(['search', 'category', 'stock', 'sort']))
+            ->filter(request(['search', 'category', 'stock', 'sort', 'type']))
             ->paginate(8)
             ->withQueryString();
         return Inertia::render('product/Index', [
