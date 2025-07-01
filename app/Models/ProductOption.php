@@ -37,4 +37,9 @@ class ProductOption extends Model
     {
         return $this->hasMany(Rating::class, 'option_id');
     }
+
+    public function cartProducts()
+    {
+        return $this->hasMany(CartProduct::class);
+    }
 }

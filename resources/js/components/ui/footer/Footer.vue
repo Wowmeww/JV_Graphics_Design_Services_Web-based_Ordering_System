@@ -6,7 +6,7 @@
 </script>
 
 <template>
-    <footer class="bg-white dark:bg-gray-900 animate__animated animate__slideInUp z-50">
+    <footer class="bg-white dark:bg-gray-900 animate__animated animate__slideInUp z-40">
         <div class="container px-6 py-8 mx-auto">
 
             <div class="flex flex-wrap justify-center mt-3 -mx-4">

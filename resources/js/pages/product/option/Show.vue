@@ -19,7 +19,7 @@ function goBack() {
     <div class="space-y-3 md:space-y-8">
         <PageTitleHeader title="Variant View" />
         <!---------- STATUS ALERT ------------------------------------------------------->
-        <Status :status="$page.props.status" @close="() => ($page.props.status = null)" />
+        <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->
 
         <ContainerPrimary title="Product Variant Information View">
             <div class="grid gap-6 pt-2 md:grid-cols-2">

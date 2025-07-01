@@ -38,6 +38,10 @@ class Product extends Model
     {
         return $this->hasMany(Rating::class)->where(['option_id' => null]);
     }
+    public function cartProducts()
+    {
+        return $this->hasMany(CartProduct::class);
+    }
 
 
     // one to many - belongs to
@@ -48,13 +52,13 @@ class Product extends Model
 
 
     // many to many - belongs to many
-    public function wishlistItems()
+    public function wishlists()
     {
-        return $this->belongsToMany(WishlistItem::class, 'wishlist_item_product')->withTimestamps();
+        return $this->belongsToMany(Wishlist::class)->withTimestamps();
     }
-    public function cartItems()
+    public function carts()
     {
-        return $this->belongsToMany(CartItem::class)->withTimestamps();
+        return $this->belongsToMany(Cart::class)->withTimestamps();
     }
     public function orders()
     {

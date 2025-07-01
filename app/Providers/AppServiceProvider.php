@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Cart;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
 use Illuminate\Database\Eloquent\Model;
@@ -28,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
 
         Gate::policy(Product::class, ProductPolicy::class);
+
+        // Gate::policy(Cart::class)
     }
 }

@@ -27,29 +27,30 @@
 </script>
 
 <template>
-    <div :class="[styleClass.card, variant % 2? 'md:flex-row': 'md:flex-row-reverse']">
-        <!-- <img class="rounded-xl object-center object-cover h-70 lg:h-86 w-70 lg:w-86"
-            src="storage/product_images/X3P6ORI5DfIavwqhbdOLuvWXl9R49HlSKZGzzvF4.jpg" alt="image" /> -->
+    <div :class="[styleClass.card, variant % 2 ? 'md:flex-row' : 'md:flex-row-reverse']">
         <div class="flex flex-col items-start gap-2 justify-between flex-1">
-            <h3 class="text-center md:text-left">{{ product.name }}</h3>
+            <h3 class="text-center md:text-left">{{ product.name }} {{ ` - ${product.category.name}` }}</h3>
 
-             <p v-if="product.description">
+            <p v-if="product.description">
                 <span>
-                    {{ product.description.slice(0, 680)}}
+                    {{ product.description.slice(0, 680) }}
                 </span>
-              <span v-if="product.description.length >= 680" class="font-black tracking-widest">
-                . . .
-              </span>
+                <span v-if="product.description.length >= 680" class="font-black tracking-widest">
+                    . . .
+                </span>
             </p>
-            <button
-                class="bg-secondary/40 border-transparent transition px-4 py-2 rounded-full text-white mx-auto md:mx-0 hover:bg-secondary/60 dark:border dark:border-white dark:bg-secondary/30">Shop
-                now</button>
+            <Link :href="route('shop.index', { filter: { category: product.category.name } })"
+                class="bg-secondary/40 border-transparent transition px-4 py-2 rounded-full text-white mx-auto md:mx-0 hover:bg-secondary/60 dark:border dark:border-white dark:bg-secondary/30">
+            Shop
+            now</Link>
         </div>
-         <img v-if="product?.images.length" class="rounded-xl object-center object-cover h-70 lg:h-86 w-70 lg:w-86"
-            :src="imageUrl(product.images[0].image_path)" alt="image" />
-        <img v-else class="rounded-xl object-center object-cover h-70 lg:h-86 w-70 lg:w-86" :src="imagePlaceholder"
-            alt="image" />
+        <div class=" w-full h-65 sm:h-80 md:h-96 md:flex-1">
+            <img v-if="product?.images.length" class="rounded-xl object-center object-cover w-full h-full"
+                :src="imageUrl(product.images[0].image_path)" alt="image" />
+            <img v-else class="rounded-xl object-center object-cover w-full h-full" :src="imagePlaceholder"
+                alt="image" />
+        </div>
     </div>
- 
+
 
 </template>

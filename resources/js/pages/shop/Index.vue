@@ -79,7 +79,7 @@
         <ShopFilter :defaults="filter" :categories="categories" @filter="handleFilter" />
 
         <div ref="scrollArea"
-            class="scroll-container flex-1 px-2 pt-8 h-screen overflow-y-auto gap-1.5 md:gap-4 grid grid-cols-2  md:grid-cols-3 xl:grid-cols-4"
+            class="scroll-container flex-1 px-2 pt-8 h-screen overflow-y-auto gap-1.5 md:gap-4 grid grid-cols-2  md:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto"
             @scroll.passive="onScroll">
 
             <ShopItem :filter="filter" v-for="product in products" :key="product.id" :product="product" />

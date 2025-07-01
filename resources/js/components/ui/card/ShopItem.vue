@@ -32,8 +32,8 @@
 
 <template>
     <div
-        class="h-fit animate__animated animate__fadeIn min-w-40 max-w-74 transition md:w-full text-white rounded-md glass p-4 bg-white/5 hover:bg-white/10 dark:bg-black/5 hover:dark:bg-black/10 border-1 border-white/40 space-y-2">
-        <div class=" w-full h-40 md:h-60 lg:h-62">
+        class="h-fit animate__animated animate__fadeIn min-w-40 max-w-74 transition md:w-full text-white rounded-md glass p-2 md:p-4 bg-white/5 hover:bg-white/10 dark:bg-black/5 hover:dark:bg-black/10 border-1 border-white/40 space-y-2">
+        <div class=" w-full h-30 sm:h-36 md:h-60 lg:h-62">
             <Carousel :images-path="product.images.map(e => e.image_path)" />
         </div>
         <div class="flex justify-end gap-0.5 py-2">
@@ -70,8 +70,7 @@
                 }) }}
             </span>
 
-            <Link :href="route('shop.show', { product: product.id, filter: props.filter })"
-                v-if="!user?.is_admin"
+            <Link :href="route('shop.show', { product: product.id, filter: props.filter })" v-if="!user?.is_admin"
                 class="bg-secondary text-center md:px-5 px-2 rounded-lg py-1 border text-[8px] sm:text-xs  uppercase font-medium border-white hover:opacity-70 transition grid place-content-center">
             Add to cart
             </Link>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductOption;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,16 +12,13 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
-        
+
         $categories = Category::pluck('name')->toArray();
         $user = $request?->user();
         $user?->loadMissing([
-            'wishlist.items.products',
-            'cart.items.products'
+            'wishlist.products',
+            'cart.products'
         ]);
-
-
-        // dd($user->wishlist);
         return Inertia::render('shop/Index', [
             'categories' => $categories,
             'user' => $user,
@@ -28,13 +26,16 @@ class ShopController extends Controller
         ]);
     }
 
-    public function show(Request $request, Product $product)
+    public function show(Request $request, Product $product, ?ProductOption $option = null)
     {
         // dd($request->all());
         $product->load(['images', 'options.images', 'category', 'ratings.user', 'options.ratings', 'options.ratings.user']);
+        $option?->load(['images', 'ratings.user']);
         return Inertia::render('shop/Show', [
             'product' => $product,
-            'filter' => $request->array('filter')
+            'option' => $option,
+            'filter' => $request->array('filter'),
+            'quantity' => $request->input('quantity', 12)
         ]);
     }
 
@@ -45,5 +46,55 @@ class ShopController extends Controller
             ->filter(request(['search', 'category', 'stock', 'sort', 'type']))
             ->paginate($perPage);
         return response()->json($products);
+    }
+
+    public function addToCart(Request $request, Product $product, ?ProductOption $option = null)
+    {
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:12', 'max:24'],
+        ]);
+
+        $user = $request->user();
+        $cart = $user->cart;
+
+        if (! $cart) {
+            // Optionally create a cart if missing
+            $cart = $user->cart()->create(); // or Cart::create(['user_id' => $user->id])
+        }
+
+        $cart->addItem($product, $option, $validated['quantity']);
+
+        return redirect()->back()->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Added to cart successfully.'
+            ],
+            'isCartOpen' => true,
+            'shopAsideOpen' => true
+        ]);
+    }
+    public function deleteCartItem(Request $request, Product $product, ?ProductOption $option = null)
+    {
+        $user = $request->user();
+        $cart = $user->cart;
+        $cart->deleteItem($product, $option);
+
+        return redirect()->back()->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Removed from.',
+            ],
+            'isCartOpen' => true,
+            'shopAsideOpen' => true
+        ]);
+    }
+
+    public function addToWishlist(Request $request, Product $product, ?ProductOption $option = null)
+    {
+        dd('wishlist');
+    }
+    public function addToOrder(Request $request, Product $product, ?ProductOption $option = null)
+    {
+        dd('order');
     }
 }

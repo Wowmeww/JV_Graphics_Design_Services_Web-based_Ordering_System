@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Product;
 use App\Models\User;
 use App\Models\Wishlist;
 use App\Models\WishlistItem;
@@ -21,24 +22,57 @@ class CartWishlistSeeder extends Seeder
         $wishlists = Wishlist::all();
 
         foreach ($carts as $cart) {
-            for ($i = 0; $i < env('CART_ITEMS'); $i++) {
-                $cartItem = CartItem::factory()->create([
-                    'cart_id' => $cart->id
-                ]);
+            for ($i = 0; $i < env('CART_ITEMS', 5); $i++) {
+                $product = Product::inRandomOrder()->first();
+                $qty = rand(12, 24);
+                if (!$product) continue;
 
-                // Attach random product(s)
-                $cartItem->products()->attach(rand(1, env('PRODUCTS')));
+                if ($i % 2 === 0) {
+                    // Product with option
+                    $option = $product->options()->inRandomOrder()->first();
+
+                    if ($option) {
+
+                        $cart->products()->attach($product->id, [
+                            'option_id' => $option->id,
+                            'quantity' => $qty,
+                            'total_amount' => $qty * $option->price,
+                        ]);
+                    }
+                } else {
+                    // Product without option
+
+                    $cart->products()->attach($product->id, [
+                        'quantity' => $qty,
+                        'total_amount' => $qty * $product->price,
+                    ]);
+                }
             }
         }
-
         foreach ($wishlists as $wishlist) {
-            for ($i = 0; $i < env('WISHLIST_ITEMS'); $i++) {
-                $wishlistItem = WishlistItem::factory()->create([
-                    'wishlist_id' => $wishlist->id
-                ]);
+            for ($i = 0; $i < env('CART_ITEMS', 5); $i++) {
+                $product = Product::inRandomOrder()->first();
+                $qty = rand(12, 24);
+                if (!$product) continue;
 
-                // Attach random product(s)
-                $wishlistItem->products()->attach(rand(1, env('PRODUCTS')));
+                if ($i % 2 === 0) {
+                    // Product with option
+                    $option = $product->options()->inRandomOrder()->first();
+
+                    if ($option) {
+                        $wishlist->products()->attach($product->id, [
+                            'option_id' => $option->id,
+                            'quantity' => $qty,
+                            'total_amount' => $qty * $option->price,
+                        ]);
+                    }
+                } else {
+                    // Product without option
+                    $wishlist->products()->attach($product->id, [
+                        'quantity' => $qty,
+                        'total_amount' => $qty * $product->price,
+                    ]);
+                }
             }
         }
     }

@@ -1,11 +1,12 @@
 <script setup>
     import { usePage } from '@inertiajs/vue3';
-    import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+    import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue';
     import ThemToggler from './ThemeToggler.vue';
     import { router } from '@inertiajs/vue3'
 
     const page = usePage();
     const user = page.props.auth?.user;
+    const user_avatar_path = computed(() => user?.avatar_url || '/images/avatar-placeholder.webp');
 
     const isDropdownOpen = ref(false);
 
@@ -38,20 +39,22 @@
                 logout: true
             },
         }
-        
+
     }
-     watch(page, () => {
-            if (page.props.confirm.confirmed && page.props.confirm.action.logout) {
-                router.post(route('logout'));
-            }
-        });
-     
+    watch(page, () => {
+        if (page.props.confirm.confirmed && page.props.confirm.action.logout) {
+            router.post(route('logout'));
+        }
+    });
+
+    const emit = defineEmits(['openCart']);
+
 
     const styleClass = {
         name: 'text-sm text-gray-900 dark:text-white',
         email: 'text-sm font-medium text-gray-900 truncate dark:text-gray-300',
-        profile: 'flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600',
-        image: 'w-10 h-10 rounded-full ring-1 ring-secondary-400 dark:ring-secondary-200',
+        profile: 'flex w-10 h-10 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600',
+        image: 'h-full w-full rounded-full ring-1 ring-secondary-400 dark:ring-secondary-200',
         dropdown: 'absolute right-0 z-50 mt-4 min-w-56 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600',
         dropdownButton: 'flex w-full cursor-pointer justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white'
     }
@@ -65,7 +68,7 @@
             <button type="button" @click.stop="toggleDropdown" :class="styleClass.profile"
                 :aria-expanded="isDropdownOpen.toString()">
                 <span class="sr-only">Open user menu</span>
-                <img :class="styleClass.image" :src="user?.avatar_url" alt="user photo" />
+                <img :class="styleClass.image" :src="user_avatar_path" alt="user photo" />
             </button>
         </div>
 
@@ -86,10 +89,13 @@
                 Dashboard
                 <i class="fa-solid fa-chart-pie"></i>
                 </Link>
-                <Link :href="route('dashboard')" :class="styleClass.dropdownButton" role="menuitem">
-                Cart
-                <i class="fa-solid fa-cart-shopping"></i>
-                </Link>
+                <button type="button" @click="() => {
+                    toggleDropdown();
+                    emit('openCart');
+                }" :class="styleClass.dropdownButton" role="menuitem">
+                    Cart
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </button>
                 <Link :href="route('dashboard')" :class="styleClass.dropdownButton" role="menuitem">
                 Wishlist
                 <i class="fa-solid fa-heart"></i>

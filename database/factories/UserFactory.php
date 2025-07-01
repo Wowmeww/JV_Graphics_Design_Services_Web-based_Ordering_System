@@ -24,7 +24,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'avatar_url' => fake()->randomElement([null, fake()->imageUrl(640, 480, 'people', true)]),
+            'avatar_url' => 'https://picsum.photos/id/' . rand(1, 400) . '/300/400',
             'name' => fake()->name(),
             'sex' => fake()->randomElement(['male', 'female']),
             'email' => fake()->unique()->safeEmail(),
@@ -42,7 +42,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

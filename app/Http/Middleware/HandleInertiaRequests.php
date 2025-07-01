@@ -43,14 +43,18 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request?->user() ?
+                    $request->user()->load(['cart', 'wishlist', 'orders']) :
+                    null,
             ],
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'isCartOpen' => $request->session()->get('cartOpen', false),
-            'isWishlistOpen' => $request->session()->get('wishlistOpen', false),
+            'shopAside' => [
+                'isCartOpen' => session('isCartOpen', false),
+                'isOpen' => session('shopAsideOpen', false),
+            ],
             'status' => session('status'),
             'confirm' => [
                 'show' => false,

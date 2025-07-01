@@ -12,7 +12,7 @@
         isDropdownOpen.value = false;
     }
 
-    const emit = defineEmits(['toggle']);
+    const emit = defineEmits(['toggle', 'openCart']);
 
     function handleToggle() {
         emit('toggle')
@@ -38,18 +38,20 @@
                     </button>
                     <Link :href="route('home')" class="flex gap-3 items-center ms-2 md:me-24">
                     <img class="w-auto h-6 sm:h-7" src="/favicon.png" alt="logo">
-                    <span
-                        class="self-center text-lg font-semibold sm:text-2xl whitespace-nowrap dark:text-white">JV Graphics DeSer</span>
+                    <p class="self-center text-lg font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+                        <span class="hidden md:inline">JV Graphics Design Services</span>
+                        <span class="md:hidden">JV Graphics</span>
+                    </p>
                     </Link>
                 </div>
                 <div class="flex items-center">
                     <div class="flex items-center ms-3">
-                        <UserProfile />
+                        <UserProfile @openCart="()=> emit('openCart')" />
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-   
+
 </template>

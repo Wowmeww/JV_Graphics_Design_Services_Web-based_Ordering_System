@@ -35,8 +35,10 @@ class User extends Authenticatable
         ];
     }
 
+    // APPENDED ATTRIBUTE
     protected $appends = ['is_admin'];
-    public function getIsAdminAttribute() {
+    public function getIsAdminAttribute()
+    {
         return $this->role === 'admin';
     }
 
@@ -51,35 +53,45 @@ class User extends Authenticatable
     }
 
     // one to many - has many
-    public function reviews() {
+    public function reviews()
+    {
         return $this->hasMany(Review::class);
     }
-    public function sentMessages() {
+    public function sentMessages()
+    {
         return $this->hasMany(Message::class, 'sender_id');
     }
-    public function receivedMessages() {
+    public function receivedMessages()
+    {
         return $this->hasMany(Message::class, 'receiver_id');
     }
 
-    public function transactions() {
-        if($this->isAdmin()) {
+    public function transactions()
+    {
+        if ($this->isAdmin()) {
             return Transaction::all();
         }
         return $this->hasMany(Transaction::class);
     }
-    public function announcements() {
+    public function announcements()
+    {
         return $this->hasMany(Announcement::class, 'admin_id');
     }
-    public function notifications() {
+    public function notifications()
+    {
         return $this->hasMany(Notification::class, 'admin_id');
     }
 
-    public function orders() {
+    public function orders()
+    {
         return $this->hasMany(Order::class);
     }
-    public function ratings() {
+    public function ratings()
+    {
         return $this->hasMany(Rating::class);
     }
 
 
+    // class custom methods
+    public function addToCart(Product $product, ?ProductOption $option) {}
 }
