@@ -17,6 +17,10 @@
         disable: {
             type: Boolean,
             default: false,
+        },
+        withSpinner: {
+            type: Boolean,
+            default: true
         }
     });
 </script>
@@ -25,6 +29,6 @@
     <component :is="is" :type="type" :href="href" :class="`btn w-full btn-${variant}`" :disabled="disable">
         {{ label }}
         <slot />
-        <i v-show="disable" class="fa-solid fa-spinner animate-spin" />
+        <i v-show="disable && withSpinner" class="fa-solid fa-spinner animate-spin" />
     </component>
 </template>

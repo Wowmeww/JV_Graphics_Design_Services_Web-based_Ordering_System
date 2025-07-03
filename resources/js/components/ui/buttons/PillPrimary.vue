@@ -18,6 +18,8 @@
         secondary: `text-center font-semibold border flex items-center justify-center leading-4 sm:leading-normal border-neutral/10 rounded-full py-2 px-6 cursor-pointer transition bg-secondary-500 text-light hover:bg-secondary/90 dark:bg-secondary-500 gap-x-4`,
         outlinePrimary: `text-center font-semibold border flex items-center justify-center leading-4 sm:leading-normal border-primary-500 rounded-full py-2 px-6 cursor-pointer transition bg-transparent text-primary-500 hover:bg-primary-100/50 dark:border-white dark:text-white dark:bg-primary-500/30 dark:hover:bg-primary-500/70 gap-x-4`,
         outlineSecondary: `text-center font-semibold border flex items-center justify-center leading-4 sm:leading-normal border-secondary-500 rounded-full py-2 px-6 cursor-pointer transition bg-transparent text-secondary-500 hover:bg-secondary-100/50 dark:border-white dark:text-white dark:bg-secondary-500/30 dark:hover:bg-secondary-500/70 gap-x-4`,
+        danger: `text-center font-semibold border flex items-center justify-center leading-4 sm:leading-normal border-red-600 rounded-full py-2 px-6 cursor-pointer transition bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 gap-x-4`,
+        outlineDanger: `text-center font-semibold border flex items-center justify-center leading-4 sm:leading-normal border-red-600 rounded-full py-2 px-6 cursor-pointer transition bg-transparent text-red-600 hover:bg-red-100 dark:border-red-400 dark:text-red-400 dark:hover:bg-red-400/10 gap-x-4`
     }
 </script>
 

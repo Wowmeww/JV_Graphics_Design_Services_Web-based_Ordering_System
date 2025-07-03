@@ -1,15 +1,15 @@
 <script setup>
     import BackgroundImage from '@/components/ui/BackgroundImage.vue';
+    import ShopItem from '@/components/ui/card/ShopItem.vue';
+    import ShopFilter from '@/components/ui/ShopFilter.vue';
     import axios from 'axios';
     import { onMounted, reactive, ref } from 'vue';
-    import ShopItem from '@/components/ui/card/ShopItem.vue';
-    import ShopFilter from "@/components/ui/ShopFilter.vue";
 
     const props = defineProps({
         categories: Array,
         user: Object,
-        filter: Object
-    })
+        filter: Object,
+    });
 
     const products = ref([]);
     const page = ref(1);
@@ -19,7 +19,6 @@
     const scrollArea = ref(null);
 
     const filter = reactive({ ...props.filter });
-
 
     const fetchProducts = async (filter) => {
         if (loading.value || noMore.value) return;
@@ -72,41 +71,30 @@
 
     <Head title="Shop" />
 
-    <BackgroundImage path="images/background/blob.jpg" class="h-full overflow-y-auto" />
+    <BackgroundImage path="/images/background/blob.jpg" class="h-full overflow-y-auto" />
 
-    <div class="flex flex-col lg:flex-row ">
-
+    <div class="flex flex-col lg:flex-row">
         <ShopFilter :defaults="filter" :categories="categories" @filter="handleFilter" />
 
         <div ref="scrollArea"
-            class="scroll-container flex-1 px-2 pt-8 h-screen overflow-y-auto gap-1.5 md:gap-4 grid grid-cols-2  md:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto"
+            class="scroll-container mx-auto grid max-h-screen max-w-7xl flex-1 grid-cols-2 gap-1.5 overflow-y-scroll px-2 pt-8 md:grid-cols-3 md:gap-4 xl:grid-cols-4"
             @scroll.passive="onScroll">
-
             <ShopItem :filter="filter" v-for="product in products" :key="product.id" :product="product" />
 
-
             <div v-if="loading"
-                class="absolute inset-y-1/2 inset-x-1/2 inline-grid place-content-center text-center flex-1 text-xl text-white">
-                Loading more... <i class="loader-gear"></i></div>
-            <div v-if="noMore" class="col-sm-2 md:col-span-3 xl:col-span-4 text-center pb-8 pt-4 text-xl text-white/80">
+                class="absolute inset-x-1/2 inset-y-1/2 inline-grid flex-1 place-content-center text-center text-xl text-white">
+                Loading more... <i class="loader-gear"></i>
+            </div>
+            <div v-if="noMore"
+                class="col-span-2 pt-4 pb-8 text-center text-xl text-white/80 md:col-span-3 xl:col-span-4">
                 No more products
                 <i class="fa-solid fa-martini-glass-empty animate-bounce"></i>
             </div>
         </div>
     </div>
-
-    <!-- <div v-if="!products.length && !loading" class="grid place-content-center h-screen text-4xl font-bold text-center px-4">
-
-        <p class="p-6 text-white bg-white/20 rounded-3xl" style="">
-            No product is available
-            <span class="loader bg-transparent mx-auto animate-spin"></span>
-        </p>
-
-    </div> -->
 </template>
 
 <style scoped>
-
 
     /* HTML: <div class="loader"></div> */
     .loader {
@@ -121,14 +109,18 @@
     }
 
     .loader:before {
-        content: "";
+        content: '';
         margin: auto;
         width: 30px;
         height: 30px;
         border-radius: 50%;
         color: #ff0909;
         background: currentColor;
-        box-shadow: -30px 0, 30px 0, 0 30px, 0 -30px;
+        box-shadow:
+            -30px 0,
+            30px 0,
+            0 30px,
+            0 -30px;
         animation: l6 1s infinite alternate;
     }
 
@@ -136,11 +128,14 @@
 
         90%,
         100% {
-            box-shadow: -10px 0, 10px 0, 0 10px, 0 -10px;
-            transform: rotate(180deg)
+            box-shadow:
+                -10px 0,
+                10px 0,
+                0 10px,
+                0 -10px;
+            transform: rotate(180deg);
         }
     }
-
 
     .loader-gear {
         width: 60px;
@@ -159,8 +154,18 @@
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        background-color: #FFF;
-        background-image: radial-gradient(circle 8px at 18px 18px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 18px 0px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 0px 18px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 36px 18px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 18px 36px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 30px 5px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 30px 5px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 30px 30px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 5px 30px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 5px 5px, var(--base-color) 100%, transparent 0);
+        background-color: #fff;
+        background-image:
+            radial-gradient(circle 8px at 18px 18px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 18px 0px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 0px 18px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 36px 18px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 18px 36px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 30px 5px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 30px 5px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 30px 30px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 5px 30px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 4px at 5px 5px, var(--base-color) 100%, transparent 0);
         background-repeat: no-repeat;
         box-sizing: border-box;
         animation: rotationBack 3s linear infinite;
@@ -174,8 +179,18 @@
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        background-color: #FFF;
-        background-image: radial-gradient(circle 5px at 12px 12px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 12px 0px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 0px 12px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 24px 12px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 12px 24px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 20px 3px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 20px 3px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 20px 20px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 3px 20px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 3px 3px, var(--base-color) 100%, transparent 0);
+        background-color: #fff;
+        background-image:
+            radial-gradient(circle 5px at 12px 12px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 12px 0px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 0px 12px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 24px 12px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 12px 24px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 20px 3px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 20px 3px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 20px 20px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 3px 20px, var(--base-color) 100%, transparent 0),
+            radial-gradient(circle 2.5px at 3px 3px, var(--base-color) 100%, transparent 0);
         background-repeat: no-repeat;
         box-sizing: border-box;
         animation: rotationBack 4s linear infinite reverse;

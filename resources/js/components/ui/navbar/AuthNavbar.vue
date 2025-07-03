@@ -12,7 +12,7 @@
         isDropdownOpen.value = false;
     }
 
-    const emit = defineEmits(['toggle', 'openCart']);
+    const emit = defineEmits(['toggle', 'openCart', 'openWishlist']);
 
     function handleToggle() {
         emit('toggle')
@@ -46,7 +46,10 @@
                 </div>
                 <div class="flex items-center">
                     <div class="flex items-center ms-3">
-                        <UserProfile @openCart="()=> emit('openCart')" />
+                        <UserProfile
+                            @openCart="() => emit('openCart')"
+                            @openWishlist="() => emit('openWishlist')"
+                        />
                     </div>
                 </div>
             </div>

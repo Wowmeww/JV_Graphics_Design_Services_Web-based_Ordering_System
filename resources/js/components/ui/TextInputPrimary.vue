@@ -12,7 +12,8 @@
         required: { type: Boolean, default: true },
         variant: { type: String, default: 'primary' },
         row: { type: Number, default: 4 },
-        disabled: {type: Boolean,default: false}
+        disabled: { type: Boolean, default: false },
+        customStyle: { type: String, default: '' }
     })
 </script>
 
@@ -24,10 +25,10 @@
         </label>
 
         <textarea :disabled="disabled" v-if="type === 'textarea'" v-model="model" :type="type" :id="label" :rows="row"
-            :class="[error ? `form-control form-control-${variant} !border-red-500` : `form-control form-control-${variant}`, 'pb-8']"
+            :class="[error ? `form-control form-control-${variant} !border-red-500` : `${customStyle} form-control form-control-${variant}`, 'pb-8']"
             :placeholder="placeholder" :required="required"></textarea>
-        <input  :disabled="disabled" v-else v-model="model" :type="type" :id="label"
-            :class="[error ? `form-control form-control-${variant} !border-red-500` : `form-control form-control-${variant}`]"
+        <input :disabled="disabled" v-else v-model="model" :type="type" :id="label"
+            :class="[error ? `form-control form-control-${variant} !border-red-500` : `${customStyle} form-control form-control-${variant}`]"
             :placeholder="placeholder" :required="required" />
         <small v-show="error" class="form-control-error">{{ error }}</small>
     </div>

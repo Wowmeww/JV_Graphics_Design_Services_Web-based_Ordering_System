@@ -27,10 +27,9 @@ class OrderSeeder extends Seeder
                     'user_id' => $user->id,
                     'quantity' => $qty,
                     'total_amount' => $qty * $product->price,
+                    'product_id' => $product->id,
                 ]);
 
-                // Attach the product with pivot quantity
-                $order->products()->attach($product->id);
             }
         }
     }

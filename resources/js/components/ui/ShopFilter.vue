@@ -96,8 +96,7 @@
         </div>
     </div>
 
-    <ContainerPrimary class="rounded-none px-2 hidden lg:block lg:w-70">
-
+    <ContainerPrimary class="rounded-none !px-2 hidden lg:block lg:w-70">
         <div class="flex flex-col gap-1 md:gap-4 p-4">
             <p class="font-bold text-xl">FIlters:</p>
             <Dropdown :required="false" :value="filters.category" @select="(opt) => filters.category = opt"

@@ -3,8 +3,6 @@
     import ModalButton from './ModalButton.vue';
     import { onMounted, onUnmounted } from 'vue';
 
-
-
     const page = usePage();
     const defaults = {
         message: 'Are you sure you want to continue?'

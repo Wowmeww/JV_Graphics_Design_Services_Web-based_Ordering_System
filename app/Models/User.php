@@ -36,10 +36,17 @@ class User extends Authenticatable
     }
 
     // APPENDED ATTRIBUTE
-    protected $appends = ['is_admin'];
+    protected $appends = ['is_admin', 'messages'];
     public function getIsAdminAttribute()
     {
         return $this->role === 'admin';
+    }
+    public function getMessagesAttribute()
+    {
+        return [
+            ...$this->sentMessages->toArray(),
+            ...$this->receivedMessages->toArray()
+        ];
     }
 
     // one to one - has one
@@ -92,6 +99,9 @@ class User extends Authenticatable
     }
 
 
-    // class custom methods
-    public function addToCart(Product $product, ?ProductOption $option) {}
+    // CUSTOM METHODS
+    public function addOrder(array $data): Order
+    {
+        return $this->orders()->create($data);
+    }
 }

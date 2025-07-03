@@ -28,7 +28,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->unsignedTinyInteger('stars'); // limit to 1–5 stars
-            $table->text('message'); // better for longer messages
+            $table->text('message')->nullable(); // better for longer messages
 
             $table->timestamps();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CartProduct;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductOption;
@@ -28,66 +29,42 @@ class ShopController extends Controller
 
     public function show(Request $request, Product $product, ?ProductOption $option = null)
     {
-        // dd($request->all());
-        $product->load(['images', 'options.images', 'category', 'ratings.user', 'options.ratings', 'options.ratings.user']);
-        $option?->load(['images', 'ratings.user']);
+        // Eager load relationships for the product
+        $product->load([
+            'images',
+            'category',
+            'options.images',
+            'options.ratings.user',
+            'ratings' => fn($q) => $q->with('user')->latest(), // newest product ratings
+        ]);
+
+        // Eager load relationships for the selected option if provided
+        if ($option) {
+            $option->load([
+                'images',
+                'ratings' => fn($q) => $q->with('user')->latest(), // newest option ratings
+            ]);
+        }
+
         return Inertia::render('shop/Show', [
             'product' => $product,
             'option' => $option,
             'filter' => $request->array('filter'),
-            'quantity' => $request->input('quantity', 12)
+            'quantity' => $request->input('quantity', 12),
         ]);
     }
 
+
+
     public function fetch(Request $request)
     {
-        $perPage = $request->get('per_page', 10);
+        $perPage = $request->get('per_page', 12);
         $products = Product::with(['images', 'options.images'])
             ->filter(request(['search', 'category', 'stock', 'sort', 'type']))
             ->paginate($perPage);
         return response()->json($products);
     }
 
-    public function addToCart(Request $request, Product $product, ?ProductOption $option = null)
-    {
-        $validated = $request->validate([
-            'quantity' => ['required', 'integer', 'min:12', 'max:24'],
-        ]);
-
-        $user = $request->user();
-        $cart = $user->cart;
-
-        if (! $cart) {
-            // Optionally create a cart if missing
-            $cart = $user->cart()->create(); // or Cart::create(['user_id' => $user->id])
-        }
-
-        $cart->addItem($product, $option, $validated['quantity']);
-
-        return redirect()->back()->with([
-            'status' => [
-                'type' => 'success',
-                'message' => 'Added to cart successfully.'
-            ],
-            'isCartOpen' => true,
-            'shopAsideOpen' => true
-        ]);
-    }
-    public function deleteCartItem(Request $request, Product $product, ?ProductOption $option = null)
-    {
-        $user = $request->user();
-        $cart = $user->cart;
-        $cart->deleteItem($product, $option);
-
-        return redirect()->back()->with([
-            'status' => [
-                'type' => 'success',
-                'message' => 'Removed from.',
-            ],
-            'isCartOpen' => true,
-            'shopAsideOpen' => true
-        ]);
-    }
 
     public function addToWishlist(Request $request, Product $product, ?ProductOption $option = null)
     {

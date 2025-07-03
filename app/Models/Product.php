@@ -43,6 +43,11 @@ class Product extends Model
         return $this->hasMany(CartProduct::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
 
     // one to many - belongs to
     public function category()
@@ -60,10 +65,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Cart::class)->withTimestamps();
     }
-    public function orders()
-    {
-        return $this->belongsToMany(Order::class)->withTimestamps();
-    }
+
 
 
     // ---------- Filters ----------------------------------------------------------------

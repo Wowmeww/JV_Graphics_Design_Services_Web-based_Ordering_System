@@ -3,63 +3,112 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\CartProduct;
+use App\Models\Product;
+use App\Models\ProductOption;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function edit(Request $request, CartProduct $cartItem)
     {
-        //
+        $cartItem->load(['product.images', 'option.images', 'product.ratings.user',  'option.ratings.user', 'product.category']);
+
+        return Inertia::render('shop/CartEdit', [
+            'cartItem' => $cartItem
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function update(Request $request, CartProduct $cartItem)
     {
-        //
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:12', 'max:24'],
+        ]);
+
+        $cartItem->update(['quantity' => $validated['quantity']]);
+
+        return redirect()->route('shop.show', [
+            'product' => $cartItem->product->id,
+            'option' => $cartItem->option?->id || null,
+        ])->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Cart item updated successfully.'
+            ],
+            'isCartOpen' => true,
+            'isWishlistOpen' => false,
+            'shopAsideOpen' => true
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Cart $cart)
+    public function store(Request $request, Product $product, ?ProductOption $option = null)
     {
-        //
-    }
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:12', 'max:24'],
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cart $cart)
-    {
-        //
-    }
+        $user = $request->user();
+        $cart = $user->cart;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Cart $cart)
-    {
-        //
-    }
+        if (! $cart) {
+            // Optionally create a cart if missing
+            $cart = $user->cart()->create(); // or Cart::create(['user_id' => $user->id])
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Cart $cart)
+        $cart->addItem($product, $option, $validated['quantity']);
+
+        return redirect()->back()->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Added to cart successfully.'
+            ],
+            'isCartOpen' => true,
+            'isWishlistOpen' => false,
+            'shopAsideOpen' => true
+        ]);
+    }
+    public function destroy(Request $request, ?CartProduct $cartItem = null)
     {
-        //
+        // Bulk deletion via array of IDs from request
+        if ($request->filled('ids')) {
+            CartProduct::whereIn('id', $request->input('ids'))->delete();
+            $with = [
+                'status' => [
+                    'type' => 'success',
+                    'message' => 'Selected items removed from cart.',
+                ],
+                'isCartOpen' => true,
+                'isWishlistOpen' => false,
+                'shopAsideOpen' => true
+            ];
+
+            if ($request->input('from') == 'edit') {
+                return redirect()->route('shop.index')->with($with);
+            }
+            return redirect()->back()->with($with);
+        }
+
+        // Single deletion via route model binding
+        if ($cartItem) {
+            $cartItem->delete();
+
+            $with = [
+                'status' => [
+                    'type' => 'success',
+                    'message' => 'Item removed from cart.',
+                ],
+                'isCartOpen' => true,
+                'isWishlistOpen' => false,
+                'shopAsideOpen' => true
+            ];
+
+            if ($request->input('from') == 'edit') {
+                return redirect()->route('shop.index')->with($with);
+            }
+
+            return redirect()->back()->with($with);
+        }
     }
 }

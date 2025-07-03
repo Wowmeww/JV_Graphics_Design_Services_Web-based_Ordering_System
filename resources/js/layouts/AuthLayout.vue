@@ -10,6 +10,8 @@
 
     const page = usePage();
 
+    const user = page.props.user;
+
     const status = computed(() => page.props.status);
     const isShopAsideOpen = computed(() => page.props.shopAside.isOpen)
 
@@ -22,17 +24,26 @@
     function toggleShopAside() {
         page.props.shopAside.isOpen = !page.props.shopAside.isOpen;
     }
-
+    function openCart() {
+        page.props.shopAside.isOpen = true;
+        page.props.shopAside.isCartOpen = true;
+        page.props.shopAside.isWishlistOpen = false;
+    }
+    function openWishlist() {
+        page.props.shopAside.isOpen = true;
+        page.props.shopAside.isCartOpen = false;
+        page.props.shopAside.isWishlistOpen = true;
+    }
 
 </script>
 
 <template>
     <div v-cloak>
-        <AuthNavbar @toggle="toggleExpand" @openCart="toggleShopAside" />
+        <AuthNavbar @toggle="toggleExpand" @openCart="openCart" @openWishlist="openWishlist" />
 
         <AuthAside :expanded="asideExpanded" @close="toggleExpand" />
 
-        <ShopAside :expanded="isShopAsideOpen" @close="toggleShopAside" />
+        <ShopAside v-if="!user?.is_admin" :expanded="isShopAsideOpen" @close="toggleShopAside" />
 
         <div class="relative min-h-screen">
             <div class="mt-14 h-max rounded-lg lg:min-h-[98vh]">

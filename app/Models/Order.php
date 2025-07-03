@@ -15,10 +15,15 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    public function option()
+    {
+        return $this->belongsTo(ProductOption::class, 'option_id');
+    }
 
     // many to many - belongs to many
-    public function products()
-    {
-        return $this->belongsToMany(Product::class)->withTimestamps();
-    }
+
 }

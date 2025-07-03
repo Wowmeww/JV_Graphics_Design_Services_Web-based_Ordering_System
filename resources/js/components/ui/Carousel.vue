@@ -38,9 +38,12 @@
             </button>
         </div>
         <div class="w-full h-full">
-            <img v-for="(path, i) in imagesPath" :key="i" :src="imageUrl(path)"
+            <img v-if="imagesPath.length" v-for="(path, i) in imagesPath" :key="i" :src="imageUrl(path)"
                 class="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out rounded-lg"
                 :class="{ 'opacity-100 z-10': i === currentSlide, 'opacity-0 z-0': i !== currentSlide }"
+                alt="Product Image" />
+            <img v-else src="/images/img-placeholder.jpg"
+                class="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out rounded-lg"
                 alt="Product Image" />
         </div>
 

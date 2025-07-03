@@ -39,7 +39,6 @@
                 logout: true
             },
         }
-
     }
     watch(page, () => {
         if (page.props.confirm.confirmed && page.props.confirm.action.logout) {
@@ -47,8 +46,16 @@
         }
     });
 
-    const emit = defineEmits(['openCart']);
+    const emit = defineEmits(['openCart', 'openWishlist']);
 
+    function openCart() {
+        toggleDropdown();
+        emit('openCart');
+    }
+    function openWishlist() {
+        toggleDropdown();
+        emit('openWishlist');
+    }
 
     const styleClass = {
         name: 'text-sm text-gray-900 dark:text-white',
@@ -89,17 +96,14 @@
                 Dashboard
                 <i class="fa-solid fa-chart-pie"></i>
                 </Link>
-                <button type="button" @click="() => {
-                    toggleDropdown();
-                    emit('openCart');
-                }" :class="styleClass.dropdownButton" role="menuitem">
+                <button type="button" @click="openCart" :class="styleClass.dropdownButton" role="menuitem">
                     Cart
                     <i class="fa-solid fa-cart-shopping"></i>
                 </button>
-                <Link :href="route('dashboard')" :class="styleClass.dropdownButton" role="menuitem">
-                Wishlist
-                <i class="fa-solid fa-heart"></i>
-                </Link>
+                <button type="button" @click="openWishlist" :class="styleClass.dropdownButton" role="menuitem">
+                    Wishlist
+                    <i class="fa-solid fa-heart"></i>
+                </button>
 
                 <a href="#" :class="styleClass.dropdownButton" role="menuitem">
                     Settings <i class="fa-solid fa-gear"></i>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -28,6 +29,12 @@ class HomeController extends Controller
     public function dashboard(Request $request)
     {
 
-        return Inertia::render('Dashboard');
+        $user = $request->user();
+        // $user->load(['messages']);
+
+        return Inertia::render('Dashboard', [
+            'user' => $user,
+            'announcements' => Announcement::all()
+        ]);
     }
 }

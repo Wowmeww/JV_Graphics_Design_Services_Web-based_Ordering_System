@@ -15,10 +15,11 @@ class Wishlist extends Model
 
     public function getItemsAttribute()
     {
-        $products = $this->products ?? collect();
-        $options = $this->options ?? collect();
-
-        return $products->concat($options)->values();
+        $products = WishlistProduct::latest('updated_at')
+            ->with(['product.images', 'option.images'])
+            ->where('wishlist_id', $this->id)
+            ->get();
+        return  $products;
     }
 
     // one to one - belongs to
@@ -40,5 +41,32 @@ class Wishlist extends Model
             'wishlist_id',
             'option_id'
         );
+    }
+
+
+    // CUSTOM METHODS
+
+    public function addItem(Product $product, ?ProductOption $option = null, int $quantity = 12): void
+    {
+        $price = $option ? $option->price : $product->price;
+        WishlistProduct::updateOrInsert(
+            [ // keys to find existing row
+                'wishlist_id' => $this->id,
+                'product_id' => $product->id,
+                'option_id' => $option?->id,
+            ],
+            [ // fields to update or insert
+                'quantity' => $quantity,
+                'total_amount' => $price * $quantity,
+                'updated_at' => now(),
+            ]
+        );
+    }
+    public function deleteItem(Product $product, ?ProductOption $option = null): void
+    {
+        WishlistProduct::where('wishlist_id', $this->id)
+            ->where('product_id', $product->id)
+            ->where('option_id', $option?->id)
+            ->delete();
     }
 }

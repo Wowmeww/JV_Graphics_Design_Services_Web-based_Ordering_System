@@ -53,6 +53,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'shopAside' => [
                 'isCartOpen' => session('isCartOpen', false),
+                'isWishlistOpen' => session('isWishlistOpen', false),
                 'isOpen' => session('shopAsideOpen', false),
             ],
             'status' => session('status'),

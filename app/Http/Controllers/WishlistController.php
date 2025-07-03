@@ -2,64 +2,110 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\ProductOption;
 use App\Models\Wishlist;
+use App\Models\WishlistProduct;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class WishlistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function edit(Request $request, WishlistProduct $wishlistItem)
     {
-        //
+        $wishlistItem->load(['product.images', 'option.images', 'product.ratings.user',  'option.ratings.user', 'product.category']);
+
+        return Inertia::render('shop/WishlistEdit', [
+            'wishlistItem' => $wishlistItem
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function update(Request $request,  WishlistProduct $wishlistItem)
     {
-        //
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:12', 'max:24'],
+        ]);
+
+        $wishlistItem->update(['quantity' => $validated['quantity']]);
+
+        return redirect()->route('shop.show', [
+            'product' => $wishlistItem->product->id,
+            'option' => $wishlistItem->option?->id || null,
+        ])->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Wishlist item updated successfully.'
+            ],
+            'isCartOpen' => false,
+            'isWishlistOpen' => true,
+            'shopAsideOpen' => true
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request, Product $product, ?ProductOption $option = null)
     {
-        //
-    }
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:12', 'max:24'],
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Wishlist $wishlist)
-    {
-        //
-    }
+        $user = $request->user();
+        $wishlist = $user->wishlist;
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Wishlist $wishlist)
-    {
-        //
-    }
+        if (! $wishlist) {
+            // Optionally create a cart if missing
+            $wishlist = $user->wishlist()->create(); // or Cart::create(['user_id' => $user->id])
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Wishlist $wishlist)
-    {
-        //
-    }
+        $wishlist->addItem($product, $option, $validated['quantity']);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Wishlist $wishlist)
+        return redirect()->back()->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Added to wishlist successfully.'
+            ],
+            'isCartOpen' => false,
+            'isWishlistOpen' => true,
+            'shopAsideOpen' => true
+        ]);
+    }
+    public function destroy(Request $request, ?WishlistProduct $wishlistItem = null)
     {
-        //
+        // Bulk deletion via array of IDs from request
+        if ($request->filled('ids')) {
+            WishlistProduct::whereIn('id', $request->input('ids'))->delete();
+            $with = [
+                'status' => [
+                    'type' => 'success',
+                    'message' => 'Selected items removed from wishlist.',
+                ],
+                'isCartOpen' => false,
+                'isWishlistOpen' => true,
+                'shopAsideOpen' => true
+            ];
+
+            if ($request->input('from') == 'edit') {
+                return redirect()->route('shop.index')->with($with);
+            }
+            return redirect()->back()->with($with);
+        }
+
+        // Single deletion via route model binding
+        if ($wishlistItem) {
+            $wishlistItem->delete();
+            $with = [
+                'status' => [
+                    'type' => 'success',
+                    'message' => 'Item removed from wishlist.',
+                ],
+                'isCartOpen' => false,
+                'isWishlistOpen' => true,
+                'shopAsideOpen' => true
+            ];
+            if ($request->input('from') == 'edit') {
+                return redirect()->route('shop.index')->with($with);
+            }
+
+            return redirect()->back()->with($with);
+        }
     }
 }

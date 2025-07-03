@@ -1,34 +1,58 @@
 <script setup>
     import { router } from '@inertiajs/vue3';
-    const props = defineProps({ item: Object });
+    const props = defineProps({
+        item: Object,
+        from: { type: String, default: 'cart' }
+    });
 
-    const emit = defineEmits(['closeCart']);
+    const emit = defineEmits(['close']);
     function image_url() {
         // const path = props.item.option?.images[0].image_path || props.item.product?.images[0].image_path;
-        const path = props.item.option?.images[0]?.image_path || props.item.product?.images[0]?.image_path || '/images/img-placeholder.jpg';
-        return path.includes('http') ? path : `/storage/${path}`;
+        const path = props.item.option?.images[0]?.image_path || props.item.product?.images[0]?.image_path;
+        return (path?.includes('storage') ? `/storage/${path}` : path) || '/images/img-placeholder.jpg';
     }
 
+    const model = defineModel({
+        type: Array,
+        default: () => []
+    });
+
     function handleDelete() {
-        router.delete(route('shop.cart', {
+        if (props.from === 'wishlist') {
+            router.delete(route('wishlist.destroy', props.item.id));
+            return;
+        }
+        router.delete(route('cart.destroy', props.item.id));
+    }
+    function handleEdit() {
+        emit('close');
+        if (props.from === 'wishlist') {
+            router.get(route('wishlist.edit', {
+                wishlistItem: props.item.id
+            }));
+            return;
+        }
+        router.get(route('cart.edit', {
+            cartItem: props.item.id
+        }));
+    }
+    function handleShow() {
+        emit('close');
+        router.get(route('shop.show', {
             product: props.item.product.id,
             option: props.item.option?.id || null
         }));
     }
-    function handleEdit() {
-        emit('closeCart');
-        router.get(route('shop.show', {
-            product: props.item.product.id,
-            option: props.item.option?.id || null,
-            quantity: props.item.quantity
-        }));
-    }
+
 </script>
 
 <template>
     <div
         class="flex relative items-center gap-3 p-2 bg-white dark:bg-slate-100 rounded-xl border shadow-sm hover:shadow-md transition text-sm">
         <div class="absolute top-1.5 right-1.5 text-xs space-x-2">
+            <button @click="handleShow" type="button">
+                <i class="fa-solid fa-eye text-secondary-200"></i>
+            </button>
             <button @click="handleEdit" type="button">
                 <i class="bi bi-pencil-square text-yellow-900/80"></i>
             </button>
@@ -36,17 +60,18 @@
                 <i class="bi bi-trash  text-red-600"></i>
             </button>
         </div>
+        <input v-model="model" :value="item" type="checkbox" class="accent-secondary" />
         <!-- Product Image -->
         <img :src="image_url()" alt="Product" class="w-12 h-12 rounded-lg object-cover border">
 
         <!-- Info -->
         <div class="flex-1">
-            <div class="font-medium text-gray-800 truncate">
+            <div class="font-medium text-gray-800 truncate text-wrap leading-3">
                 {{ item.option?.name || item.product.name }}
             </div>
-            <div class="text-xs text-gray-500">
+            <!-- <div class="text-xs text-gray-500">
                 Option: <span class="font-medium text-gray-700">Variant</span>
-            </div>
+            </div> -->
             <div class="text-xs text-gray-500 mt-0.5">
                 {{
                     (item.option?.price || item.product.price).toLocaleString('en-PH', {
