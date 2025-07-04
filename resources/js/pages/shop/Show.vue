@@ -26,7 +26,7 @@
         option: props.option?.id || null,
     });
     const form = useForm({
-        quantity: props.quantity
+        quantity: props.quantity,
     });
 
     const focusedImage = ref(tempProduct.value.images?.[0]?.image_path || '');
@@ -72,11 +72,17 @@
         form.post(route('wishlist.store', routeParameters));
     }
     function orderNow() {
-        form.post(route('shop.order', routeParameters));
+        router.get(route('order.create'), {
+            product_id: props.product.id,
+            option_id: tempProduct.value.type === 'Variant' ? tempProduct.value.id : null,
+            quantity: form.quantity,
+            total_amount: tempProduct.value.price,
+        });
     }
 
     function goBack() {
-        router.get(route('shop.index'), { filter: props.filter });
+        window.history.back();
+        // router.get(route('shop.index'), { filter: props.filter });
     }
 
     const styleClass = {

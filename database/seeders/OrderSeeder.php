@@ -21,7 +21,7 @@ class OrderSeeder extends Seeder
             for ($i = 0; $i < env('ORDERS'); $i++) {
                 // Pick a random product each time
                 $product = Product::inRandomOrder()->first();
-                $qty = rand(1, 4) * 12;
+                $qty = rand(12, 24);
 
                 $order = Order::factory()->create([
                     'user_id' => $user->id,

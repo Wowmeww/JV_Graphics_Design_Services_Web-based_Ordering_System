@@ -3,6 +3,7 @@
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductOption;
+use App\Models\Rating;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->string('note')->nullable();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(ProductOption::class, 'option_id')->nullable()->default(null)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Rating::class)->nullable();
             $table->timestamps();
         });
         // Schema::create('order_product', function (Blueprint $table) {

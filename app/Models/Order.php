@@ -23,6 +23,10 @@ class Order extends Model
     {
         return $this->belongsTo(ProductOption::class, 'option_id');
     }
+    public function rating()
+    {
+        return $this->hasOne(Rating::class);
+    }
 
     // many to many - belongs to many
 

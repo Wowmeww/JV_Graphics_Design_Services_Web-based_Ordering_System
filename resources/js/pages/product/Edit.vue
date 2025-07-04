@@ -92,7 +92,7 @@
     <form class="space-y-3 md:space-y-8" @submit.prevent="submit">
         <PageTitleHeader title="Product Editor" />
         <!---------- STATUS ALERT ------------------------------------------------------->
-        <Status :status="$page.props.status" @close="() => ($page.props.status = null)" />
+        <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->
 
         <ContainerPrimary title="Product Setting">
             <div class="grid gap-6 pt-2 md:grid-cols-2">
@@ -116,7 +116,6 @@
                         type="textarea" label="Product Description" placeholder="Enter product description"
                         variant="secondary" />
                 </div>
-
                 <!-- Another Column -->
                 <div class="space-y-3">
                     <TextInputPrimary v-model="form.name" :error="form.errors.name" label="Product Name"

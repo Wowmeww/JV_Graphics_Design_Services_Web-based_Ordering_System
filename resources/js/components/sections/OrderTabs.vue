@@ -8,6 +8,8 @@
         completedOrders: Array,
         canceledOrders: Array,
         rateOrders: Array,
+        ratedOrders: Array,
+        tab: String
     });
 
     const tabs = computed(() => [
@@ -18,7 +20,7 @@
         { name: 'Rate', icon: 'bi bi-star text-xl', count: props.rateOrders.length },
     ]);
 
-    const activeTab = ref(tabs.value[0].name);
+    const activeTab = ref(props.tab || tabs.value[0].name);
 
     const forRate = ref(null);
 
@@ -113,6 +115,8 @@
 
                         <OrderTabCard @rate="({ order }) => forRate = order" showRate v-for="order in rateOrders"
                             :key="`rate-${order.id}`" :order="order" label="Ready for rating" />
+                        <OrderTabCard @rate="({ order }) => forRate = order" showRate v-for="order in ratedOrders"
+                            :key="`rated-${order.id}`" :order="order" label="Rated" />
                     </div>
                 </div>
             </div>

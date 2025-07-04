@@ -38,14 +38,14 @@
 </script>
 
 <template>
-    <div v-cloak>
+    <div v-cloak class="overflow-y-scroll">
         <AuthNavbar @toggle="toggleExpand" @openCart="openCart" @openWishlist="openWishlist" />
 
         <AuthAside :expanded="asideExpanded" @close="toggleExpand" />
 
         <ShopAside v-if="!user?.is_admin" :expanded="isShopAsideOpen" @close="toggleShopAside" />
 
-        <div class="relative min-h-screen">
+        <div class="relative min-h-screen max-h-fit">
             <div class="mt-14 h-max rounded-lg lg:min-h-[98vh]">
                 <slot />
             </div>

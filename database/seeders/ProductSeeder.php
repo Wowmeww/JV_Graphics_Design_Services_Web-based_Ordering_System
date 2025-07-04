@@ -31,12 +31,12 @@ class ProductSeeder extends Seeder
                 ProductOption::factory()
                     ->count($optionCount)
                     ->has(
-                        ProductOptionImage::factory()->count(2), 
+                        ProductOptionImage::factory()->count(2),
                         'images'
                     ),
                 'options'
             )
-            ->has(ProductImage::factory()->count(3), 'images') 
+            ->has(ProductImage::factory()->count(2), 'images')
             ->create();
     }
 }

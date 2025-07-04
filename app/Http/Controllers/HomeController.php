@@ -25,16 +25,15 @@ class HomeController extends Controller
     }
 
 
-
     public function dashboard(Request $request)
     {
-
         $user = $request->user();
-        // $user->load(['messages']);
+        $user->load(['cart', 'wishlist', 'orders.product.images', 'orders.option.images']);
 
+        $announcements = Announcement::with(['user'])->latest()->get();
         return Inertia::render('Dashboard', [
             'user' => $user,
-            'announcements' => Announcement::all()
+            'announcements' =>  $announcements
         ]);
     }
 }

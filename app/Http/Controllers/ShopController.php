@@ -59,7 +59,7 @@ class ShopController extends Controller
     public function fetch(Request $request)
     {
         $perPage = $request->get('per_page', 12);
-        $products = Product::with(['images', 'options.images'])
+        $products = Product::with(['images', 'options.images', 'category'])
             ->filter(request(['search', 'category', 'stock', 'sort', 'type']))
             ->paginate($perPage);
         return response()->json($products);

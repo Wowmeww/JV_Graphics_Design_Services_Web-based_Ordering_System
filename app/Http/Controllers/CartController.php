@@ -71,44 +71,38 @@ class CartController extends Controller
     }
     public function destroy(Request $request, ?CartProduct $cartItem = null)
     {
+        $with = [
+            'isCartOpen' => true,
+            'isWishlistOpen' => false,
+            'shopAsideOpen' => true,
+        ];
+
         // Bulk deletion via array of IDs from request
         if ($request->filled('ids')) {
             CartProduct::whereIn('id', $request->input('ids'))->delete();
-            $with = [
-                'status' => [
-                    'type' => 'success',
-                    'message' => 'Selected items removed from cart.',
-                ],
-                'isCartOpen' => true,
-                'isWishlistOpen' => false,
-                'shopAsideOpen' => true
+            $with['status'] = [
+                'type' => 'success',
+                'message' => 'Selected items removed from cart.',
             ];
-
-            if ($request->input('from') == 'edit') {
-                return redirect()->route('shop.index')->with($with);
-            }
-            return redirect()->back()->with($with);
         }
-
         // Single deletion via route model binding
-        if ($cartItem) {
+        elseif ($cartItem) {
             $cartItem->delete();
-
-            $with = [
-                'status' => [
-                    'type' => 'success',
-                    'message' => 'Item removed from cart.',
-                ],
-                'isCartOpen' => true,
-                'isWishlistOpen' => false,
-                'shopAsideOpen' => true
+            $with['status'] = [
+                'type' => 'success',
+                'message' => 'Item removed from cart.',
             ];
-
-            if ($request->input('from') == 'edit') {
-                return redirect()->route('shop.index')->with($with);
-            }
-
-            return redirect()->back()->with($with);
         }
+        // Nothing was deleted
+        else {
+            $with['status'] = [
+                'type' => 'error',
+                'message' => 'No item selected for deletion.',
+            ];
+        }
+
+        return $request->input('from') === 'edit'
+            ? redirect()->route('shop.index')->with($with)
+            : redirect()->route('dashboard')->with($with);
     }
 }

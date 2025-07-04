@@ -116,6 +116,15 @@
                 </span>
             </p>
         </div>
+
+        <div v-if="props.order.status == 'rated'" class="px-6">
+            <div class="flex justify-center gap-2 text-yellow-400 text-2xl">
+                <p v-for="i in 5" :key="i" type="button" class="hover:scale-125 transition transform">
+                    <i v-if="i > order.rating.stars" class="fa-regular fa-star"></i>
+                    <i v-else class="fa-solid fa-star"></i>
+                </p>
+            </div>
+        </div>
         <div class="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
             <span href="#" class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
                 <i class="bi bi-clock"></i>
@@ -123,7 +132,8 @@
             </span>
             <PillPrimary v-if="showCancel" @click="handleCancel" variant="outlineDanger" label="Cancel" />
             <PillPrimary v-if="showReceived" @click="handleReceived" label="Received" />
-            <PillPrimary v-if="showRate" @click="handleRate" label="Rate" />
+            <PillPrimary v-if="showRate" @click="handleRate"
+                :label="props.order.status == 'received' ? 'Rate' : 'Update Rating'" />
         </div>
     </div>
 

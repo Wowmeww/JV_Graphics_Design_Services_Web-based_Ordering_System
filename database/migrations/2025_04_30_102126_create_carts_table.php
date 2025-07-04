@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('cart_product', function (Blueprint $table) {
-            $table->id();
+            $table->id()->first();
             $table->foreignIdFor(Cart::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(ProductOption::class, 'option_id')->nullable()->constrained()->cascadeOnDelete();

@@ -26,14 +26,23 @@ class RatingController extends Controller
         $data = [
             'stars'  => $fields['stars'],
             'message' => $fields['message'],
+            'order_id' => $order->id
         ];
 
-        Rating::updateOrCreate($match, $data);
+        $rating = Rating::updateOrCreate($match, $data);
         $order->update([
-            'status' => 'rated'
+            'status' => 'rated',
+            'rating_id' => $rating->id
         ]);
+        // Under Review
+        // Processing
+        // Completed
+        // Canceled
+        // Rate
 
-        return redirect()->back()->with('status', [
+        return to_route('order.index', [
+            'tab' => 'Rate'
+        ])->with('status', [
             'type' => 'success',
             'message' => 'Rating and feedback posted',
         ]);

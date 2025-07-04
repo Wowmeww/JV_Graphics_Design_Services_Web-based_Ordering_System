@@ -70,42 +70,35 @@ class WishlistController extends Controller
     }
     public function destroy(Request $request, ?WishlistProduct $wishlistItem = null)
     {
-        // Bulk deletion via array of IDs from request
+        $with = [
+            'status' => [
+                'type' => 'success',
+                'message' => 'Item removed from wishlist.',
+            ],
+            'isCartOpen' => false,
+            'isWishlistOpen' => true,
+            'shopAsideOpen' => true,
+        ];
+
         if ($request->filled('ids')) {
             WishlistProduct::whereIn('id', $request->input('ids'))->delete();
-            $with = [
-                'status' => [
-                    'type' => 'success',
-                    'message' => 'Selected items removed from wishlist.',
-                ],
-                'isCartOpen' => false,
-                'isWishlistOpen' => true,
-                'shopAsideOpen' => true
-            ];
-
-            if ($request->input('from') == 'edit') {
-                return redirect()->route('shop.index')->with($with);
-            }
-            return redirect()->back()->with($with);
-        }
-
-        // Single deletion via route model binding
-        if ($wishlistItem) {
+            $with['status']['message'] = 'Selected items removed from wishlist.';
+        } elseif ($wishlistItem) {
             $wishlistItem->delete();
-            $with = [
+        } else {
+            // Handle the case when nothing was deleted
+            return redirect()->back()->with([
                 'status' => [
-                    'type' => 'success',
-                    'message' => 'Item removed from wishlist.',
+                    'type' => 'error',
+                    'message' => 'No item selected for deletion.',
                 ],
-                'isCartOpen' => false,
-                'isWishlistOpen' => true,
-                'shopAsideOpen' => true
-            ];
-            if ($request->input('from') == 'edit') {
-                return redirect()->route('shop.index')->with($with);
-            }
-
-            return redirect()->back()->with($with);
+            ]);
         }
+
+        // return redirect()->to(url()->previous() ?? route('shop.index'))->with($with);
+
+        return $request->input('from') === 'edit'
+            ? redirect()->route('shop.index')->with($with)
+            : redirect()->route('dashboard')->with($with);
     }
 }

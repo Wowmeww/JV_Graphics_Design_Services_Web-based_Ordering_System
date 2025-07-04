@@ -32,7 +32,6 @@
         handleFilter();
     }
 
-
     const sorts = [
         "Sort by name (A-Z)",
         "Sort by name (Z-A)",

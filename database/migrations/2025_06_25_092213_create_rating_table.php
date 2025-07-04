@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductOption;
 use App\Models\User;
@@ -29,7 +30,7 @@ return new class extends Migration
 
             $table->unsignedTinyInteger('stars'); // limit to 1–5 stars
             $table->text('message')->nullable(); // better for longer messages
-
+            $table->foreignIdFor(Order::class)->nullable();
             $table->timestamps();
         });
     }

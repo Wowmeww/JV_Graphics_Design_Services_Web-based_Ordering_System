@@ -53,7 +53,7 @@
 </script>
 
 <template>
-    <div v-if="status" class="fixed inset-x-0 top-[75vh] px-3 md:px-12 flex justify-center md:justify-end z-50">
+    <div v-if="status" @click="close" class="fixed inset-x-0 top-[75vh] px-3 md:px-12 flex justify-center md:justify-end z-50">
         <Transition name="fade">
             <div
                 class="flex relative min-w-sm max-w-md overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800 ">

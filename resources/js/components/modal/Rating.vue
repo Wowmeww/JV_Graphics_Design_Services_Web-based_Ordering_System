@@ -8,8 +8,8 @@
     const emit = defineEmits(['closeRatingModal']);
 
     const form = useForm({
-        stars: 0,
-        message: ''
+        stars: props.order.rating ? props.order.rating.stars : 0,
+        message: props.order.rating ? props.order.rating.message : ''
     });
 
     function submit() {

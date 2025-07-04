@@ -16,7 +16,7 @@
         quantity: props.wishlistItem.quantity
     });
 
-    const focusedImage = ref(product.images[0].image_path);
+    const focusedImage = ref(product.images[0]?.image_path);
 
     function changeFocusedImage(path) {
         focusedImage.value = path;
@@ -48,7 +48,8 @@
     }
 
     function goBack() {
-        router.get(route('shop.index'));
+        // router.get(route('shop.index'));
+        window.history.back();
     }
 
     const styleClass = {

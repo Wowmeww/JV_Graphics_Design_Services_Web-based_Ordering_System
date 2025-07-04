@@ -1,5 +1,5 @@
 <script setup>
-    import { usePage } from "@inertiajs/vue3";
+    import { router, usePage } from "@inertiajs/vue3";
     import { computed } from "vue";
     import Carousel from "../Carousel.vue";
 
@@ -27,20 +27,27 @@
             empty: emptyStars,
         };
     });
+
+    function filterCategory() {
+        router.get(route('shop.index'), { filter: { ...props.filter, category: props.product.category.name } });
+    }
 </script>
 
 
 <template>
     <div
-        class="h-fit animate__animated animate__fadeIn min-w-40 max-w-74 transition md:w-full text-white rounded-md glass p-2 md:p-4 bg-white/5 hover:bg-white/10 dark:bg-black/5 hover:dark:bg-black/10 border-1 border-white/40 space-y-2">
+        class="h-fit relative animate__animated animate__fadeIn min-w-40 max-w-74 transition md:w-full text-white rounded-md glass p-2 md:p-4 bg-white/5 hover:bg-white/10 dark:bg-black/5 hover:dark:bg-black/10 border-1 border-white/40 space-y-2">
+
+        <button @click="filterCategory"
+            class="absolute top-2 right-4 z-40 px-3 py-1 text-xs  bg-primary-500/90 rounded-full dark:bg-blue-400 ">
+            {{ product.category.name }}
+        </button>
         <div class=" w-full h-30 sm:h-36 md:h-60 lg:h-62">
             <Carousel :images-path="product.images.map(e => e.image_path)" />
         </div>
-        <div class="flex justify-end gap-0.5 py-2">
+        <!-- <div class="flex justify-end gap-0.5 py-2">
             <i class="fa-solid fa-eye p-1 rounded hover:bg-white/40 cursor-pointer"></i>
-            <i class="fa-solid fa-heart p-1 rounded hover:bg-white/40 cursor-pointer"></i>
-            <i class="fa-regular fa-heart p-1 rounded hover:bg-white/40 cursor-pointer"></i>
-        </div>
+        </div> -->
         <div class="md:space-y-3 space-y-1.5">
             <h3 class="md:text-xl text-lg leading-4 md:leading-5 lg:leading-8">
                 {{ product.name }}
