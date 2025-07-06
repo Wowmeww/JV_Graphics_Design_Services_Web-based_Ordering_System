@@ -69,7 +69,8 @@
                         <DashboardMenuItem type="button" label="announcements" :count="announcements.length"
                             icon="fa-solid fa-bullhorn" />
                     </a>
-                    <DashboardMenuItem type="button" label="profile" icon="fa-solid fa-user" />
+                    <DashboardMenuItem type="button" label="profile" is="Link" :href="route('profile.edit')"
+                        icon="fa-solid fa-user" />
                 </div>
             </ContainerPrimary>
         </div>

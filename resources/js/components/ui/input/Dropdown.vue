@@ -75,7 +75,7 @@
                 </button>
             </div>
             <p v-for="(option, i) of options" :key="i"
-                class="px-4 py-1 hover:bg-primary-100 transition dark:hover:bg-primary-400/10 cursor-pointer"
+                class="px-4 py-1 hover:bg-primary-100 transition dark:hover:bg-primary-400/10 dark:text-white cursor-pointer"
                 :class="option === value ? 'font-semibold' : ''" @click.prevent="handleOptionClick(option)">{{
                     option }}</p>
         </div>

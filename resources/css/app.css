@@ -61,7 +61,7 @@
   }
 
   .form-control {
-    @apply px-2.5 h-fit min-h-10 md:min-h-12 py-1.5 md:py-3.5 md:px-[1.375rem] rounded-md md:rounded-xl leading-5 border focus:outline-none focus:ring transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 bg-transparent;
+    @apply px-2.5 w-full h-fit min-h-10 md:min-h-12 py-1.5 md:py-3.5 md:px-[1.375rem] rounded-md md:rounded-xl leading-5 border focus:outline-none focus:ring transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 bg-transparent;
   }
 
   .form-control-primary {

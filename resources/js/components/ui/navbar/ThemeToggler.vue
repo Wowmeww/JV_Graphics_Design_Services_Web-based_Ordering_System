@@ -11,8 +11,6 @@
     ]
 
     const isOpen = ref(false);
-
-
 </script>
 
 <template>

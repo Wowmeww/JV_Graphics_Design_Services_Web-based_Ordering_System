@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'name' => 'Nico Bernard B. Firmanes',
             'email' => 'nicobernardfirmanes@gmail.com',
             'sex' => 'male',
-            'birth_date' => '02-25-2004',
+            'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
             'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
         ]);
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
             'name' => 'Nico Bernard B. Firmanes',
             'email' => 'nbfirmanes@sorsu.edu.ph',
             'sex' => 'male',
-            'birth_date' => '02-25-2004',
+            'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
             'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
         ]);
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
             'user_id' => $customer->id
         ]);
 
-        
+
 
         // CREATE USER WITH CART AND WISHLIST
         for ($i = 1; $i <= env('USERS', 14); $i++) {

@@ -8,9 +8,7 @@
     const user = page.props.auth?.user;
     const user_avatar_path = computed(() => {
         if (user.avatar_url) {
-            return user.avatar_url.includes('product_images')
-                ? `/storage/${user.avatar_url}`
-                : user.avatar_url;
+            return `/storage/${user.avatar_url}`
         }
         return '/images/avatar-placeholder.webp';
     });

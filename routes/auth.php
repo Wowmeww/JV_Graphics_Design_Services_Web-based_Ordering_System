@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -31,7 +32,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/reset-password/{token}', [PasswordResetController::class, 'passReset'])->name('password.reset');
 
-    Route::post('/reset-password',[PasswordResetController::class, 'passUpdate'])->name('password.update');
+    Route::post('/reset-password', [PasswordResetController::class, 'passUpdate'])->name('password.update');
 });
 
 Route::middleware('auth')->group(function () {
@@ -53,4 +54,15 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+});
+
+
+// PROFILE SETTINGS ROUTE
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/password/edit', [ProfileController::class, 'editPassword'])->name('password.edit');
+    Route::patch('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::get('/appearance/edit', [ProfileController::class, 'editAppearance'])->name('appearance.edit');
 });
