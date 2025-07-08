@@ -14,6 +14,8 @@ use Inertia\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
+
+
 class ProfileController extends Controller
 {
     /**
@@ -31,28 +33,34 @@ class ProfileController extends Controller
      * Update the user's profile information.
      */
 
+
     public function updateProfile(Request $request)
     {
         $user = $request->user();
 
-        // Validate fields
         $validated = $request->validate([
             'name'       => ['required', 'string', 'max:100'],
             'sex'        => ['required', 'string'],
-            'email' => ['required', 'email', 'lowercase', 'max:200', Rule::unique('users', 'email')->ignore($user->id)],
+            'email'      => ['required', 'email', 'lowercase', 'max:200', Rule::unique('users', 'email')->ignore($user->id)],
             'birth_date' => ['nullable', 'string'],
             'address'    => ['nullable', 'string', 'max:255'],
-            'avatar'     => ['nullable', 'image', 'max:1024'], // 1MB max
+            'avatar'     => ['nullable', 'image', 'max:1024'],
         ]);
 
-        // Update user fields
-        $user->update([
+        $updateData = [
             'name'       => $validated['name'],
             'sex'        => $validated['sex'],
-            'email'      => $validated['email'],
             'birth_date' => $validated['birth_date'] ?? null,
             'address'    => $validated['address'] ?? null,
-        ]);
+        ];
+
+        // Check if email was changed
+        if ($validated['email'] !== $user->email) {
+            $updateData['email'] = $validated['email'];
+            $updateData['email_verified_at'] = null;
+        }
+
+        $user->update($updateData);
 
         // Handle avatar actions
         $avatarAction = $request->input('avatarAction');
@@ -63,7 +71,6 @@ class ProfileController extends Controller
         }
 
         if ($avatarAction === 'upload' && $request->hasFile('avatar')) {
-            // Delete previous avatar if exists
             if ($user->avatar_url) {
                 Storage::disk('public')->delete($user->avatar_url);
             }
@@ -77,6 +84,7 @@ class ProfileController extends Controller
             'message' => 'Profile updated',
         ]);
     }
+
 
     public function editPassword(Request $request)
     {

@@ -59,7 +59,7 @@
                 <TextInputPrimary label="New Password" type="password" v-model="form.password"
                     :error="form.errors.password" placeholder="Choose a strong new password" />
 
-                <p class="text-sm mt-1 ml-1" :class="{
+                <p v-if="passwordStrength" class="text-sm mt-1 ml-1" :class="{
                     'text-red-500': passwordStrength === 'Weak',
                     'text-yellow-500': passwordStrength === 'Medium',
                     'text-green-500': passwordStrength === 'Strong',

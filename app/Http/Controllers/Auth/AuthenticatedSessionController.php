@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -54,13 +56,42 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-
-
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+
+    // EMAIL VERIFICATION FUNCTIONS
+    public function verificationNotice(Request $request)
+    {
+        return $request->user()
+            ->hasVerifiedEmail() ?
+            redirect()->intended(route('dashboard', absolute: false)) :
+            Inertia::render('auth/VerifyEmail', ['message' => session('message')]);
+    }
+
+    public function verificationVerify(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+
+        return redirect()->intended('/dashboard')->with('status', [
+            'type' => 'success',
+            'message' => 'Email successfully verified.',
+        ]);
+    }
+
+    public function verificationSend(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('message', 'email sent');
     }
 }

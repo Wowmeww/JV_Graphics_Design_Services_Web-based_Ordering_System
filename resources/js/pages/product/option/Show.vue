@@ -16,7 +16,7 @@ function goBack() {
 </script>
 <template>
     <Head title="View Product Variant" />
-    <div class="space-y-3 md:space-y-8">
+    <div class="space-y-3 md:space-y-8 pt-10">
         <PageTitleHeader title="Variant View" />
         <!---------- STATUS ALERT ------------------------------------------------------->
         <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->

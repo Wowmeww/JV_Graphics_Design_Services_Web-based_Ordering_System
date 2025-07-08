@@ -15,7 +15,7 @@
         mustVerifyEmail: Boolean
     });
 
-    const originalData = {
+    const form = useForm({
         name: props.user.name,
         sex: props.user.sex,
         email: props.user.email,
@@ -24,9 +24,7 @@
         avatarAction: 'none',
         avatar: null,
         _method: 'PATCH'
-    };
-
-    const form = useForm({ ...originalData });
+    });
 
     const isNotChanged = ref(true);
     const avatarPreview = ref(getAvatarUrl(props.user.avatar_url));
@@ -58,9 +56,7 @@
 
     // Watch form for changes to enable the submit button
     watch(form, (newVal) => {
-        const raw = toRaw(form);
-        const fieldsToCompare = ['name', 'sex', 'email', 'birth_date', 'address', 'avatarAction'];
-        isNotChanged.value = fieldsToCompare.every(key => raw[key] === originalData[key]) && !form.avatar;
+        isNotChanged.value = false;
     }, { deep: true });
 
     function submit() {
@@ -68,8 +64,7 @@
             preserveScroll: true,
             onSuccess: () => {
                 // Save the new data as original for future changes
-                Object.assign(originalData, { ...toRaw(form), avatar: null });
-                form.reset();
+                // form.reset();
                 isNotChanged.value = true;
             }
         });
@@ -94,7 +89,7 @@
                                 <img class="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500"
                                     :src="avatarPreview" alt="User avatar" />
                                 <button
-                                    v-if="(avatarPreview != `/storage/${user.avatar_url}`) || form.avatarAction == 'delete'"
+                                    v-if="form.avatarAction == 'delete' || (avatarPreview !== `storage/${props.avatar_url}` && props.avatar_url)"
                                     @click="resetAvatarPreview" type="button"
                                     class="absolute top-0 right-0 p-2.5 rounded-full bg-slate-300/80 hover:bg-slate-300/90">
                                     <i class="fa-solid fa-rotate-right"></i>

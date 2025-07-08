@@ -16,13 +16,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // make the id values like 5d99059a, fc1d90aa, 5f140659
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
+            $table->string('id', 8)->primary(); // Random 8-character string
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->string('status')->default('pending'); // pending, processing, completed, cancelled, received
+            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled', 'received', 'rated'])->default('pending');
             $table->string('type')->default('normal');
             $table->integer('quantity')->default(12);
-            $table->integer('total_amount')->default(12);
+            $table->decimal('total_amount', 10, 2);
             $table->string('note')->nullable();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(ProductOption::class, 'option_id')->nullable()->default(null)->constrained()->cascadeOnDelete();

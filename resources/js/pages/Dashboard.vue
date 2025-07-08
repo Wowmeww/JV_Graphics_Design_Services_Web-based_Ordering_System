@@ -1,12 +1,13 @@
 <script setup>
     import ThemeToggler from '@/components/ui/navbar/ThemeToggler.vue';
-    import ContainerPrimary from '../components/ContainerPrimary.vue';
-    import DashboardMenuItem from '../components/ui/card/DashboardMenuItem.vue';
+    import DashboardMenuItem from '@/components/ui/card/DashboardMenuItem.vue';
     import { usePage } from '@inertiajs/vue3';
     import { computed } from 'vue';
-    import Announcement from '../components/ui/card/Announcement.vue';
+    import Announcement from '@/components/ui/card/Announcement.vue';
     import DashboardCartWishlistItem from '../components/ui/card/DashboardCartWishlistItem.vue';
-    import DashboardOrder from '../components/ui/card/DashboardOrder.vue';
+    import DashboardOrder from '@/components/ui/card/DashboardOrder.vue';
+    import AdminDashboard from '@/components/sections/AdminDashboard.vue';
+    import ContainerPrimary from '@/components/ContainerPrimary.vue';
 
     //   import ProductsManagement from '../components/sections/ProductsManagement.vue'
 
@@ -14,7 +15,8 @@
 
     const props = defineProps({
         user: Object,
-        announcements: Object
+        announcements: Object,
+        shop: Object
     });
 
     function openCart() {
@@ -53,15 +55,19 @@
 
     <Head title="Dashboard" />
 
-    <div :class="styleClass.pageContainer">
+
+    <AdminDashboard v-if="user.is_admin" :shop="shop" />
+
+    <!-- CUSTOMER -->
+    <div v-else :class="styleClass.pageContainer">
         <div class="py-6 space-y-4 ">
             <ContainerPrimary v-if="true" title="Dashboard">
                 <div class="flex flex-wrap justify-center gap-4 pt-2">
                     <DashboardMenuItem is="Link" :href="route('order.index')" type="button" label="orders"
                         :count="orderCount" icon="fa-solid fa-bag-shopping" />
                     <DashboardMenuItem type="button" @click="openWishlist" label="wishlist"
-                        :count="user.wishlist.items.length" icon="fa-solid fa-heart" />
-                    <DashboardMenuItem type="button" @click="openCart" label="cart" :count="user.cart.items.length"
+                        :count="user.wishlist?.items.length" icon="fa-solid fa-heart" />
+                    <DashboardMenuItem type="button" @click="openCart" label="cart" :count="user.cart?.items.length"
                         icon="fa-solid fa-cart-shopping" />
                     <DashboardMenuItem type="button" label="message" :count="user.messages.length"
                         icon="fa-solid fa-comments" />
@@ -83,7 +89,7 @@
                         :key="announcement.id" />
                 </div>
             </div>
-            <div v-if="user.cart.items.length" :class="styleClass.fragment">
+            <div v-if="user.cart?.items.length" :class="styleClass.fragment">
                 <p :class="styleClass.fragmentTitle">Cart items</p>
                 <div :class="styleClass.scrollContainer">
                     <div class="grid justify-center sm:grid-cols-2 gap-2">
@@ -92,7 +98,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="user.wishlist.items.length" :class="styleClass.fragment">
+            <div v-if="user.wishlist?.items.length" :class="styleClass.fragment">
                 <p :class="styleClass.fragmentTitle">Wishlist items</p>
                 <div :class="styleClass.scrollContainer">
                     <div class="grid justify-center sm:grid-cols-2 gap-2">

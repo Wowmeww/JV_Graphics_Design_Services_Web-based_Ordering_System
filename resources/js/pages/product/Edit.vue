@@ -89,7 +89,7 @@
 
     <Head title="Edit Product" />
 
-    <form class="space-y-3 md:space-y-8" @submit.prevent="submit">
+    <form class="space-y-3 md:space-y-8 pt-10" @submit.prevent="submit">
         <PageTitleHeader title="Product Editor" />
         <!---------- STATUS ALERT ------------------------------------------------------->
         <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->

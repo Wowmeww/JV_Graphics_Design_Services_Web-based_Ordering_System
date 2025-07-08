@@ -8,7 +8,7 @@
     const user = page.props.auth?.user;
     const user_avatar_path = computed(() => {
         if (user.avatar_url) {
-            return `/storage/${user.avatar_url}`
+            return user.avatar_url.includes('https') ? user.avatar_url : `/storage/${user.avatar_url}`
         }
         return '/images/avatar-placeholder.webp';
     });
@@ -64,7 +64,7 @@
     }
 
     const styleClass = {
-        name: 'text-sm text-gray-900 dark:text-white',
+        name: 'text-sm text-gray-900 dark:text-white flex items-center justify-between min-w-54',
         email: 'text-sm font-medium text-gray-900 truncate dark:text-gray-300',
         profile: 'flex w-10 h-10 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600',
         image: 'h-full w-full rounded-full ring-1 ring-secondary-400 dark:ring-secondary-200',
@@ -87,15 +87,21 @@
 
         <!-- Dropdown Menu -->
         <div v-show="isDropdownOpen" id="dropdown-user" :class="styleClass.dropdown">
-            <div class="px-4 py-3" role="none">
+            <Link as="button" type="button" :href="route('profile.edit')"
+                class="px-4 py-3 block w-full text-left hover:bg-slate-100 dark:hover:bg-gray-600">
 
-                <p :class="styleClass.name">
+            <p :class="styleClass.name">
+                <span>
                     {{ user.name }}
-                </p>
-                <p :class="styleClass.email">
-                    {{ user.email }}
-                </p>
-            </div>
+                </span>
+                <i class="fa-solid fa-pen-to-square"></i>
+            </p>
+            <p :class="styleClass.email">
+                {{ user.email }}
+            </p>
+
+
+            </Link>
             <div class="py-1" role="none">
 
                 <Link :href="route('dashboard')" :class="styleClass.dropdownButton" role="menuitem">
@@ -111,9 +117,10 @@
                     <i class="fa-solid fa-heart"></i>
                 </button>
 
-                <a href="#" :class="styleClass.dropdownButton" role="menuitem">
-                    Settings <i class="fa-solid fa-gear"></i>
-                </a>
+                <Link as="button" type="button" :href="route('appearance.edit')" :class="styleClass.dropdownButton"
+                    role="menuitem">
+                Settings <i class="fa-solid fa-gear"></i>
+                </Link>
 
                 <button @click="logout" :class="styleClass.dropdownButton" role="menuitem">
                     Sign out <i class="fa-solid fa-arrow-right-from-bracket"></i>

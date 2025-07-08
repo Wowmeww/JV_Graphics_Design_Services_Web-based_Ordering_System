@@ -115,6 +115,7 @@
 
                         <OrderTabCard @rate="({ order }) => forRate = order" showRate v-for="order in rateOrders"
                             :key="`rate-${order.id}`" :order="order" label="Ready for rating" />
+                            
                         <OrderTabCard @rate="({ order }) => forRate = order" showRate v-for="order in ratedOrders"
                             :key="`rated-${order.id}`" :order="order" label="Rated" />
                     </div>

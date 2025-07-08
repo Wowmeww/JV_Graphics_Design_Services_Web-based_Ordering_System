@@ -120,7 +120,7 @@
         <div v-if="props.order.status == 'rated'" class="px-6">
             <div class="flex justify-center gap-2 text-yellow-400 text-2xl">
                 <p v-for="i in 5" :key="i" type="button" class="hover:scale-125 transition transform">
-                    <i v-if="i > order.rating.stars" class="fa-regular fa-star"></i>
+                    <i v-if="i > order.rating?.stars" class="fa-regular fa-star"></i>
                     <i v-else class="fa-solid fa-star"></i>
                 </p>
             </div>

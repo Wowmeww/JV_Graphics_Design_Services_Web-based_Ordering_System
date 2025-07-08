@@ -23,9 +23,9 @@
     const avatar_src = computed(() => {
         let src = props.announcement.user.avatar_url;
         if (src) {
-            return src.includes('product_images')
-                ? `/storage/${src}`
-                : src;
+            return src.includes('https')
+                ? src
+                : `/storage/${src}`;
         }
         return '/images/avatar-placeholder.webp';
     });
@@ -59,7 +59,8 @@
             </button>
 
             <div class="flex items-center">
-                <img class="hidden object-cover w-10 h-10 mx-4 rounded-full border border-primary dark:border-primary-200 sm:block" :src="avatar_src" alt="avatar">
+                <img class="hidden object-cover w-10 h-10 mx-4 rounded-full border border-primary dark:border-primary-200 sm:block"
+                    :src="avatar_src" alt="avatar">
                 <a class="font-bold text-gray-700 cursor-pointer dark:text-gray-200" tabindex="0" role="link">
                     {{ announcement.user.name }}
                 </a>

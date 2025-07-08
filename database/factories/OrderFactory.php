@@ -15,16 +15,19 @@ class OrderFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    //  more rialistic date
     public function definition(): array
     {
-        $qty = rand(1,4) * 12;
+        $qty = rand(1, 4) * 12;
         return [
             'user_id' => User::factory(),
-            'status' => 'pending',
+            'status' => fake()->randomElement(['pending', 'processing', 'completed', 'cancelled', 'received', 'rated']),
             'type' => 'normal',
             'quantity' => $qty,
             'total_amount' => $qty * 68,
-            'note' => fake()->randomElement([null, fake()->realText(rand(16, 30))])
+            'note' => fake()->randomElement([null, fake()->realText(rand(16, 30))]),
+            'created_at' => fake()->dateTimeBetween('-1 months', 'now'),
         ];
     }
 }
