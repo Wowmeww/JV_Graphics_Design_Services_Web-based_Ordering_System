@@ -131,7 +131,14 @@
     @apply text-blue-600 cursor-pointer hover:underline transition-all duration-200 ease-in-out;
   }
 
-  button, [type = button], [type = submit], [type=checkbox], [type=radio] {
+  button,
+  [type=button],
+  [type=submit],
+  [type=checkbox],
+  [type=radio] {
     @apply cursor-pointer;
   }
+
+
 }
+

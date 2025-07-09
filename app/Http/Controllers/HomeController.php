@@ -44,7 +44,8 @@ class HomeController extends Controller
         $shop = [
             'orders'    => [],
             'customers' => 0,
-            'products'  => []
+            'products'  => [],
+            'announcements' => []
         ];
 
         // Only load these if admin
@@ -56,6 +57,7 @@ class HomeController extends Controller
             $shop['customers'] = User::where('role', 'customer')->count();
 
             $shop['products'] = Product::with('images')->get();
+            $shop['announcements'] = Announcement::with('user')->latest()->get();
         }
 
         $announcements = Announcement::with('user')->latest()->take(10)->get();

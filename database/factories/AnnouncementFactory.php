@@ -18,9 +18,9 @@ class AnnouncementFactory extends Factory
     public function definition(): array
     {
         return [
-            'admin_id' => User::where('role', 'admin')->first(),
+            'admin_id' => User::where('role', 'admin')->inRandomOrder()->value('id'),
             'title' => fake()->realText(rand(16, 30)),
-            'content' => fake()->realText(rand(24, 80)),
+            'content' => implode("\n\n", fake()->paragraphs(rand(1, 7))),
         ];
     }
 }
