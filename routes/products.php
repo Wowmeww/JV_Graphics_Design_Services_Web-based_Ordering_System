@@ -6,7 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductOptionController;
 
 
-Route::middleware(['auth', 'verified', 'can:create,App\Models\Product'])->group(function () {
+Route::middleware(['auth', 'verified', 'can:create,App\Models\Product', 'password.confirm'])->group(function () {
 
     // Product Routes
     Route::resource('products', ProductController::class)->names('product');

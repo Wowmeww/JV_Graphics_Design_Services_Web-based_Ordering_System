@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class, 'sender_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class, 'receiver_id')->constrained()->cascadeOnDelete();
             $table->string('content');
+            $table->boolean('seen')->default(false);
             $table->timestamps();
         });
     }

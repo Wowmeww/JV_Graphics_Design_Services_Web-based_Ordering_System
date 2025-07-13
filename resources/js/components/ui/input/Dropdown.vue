@@ -44,7 +44,7 @@
 
 <template>
     <div class="relative form-group flex flex-col">
-        <label class="input-label">
+        <label v-if="label" class="input-label">
             {{ label }}
             <span v-show="required" class="text-red-600 dark:text-red-500 font-black">*</span>
         </label>

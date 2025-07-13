@@ -1,20 +1,21 @@
 <script setup>
-import Status from '@/components/alert/Status.vue';
-import ContainerPrimary from '@/components/ContainerPrimary.vue';
-import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
-import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
-import Product from '@/components/ui/card/Product.vue';
-import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
+    import Status from '@/components/alert/Status.vue';
+    import ContainerPrimary from '@/components/ContainerPrimary.vue';
+    import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
+    import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
+    import Product from '@/components/ui/card/Product.vue';
+    import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
 
-const props = defineProps({
-    product: Object,
-});
+    const props = defineProps({
+        product: Object,
+    });
 
-function goBack() {
-    window.history.back();
-}
+    function goBack() {
+        window.history.back();
+    }
 </script>
 <template>
+
     <Head title="View Product" />
     <div class="space-y-3 md:space-y-8 pt-10">
         <PageTitleHeader title="Product View" />
@@ -81,12 +82,9 @@ function goBack() {
                             <Product v-for="opt of product.options" :key="opt.id" :product="opt" />
 
                             <!---------- OPTION CREATE LINK ------------------------------------------------------->
-                            <Link
-                                :href="route('option.create', product)"
-                                type="button"
-                                class="container-primary text-secondary border-secondary dark:text-secondary-100 :text-6xl hover:bg-secondary-200/60 dark:hover:bg-secondary-200/10 inline-block w-full min-w-fit rounded-xl border-2 bg-white p-4 text-center text-4xl text-wrap transition duration-1000 dark:border-white/10 dark:bg-[#1e293b]"
-                            >
-                                <i class="fa-solid fa-plus"></i>
+                            <Link :href="route('option.create', product)" type="button"
+                                class="container-primary text-secondary border-secondary dark:text-secondary-100 :text-6xl hover:bg-secondary-200/60 dark:hover:bg-secondary-200/10 inline-block w-full min-w-fit rounded-xl border-2 bg-white p-4 text-center text-4xl text-wrap transition duration-1000 dark:border-white/10 dark:bg-[#1e293b]">
+                            <i class="fa-solid fa-plus"></i>
                             </Link>
                         </div>
                     </div>
@@ -98,8 +96,9 @@ function goBack() {
                 </div>
             </div>
             <div class="mx-auto grid max-w-3xl grid-cols-2 gap-3 py-6 pt-8">
-                <PillPrimary is="Link" :href="route('product.edit', product)" label="Edit" variant="secondary" type="button" />
-                <PillPrimary is="Link" :href="route('product.index')" label="Back" variant="outlineSecondary" />
+                <PillPrimary is="Link" :href="route('product.edit', product)" label="Edit" variant="secondary"
+                    type="button" />
+                <PillPrimary @click="goBack" label="Back" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>
     </div>

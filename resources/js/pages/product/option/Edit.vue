@@ -1,5 +1,4 @@
 <script setup>
-    import Status from '@/components/alert/Status.vue';
     import ContainerPrimary from '@/components/ContainerPrimary.vue';
     import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
     import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
@@ -54,7 +53,7 @@
 
     function resetForm() {
         form.reset();
-        images.value = [...props.product.images];
+        images.value = [...props.option?.images];
         is_unchanged.value = true;
     }
 
@@ -88,7 +87,7 @@
     <form class="space-y-3 md:space-y-8 pt-10" @submit.prevent="submit">
         <PageTitleHeader title="Product Variant Editor" />
         <!---------- STATUS ALERT ------------------------------------------------------->
-        <Status :status="$page.props.status" @close="() => ($page.props.status = null)" />
+        <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->
 
         <ContainerPrimary title="Product Variant Setting">
             <div class="grid gap-6 pt-2 md:grid-cols-2">
@@ -138,7 +137,7 @@
                     type="submit" />
                 <PillPrimary @click="handleDelete" label="Delete" variant="outlineSecondary"
                     :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'" />
-                <PillPrimary @click="resetForm" label="Reset" variant="outlineSecondary" />
+                <PillPrimary @click="resetForm" label="Reset" :disabled="is_unchanged" variant="outlineSecondary" />
                 <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>

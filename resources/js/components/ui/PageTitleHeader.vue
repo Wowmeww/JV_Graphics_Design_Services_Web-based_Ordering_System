@@ -5,7 +5,6 @@
 
     defineProps({
         title: String,
-
     });
 
     const currentDate = ref(new Date().toLocaleDateString('en-us', {

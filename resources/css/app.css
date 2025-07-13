@@ -140,5 +140,7 @@
   }
 
 
+  .container-secondary {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 transition-all hover:shadow-md dark:bg-[#1e293b] dark:border-gray-100/30 dark:shadow-white/30;
+  }
 }
-

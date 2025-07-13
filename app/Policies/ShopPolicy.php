@@ -9,8 +9,9 @@ class ShopPolicy
     /**
      * Create a new policy instance.
      */
-    public function __construct()
+    public function shop(?User $user): bool
     {
-        //
+        return $user && $user->role === 'customer';
     }
 }
+

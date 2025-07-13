@@ -108,11 +108,13 @@
                 Dashboard
                 <i class="fa-solid fa-chart-pie"></i>
                 </Link>
-                <button type="button" @click="openCart" :class="styleClass.dropdownButton" role="menuitem">
+                <button v-if="!user.is_admin" type="button" @click="openCart" :class="styleClass.dropdownButton"
+                    role="menuitem">
                     Cart
                     <i class="fa-solid fa-cart-shopping"></i>
                 </button>
-                <button type="button" @click="openWishlist" :class="styleClass.dropdownButton" role="menuitem">
+                <button v-if="!user.is_admin" type="button" @click="openWishlist" :class="styleClass.dropdownButton"
+                    role="menuitem">
                     Wishlist
                     <i class="fa-solid fa-heart"></i>
                 </button>

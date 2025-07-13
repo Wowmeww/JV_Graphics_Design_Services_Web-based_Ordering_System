@@ -26,6 +26,6 @@
 
         <!-- Paginator -->
         <!---------------------------------- Paginator ----------------------------------------------->
-        <Paginator :products="products" />
+        <Paginator :paginator="products" />
     </div>
 </template>

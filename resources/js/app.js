@@ -13,7 +13,11 @@ import { initializeTheme } from './composables/useAppearance';
 // import AuthLayout from './layouts/AuthLayout.vue';
 import SolveLayout from './layouts/SolveLayout.vue';
 
+import './echo';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+
 
 createInertiaApp({
     title: (title) => title ? `${title} - ${appName}` : appName,

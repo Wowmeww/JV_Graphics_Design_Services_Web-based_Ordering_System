@@ -12,6 +12,8 @@
         tab: String
     });
 
+    const emit = defineEmits(['changeTab']);
+
     const tabs = computed(() => [
         { name: 'Under Review', icon: 'bi bi-hourglass text-lg', count: props.pendingOrders.length },
         { name: 'Processing', icon: 'bi bi-paint-bucket text-xl', count: props.processingOrders.length },
@@ -32,6 +34,11 @@
         tabsContainer: 'flex flex-wrap border-b border-gray-200 dark:border-gray-700 text-sm font-medium text-center text-gray-500 dark:text-gray-400',
         tabTitle: 'font-semibold text-indigo-600 items-center pb-2 pr-2 border-b-2 border-indigo-600 uppercase inline-block'
     }
+
+    function changeTab(tab) {
+        emit('changeTab', tab)
+        activeTab.value = tab;
+    }
 </script>
 
 <template>
@@ -41,7 +48,7 @@
         <i class="bi bi-arrow-left text-xl "></i>
         Back
         </Link>
-        <button v-for="tab in tabs" :key="tab.name" @click="activeTab = tab.name"
+        <button v-for="tab in tabs" :key="tab.name" @click="changeTab(tab.name)"
             :class="tab.name === activeTab ? `${styleClass.tab} ${styleClass.active}` : styleClass.tab">
             <span v-if="tab.count"
                 class="absolute text-xs top-0 right-0 bg-primary-400 p-0.5 rounded-full h-5 w-5 text-white">{{ tab.count
@@ -115,7 +122,7 @@
 
                         <OrderTabCard @rate="({ order }) => forRate = order" showRate v-for="order in rateOrders"
                             :key="`rate-${order.id}`" :order="order" label="Ready for rating" />
-                            
+
                         <OrderTabCard @rate="({ order }) => forRate = order" showRate v-for="order in ratedOrders"
                             :key="`rated-${order.id}`" :order="order" label="Rated" />
                     </div>

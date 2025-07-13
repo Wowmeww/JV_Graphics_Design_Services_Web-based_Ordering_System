@@ -85,6 +85,16 @@
         // router.get(route('shop.index'), { filter: props.filter });
     }
 
+    function image_url(src) {
+        // let src = props.product?.images[0];
+        if (src) {
+            return src.includes('https')
+                ? src
+                : `/storage/${src}`;
+        }
+        return '/images/img-placeholder.jpg';
+    };
+
     const styleClass = {
         name: 'font-semibold text-xl',
         text: 'text-slate-600 leading-tight dark:text-slate-200',
@@ -107,12 +117,11 @@
                     <div class="space-y-2">
                         <img class="h-20 w-20 cursor-pointer"
                             :class="{ 'border-2 border-secondary object-center object-cover dark:border-white': image.image_path === focusedImage }"
-                            v-for="image of tempProduct.images" :src="image.image_path" :key="image.id" alt=""
-                            @click="changeFocusedImage(image.image_path)" />
+                            v-for="image of tempProduct.images" :src="image_url(image.image_path)" :key="image.id"
+                            alt="" @click="changeFocusedImage(image.image_path)" />
                     </div>
                     <div class="flex-1 md:h-[30rem] h-60 sm:h-70">
-                        <img :src="focusedImage ? focusedImage : '/images/img-placeholder.jpg'" alt=""
-                            class="object-center object-cover w-full h-full" />
+                        <img :src="image_url(focusedImage)" alt="" class="object-center object-cover w-full h-full" />
                     </div>
                 </div>
                 <div class="flex-1 h-[32rem]  overflow-y-scroll">

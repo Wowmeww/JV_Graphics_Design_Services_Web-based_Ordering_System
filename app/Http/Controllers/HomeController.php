@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use App\Models\Category;
+use App\Models\Message;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
 class HomeController extends Controller
 {
     public function index()
@@ -53,11 +53,10 @@ class HomeController extends Controller
             $shop['orders'] = Order::with(['user', 'product.category', 'option'])
                 ->latest()
                 ->get();
-
             $shop['customers'] = User::where('role', 'customer')->count();
-
             $shop['products'] = Product::with('images')->get();
             $shop['announcements'] = Announcement::with('user')->latest()->get();
+            $shop['messages'] = Message::all()->count();
         }
 
         $announcements = Announcement::with('user')->latest()->take(10)->get();

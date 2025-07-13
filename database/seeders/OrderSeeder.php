@@ -29,7 +29,6 @@ class OrderSeeder extends Seeder
                     'total_amount' => $qty * $product->price,
                     'product_id' => $product->id,
                 ]);
-
             }
         }
     }

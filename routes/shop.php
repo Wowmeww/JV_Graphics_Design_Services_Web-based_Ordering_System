@@ -12,7 +12,7 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/products/fetch', [ShopController::class, 'fetch'])->name('shop.fetch');
 Route::get('/shop/{product}/{option?}', [ShopController::class, 'show'])->name('shop.show');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'can:shop'])->group(function () {
     // CART ROUTES
     Route::post('/shop-cart/{product}/{option?}', [CartController::class, 'store'])->name('cart.store');
     Route::get('/shop-cart/item/{cartItem}/edit', [CartController::class, 'edit'])->name('cart.edit');

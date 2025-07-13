@@ -144,7 +144,7 @@
                     type="submit" />
                 <PillPrimary @click="handleDelete" label="Delete" variant="outlineSecondary"
                     :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'" />
-                <PillPrimary @click="resetForm" label="Reset" variant="outlineSecondary" />
+                <PillPrimary @click="resetForm" label="Reset" :disabled="is_unchanged || form.processing" variant="outlineSecondary" />
                 <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>

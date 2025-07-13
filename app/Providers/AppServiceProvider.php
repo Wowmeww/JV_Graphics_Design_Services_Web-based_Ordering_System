@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
+use App\Policies\ShopPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -27,9 +28,12 @@ class AppServiceProvider extends ServiceProvider
         // Model::preventLazyLoading();
         Model::automaticallyEagerLoadRelationships();
 
-
         Gate::policy(Product::class, ProductPolicy::class);
 
-        // Gate::policy(Cart::class)
+        Gate::define('shop', [ShopPolicy::class, 'shop']);
+
+        Inertia::share([
+            'urlPrevious' => url()->previous()
+        ]);
     }
 }

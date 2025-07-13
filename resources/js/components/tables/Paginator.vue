@@ -2,7 +2,7 @@
     import { computed } from 'vue';
 
     const props = defineProps({
-        products: Object,
+        paginator: Object,
     });
 
     const styleClass = {
@@ -13,7 +13,7 @@
     };
 
     const processedLinks = computed(() => {
-        const links = props.products.links;
+        const links = props.paginator.links;
         const total = links.length;
 
         // Always include first 3 and last 3

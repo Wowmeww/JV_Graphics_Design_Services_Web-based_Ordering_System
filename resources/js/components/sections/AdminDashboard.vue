@@ -276,40 +276,67 @@
                         </p>
                     </div>
                 </div>
+
+                <!-- Messages Stat Card -->
+                <div :class="[styleClass.stat.container, 'border-purple-500']">
+                    <div class="p-3 bg-purple-100 rounded-full text-purple-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h3 :class="styleClass.stat.title">Messages</h3>
+                        <p :class="styleClass.stat.count">{{ shop.messages }}</p>
+                    </div>
+                </div>
             </div>
-
-
-
         </ContainerPrimary>
 
         <div class="py-10 ">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-600 ">
-                <!-- Sales Report Chart -->
-                <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4">
-                    <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Sales Report</h3>
-                    <VueApexCharts :options="charts.sales.options" :type="charts.sales.type"
-                        :height="charts.sales.height" :width="charts.sales.width" :series="charts.sales.series" />
-                </div>
-                <!-- Daily Site Visitors -->
-                <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4 ">
-                    <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Daily Site Visitors</h3>
-                    <VueApexCharts :options="charts.visits.options" :type="charts.visits.type"
-                        :height="charts.visits.height" :width="charts.visits.width" :series="charts.visits.series" />
-                </div>
-                <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4">
-                    <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Sales by Category</h3>
-                    <VueApexCharts :options="charts.categorySales.options" :type="charts.categorySales.type"
-                        :height="charts.categorySales.height" :width="charts.categorySales.width"
-                        :series="charts.categorySales.series" />
-                </div>
-                <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4 flex flex-col">
-                    <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Top Products</h3>
-
-                    <div class="h-96 overflow-y-scroll">
-                        <TopProduct v-for="product in topProducts" :key="product.id" :product="product" />
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <!-- Sales Report Chart -->
+                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4 md:col-span-7">
+                        <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Sales Report</h3>
+                        <VueApexCharts :options="charts.sales.options" :type="charts.sales.type"
+                            :height="charts.sales.height" :width="charts.sales.width" :series="charts.sales.series" />
+                    </div>
+                    <!-- Daily Site Visitors -->
+                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4 md:col-span-5">
+                        <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Daily Site Visitors</h3>
+                        <VueApexCharts :options="charts.visits.options" :type="charts.visits.type"
+                            :height="charts.visits.height" :width="charts.visits.width"
+                            :series="charts.visits.series" />
                     </div>
                 </div>
-                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 ">
+                <div class="md:col-span-2 grid gap-2 md:grid-cols-12">
+                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4  flex flex-col md:col-span-4" v-if="sales.length">
+                        <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Sales by Category</h3>
+                        <VueApexCharts :options="charts.categorySales.options" :type="charts.categorySales.type"
+                            :height="charts.categorySales.height" :width="charts.categorySales.width"
+                            :series="charts.categorySales.series" />
+                    </div>
+                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4 flex flex-col md:col-span-3"
+                        v-if="topProducts.length">
+                        <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Messages</h3>
+
+                        <div class="h-96 overflow-y-scroll px-2">
+                            <TopProduct v-for="product in topProducts" :key="product.id" :product="product" />
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4 flex flex-col md:col-span-5"
+                        v-if="topProducts.length">
+                        <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Top Products</h3>
+
+                        <div class="h-96 overflow-y-scroll px-2">
+                            <TopProduct v-for="product in topProducts" :key="product.id" :product="product" />
+                        </div>
+                    </div>
+                </div>
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 " v-if="recentOrders.length">
                     <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4">
                         <div class="h-full  flex flex-col">
                             <h3 class="text-lg dark:text-slate-300 font-semibold mb-2 ">Recent Orders</h3>
@@ -321,7 +348,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4">
+                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4" v-if="shop.announcements.length">
                         <div class="h-full  flex flex-col">
                             <h3 class="text-lg dark:text-slate-300 font-semibold mb-2 ">Announcements</h3>
 

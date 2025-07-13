@@ -17,7 +17,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'id' => 1,
             'role' => 'admin',
             'name' => 'Nico Bernard B. Firmanes',
             'email' => 'nicobernardfirmanes@gmail.com',
@@ -26,18 +25,22 @@ class UserSeeder extends Seeder
             'password' => bcrypt(123),
             'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
         ]);
-        User::factory()->create([
-            'role' => 'admin',
-            'name' => env('APP_NAME'),
-            'email' => 'jvgraphicsdesignservices@mail.com',
-            'password' => bcrypt(123),
-            'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
-        ]);
+
         $customer = User::factory()->create([
             'name' => 'Nico Bernard B. Firmanes',
             'email' => 'nbfirmanes@sorsu.edu.ph',
             'sex' => 'male',
             'birth_date' => '2004-02-25',
+            'password' => bcrypt(123),
+            'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
+        ]);
+
+        User::factory()->create([
+            'role' => 'admin',
+            'name' => "JV Graphics Design Services",
+            'email' => 'jvgraphicsdesignservices@mail.com',
+            'sex' => 'male', // <-- add this
+            'birth_date' => '2000-01-01', // <-- add this
             'password' => bcrypt(123),
             'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
         ]);

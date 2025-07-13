@@ -25,6 +25,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
+
     // Password Reset
     Route::get('/forgot-password', [PasswordResetController::class, 'passRequest'])->name('password.request');
 
@@ -35,27 +38,25 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [PasswordResetController::class, 'passUpdate'])->name('password.update');
 });
 
-Route::middleware('auth')->group(function () {
-    // Route::get('verify-email', EmailVerificationPromptController::class)
-    //     ->name('verification.notice');
 
-    // Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-    //     ->middleware(['signed', 'throttle:6,1'])
-    //     ->name('verification.verify');
+// EMAIL VERIFICATION ROUTES
 
-    // Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-    //     ->middleware('throttle:6,1')
-    //     ->name('verification.send');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/email/verify', [AuthenticatedSessionController::class, 'verificationNotice'])
+        ->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [AuthenticatedSessionController::class, 'verificationVerify'])
+        ->middleware(['signed'])->name('verification.verify');
+    Route::post('/email/verification-notification', [AuthenticatedSessionController::class, 'verificationSend'])
+        ->middleware(['throttle:6,1'])
+        ->name('verification.send');
+
+
+    // PASSWORD CONFIRMATION ROUTES
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
         ->name('password.confirm');
-
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
 });
-
 
 // PROFILE SETTINGS ROUTE
 

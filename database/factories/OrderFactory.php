@@ -22,7 +22,8 @@ class OrderFactory extends Factory
         $qty = rand(1, 4) * 12;
         return [
             'user_id' => User::factory(),
-            'status' => fake()->randomElement(['pending', 'processing', 'completed', 'cancelled', 'received', 'rated']),
+            // 'status' => fake()->randomElement(['pending', 'processing', 'completed', 'cancelled', 'received', 'rated']),
+            'status' => 'pending',
             'type' => 'normal',
             'quantity' => $qty,
             'total_amount' => $qty * 68,
