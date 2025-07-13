@@ -94,7 +94,7 @@ class ManageOrderController extends Controller
             ]);
         }
 
-        event(new OrderStatusEvent(User::find($order->user_id)));
+        event(new OrderStatusEvent(User::find($order->user_id), $order));
 
         return back()->with('status', [
             'type' => 'success',

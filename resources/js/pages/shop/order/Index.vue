@@ -2,7 +2,7 @@
     import { computed, ref, onMounted } from 'vue';
     import Tabs from '@/components/sections/OrderTabs.vue';
     import { router } from '@inertiajs/vue3';
-    import echo from '@/echo';
+    import { useEcho } from "@laravel/echo-vue";
     // Props
     const props = defineProps({
         orders: Array,
@@ -22,10 +22,18 @@
     const ratedOrders = computed(() => orderList.value.filter(order => order.status === 'rated'));
 
 
-    echo.private(`update-order-status.${props.user.id}`)
-        .listen('.OrderStatusUpdated', () => {
-            router.get(route('order.index'), { tab: activeTab.value }, { preserveScroll: true });
-        });
+    useEcho(
+        `update-order-status.${props.user.id}`,
+        '.OrderStatusUpdated',
+        (e) => {
+            const index = orderList.value.findIndex(order => order.id === e.order.id);
+            if (index !== -1) {
+                orderList.value[index] = e.order;
+            } else {
+                orderList.value.unshift(e.order); // Add new order at the top if needed
+            }
+        },
+    );
 
 
 </script>

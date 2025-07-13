@@ -16,6 +16,7 @@ class OrderStatusEvent implements ShouldBroadcast
 
     public function __construct(
         public User $user,
+        public Order $order
     ) {}
 
     /**
@@ -32,5 +33,12 @@ class OrderStatusEvent implements ShouldBroadcast
     public function broadcastAs(): string
     {
         return 'OrderStatusUpdated';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'order' => $this->order->load(['product.images', 'option.images', 'rating'])
+        ];
     }
 }
