@@ -105,4 +105,12 @@ class User extends Authenticatable  implements MustVerifyEmail
     {
         return $this->orders()->create($data);
     }
+
+    public function sendMessage($receiver_id, $content): Message
+    {
+        return $this->sentMessages()->create([
+            'receiver_id' => $receiver_id,
+            'content' => $content,
+        ]);
+    }
 }

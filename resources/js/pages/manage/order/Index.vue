@@ -1,12 +1,13 @@
 <script setup>
     import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
     import Paginator from '../../../components/tables/Paginator.vue';
-    import { computed, reactive, watch } from 'vue';
-    import Search from '../../../components/ui/Search.vue';
+    import { computed, reactive, ref, watch } from 'vue';
     import Dropdown from '../../../components/ui/input/Dropdown.vue';
     import { router, useForm } from '@inertiajs/vue3';
     import { route } from 'ziggy-js';
     import { debounce } from 'lodash';
+    import { useEcho } from "@laravel/echo-vue";
+
 
     const props = defineProps({
         orders: Object,
@@ -14,23 +15,34 @@
         statusOptions: Array
     });
 
+    const tempOrders = ref([...props.orders.data]);
 
     const params = route().params;
 
+    watch(() => props.orders.data, () => tempOrders.value = [...props.orders.data]);
     const form = reactive({
         search: params.search || null,
         status: params.status || null,
     });
+    // am I adding order corectly?
+    useEcho(
+        'order-placed',
+        '.OrderPlaced',
+        ({ order }) => {
+            tempOrders.value.unshift(order);
+            router.reload({ preserveState: true, preserveScroll: true });
+        },
+    );
 
     const applyFilters = () => {
         router.get(route('manage.orders.index'), { ...form, page: 1 }, {
-            preserveState: true
+            preserveState: true,
+            preserveScroll: true
         });
+
     }
 
-    watch(form, debounce(() => {
-        applyFilters();
-    }, 400));
+    watch(form, debounce(applyFilters, 400), { deep: true });
 
     function clearFilter() {
         form.search = null;
@@ -52,6 +64,16 @@
                 : `/storage/${src}`;
         }
         return '/images/avatar-placeholder.webp';
+    }
+
+    function clearSearch() {
+        form.search = null;
+        applyFilters();
+    }
+
+    function clearStatus() {
+        form.status = null;
+        applyFilters();
     }
 
     const styleClass = computed(() => ({
@@ -89,8 +111,7 @@
     <Head title="Orders" />
     <div class="py-3 px-2">
         <div class="max-w-7xl mx-auto py-6">
-            <PageTitleHeader title="Orders" />
-
+            <PageTitleHeader title="Order" />
             <div class="bg-white dark:bg-gray-800 p-4 rounded-lg my-4">
                 <!-- FILTER -->
                 <div class="flex flex-col sm:flex-row items-center gap-x-5 gap-y-2">
@@ -104,7 +125,6 @@
 
                     <button type="button" @click="clearFilter" class="btn btn-outline-primary w-full sm:w-fit">Clear
                         filters</button>
-
                 </div>
                 <!-- APPLIED FILTERS -->
 
@@ -113,20 +133,22 @@
 
                     <small class="badge badge-secondary" v-if="form.search">
                         Search: "{{ form.search }}"
-                        <button @click="form.search = null" class="text-xs">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </small>
-                    <small class="badge badge-secondary" v-if="form.status">
-                        Status: "{{ form.status }}"
-                        <button @click="form.status = null" class="text-xs">
+                        <button @click="clearSearch" class="text-xs ml-2">
                             <i class="fas fa-times"></i>
                         </button>
                     </small>
 
+                    <small class="badge badge-secondary" v-if="form.status">
+                        Status: "{{ form.status }}"
+                        <button @click="clearStatus" class="text-xs ml-2">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </small>
+
+
                 </div>
             </div>
-            <section class="container mx-auto mt-4" v-if="orders.data.length">
+            <section class="container mx-auto mt-4" v-if="tempOrders.length">
 
                 <div class="flex flex-col">
                     <div class="overflow-x-auto ">
@@ -171,7 +193,7 @@
                                         </tr>
                                     </thead>
                                     <tbody :class="styleClass.tBody">
-                                        <tr v-for="order in orders.data" :key="`order-${order.id}`">
+                                        <tr v-for="order in tempOrders" :key="`order-${order.id}`">
                                             <td :class="styleClass.td">
                                                 <span class="font-bold lowercase">{{ order.id }}</span>
                                             </td>
@@ -179,25 +201,30 @@
                                                 {{ formatDate(order.created_at) }}
                                             </td>
                                             <td :class="styleClass.td">
-                                                <div :class="styleClass.badges[order.status]">
-                                                    <i :class="badges[order.status].icon"></i>
-                                                    <span class="capitalize">{{ order.status }}</span>
-                                                </div>
+                                                <Link
+                                                    :href="route('manage.orders.index', { ...form, status: order.status })"
+                                                    :class="styleClass.badges[order.status]">
+                                                <i :class="badges[order.status].icon"></i>
+                                                <span class="capitalize">{{ order.status }}</span>
+                                                </Link>
 
                                             </td>
+
                                             <td :class="styleClass.td">
-                                                <div class="flex items-center gap-x-2">
-                                                    <img :class="styleClass.user.avatar"
-                                                        :src="avatarSrc(order.user.avatar_url)" alt="">
-                                                    <div>
-                                                        <h2 :class="styleClass.user.name">
-                                                            {{ order.user.name }}
-                                                        </h2>
-                                                        <p :class="styleClass.user.email">
-                                                            {{ order.user.email }}
-                                                        </p>
-                                                    </div>
+                                                <Link
+                                                    :href="route('manage.orders.index', { ...form, search: order.user.name })"
+                                                    class="flex items-center gap-x-2">
+                                                <img :class="styleClass.user.avatar"
+                                                    :src="avatarSrc(order.user.avatar_url)" alt="">
+                                                <div>
+                                                    <h2 :class="styleClass.user.name">
+                                                        {{ order.user.name }}
+                                                    </h2>
+                                                    <p :class="styleClass.user.email">
+                                                        {{ order.user.email }}
+                                                    </p>
                                                 </div>
+                                                </Link>
                                             </td>
                                             <td :class="styleClass.td">
                                                 {{ order.type }}
@@ -210,7 +237,7 @@
                                             </td>
                                             <td class="px-4 py-4 text-sm whitespace-nowrap">
                                                 <div class="flex items-center gap-x-6">
-                                                    <Link :href="route('manage.orders.show', order)"
+                                                    <Link :href="route('manage.orders.show', { order, searches: form })"
                                                         class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
                                                     Review
                                                     </Link>

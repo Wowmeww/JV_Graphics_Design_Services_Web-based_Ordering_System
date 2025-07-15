@@ -3,7 +3,8 @@
     import OrderStatus from '../../../components/modal/OrderStatus.vue';
     import { ref } from 'vue';
     const props = defineProps({
-        order: Object
+        order: Object,
+        searches: Object
     });
 
     const page = usePage();
@@ -90,7 +91,7 @@
                         Placed on {{ formatDate(order.created_at) }}
                     </p>
                 </div>
-                <Link :href="route('manage.orders.index')" class="btn btn-outline-secondary">
+                <Link :href="route('manage.orders.index', { ...searches })" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left"></i>
                 Back to Orders
                 </Link>
@@ -231,7 +232,7 @@
                         <div class="p-6">
                             <div class="flex items-center gap-4 mb-5">
                                 <div class="relative">
-                                    <img :src="order.user.avatar_url || '/images/avatar-placeholder.webp'"
+                                    <img :src="`/storage/${order.user.avatar_url}` || '/images/avatar-placeholder.webp'"
                                         class="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow">
                                     <!-- <span
                                         class="absolute bottom-0 right-0 bg-green-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-white dark:border-gray-800">
@@ -242,11 +243,11 @@
                                     <p class="font-medium text-gray-900 dark:text-white">{{ order.user.name }}</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ order.user.email }}</p>
                                     <div class="flex gap-2 mt-1">
-                                        <span
+                                        <Link :href="route('manage.orders.index', { search: order.user.name })"
                                             class="text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full">
-                                            <i class="fas fa-shopping-bag mr-1"></i>
-                                            {{ order.user.orders?.length }} orders
-                                        </span>
+                                        <i class="fas fa-shopping-bag mr-1"></i>
+                                        {{ order.user.orders?.length }} orders
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

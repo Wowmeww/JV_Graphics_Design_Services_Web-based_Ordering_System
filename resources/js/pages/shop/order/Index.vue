@@ -1,5 +1,5 @@
 <script setup>
-    import { computed, ref, onMounted } from 'vue';
+    import { computed, ref, onMounted, watch } from 'vue';
     import Tabs from '@/components/sections/OrderTabs.vue';
     import { router } from '@inertiajs/vue3';
     import { useEcho } from "@laravel/echo-vue";
@@ -10,8 +10,10 @@
         tab: String
     });
 
-    const orderList = ref([...props.orders]); // make a reactive copy
-
+    const orderList = ref([...props.orders]);
+    watch(() => props.orders, (newOrders) => {
+        orderList.value = [...newOrders];
+    });
     const activeTab = ref(props.tab);
     // Order filters
     const pendingOrders = computed(() => orderList.value.filter(order => order.status === 'pending'));

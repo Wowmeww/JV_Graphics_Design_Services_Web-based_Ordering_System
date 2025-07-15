@@ -53,7 +53,8 @@
 
         <!-- View Button -->
         <div class="mt-4 text-right">
-            <button class="text-sm text-blue-600 dark:text-blue-500 hover:underline">View Details</button>
+            <Link :href="route('manage.orders.show', { order: order.id })"
+                class="text-sm text-blue-600 dark:text-blue-500 hover:underline">View Details</Link>
         </div>
     </div>
 </template>

@@ -23,6 +23,7 @@ class ManageOrderController extends Controller
             'status' => 'nullable|string|max:50',
         ]);
 
+        // ->whereNotIn('status', ['received', 'rated', 'cancelled'])
         $orders = Order::query()
             ->with([
                 'user:id,name,email',
@@ -54,12 +55,13 @@ class ManageOrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(Request $request, Order $order)
     {
 
         $order->load(['product.images', 'option.images', 'user.orders']);
         return Inertia::render('manage/order/Show', [
-            'order' => $order
+            'order' => $order,
+            'searches' =>  $request->input('searches')
         ]);
     }
 

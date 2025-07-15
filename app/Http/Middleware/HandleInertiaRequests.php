@@ -61,9 +61,10 @@ class HandleInertiaRequests extends Middleware
                 'show' => false,
                 'message' => '',
                 'confirmed' => false,
+                'action' => null
             ],
             'github' => env('GITHUB_REPO'),
-            
+
         ];
     }
 }

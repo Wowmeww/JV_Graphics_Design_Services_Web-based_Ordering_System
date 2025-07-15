@@ -81,7 +81,7 @@
             </ContainerPrimary>
         </div>
         <div :class="styleClass.fragmentsContainer"
-            v-if="announcements.length || user.cart.items.length || user.orders.filter(order => order.status == 'pending' || order.status == 'processing').length || user.wishlist.items.length">
+            v-if="announcements?.length || user.cart?.items?.length || user.orders.filter(order => order.status == 'pending' || order.status == 'processing')?.length || user.wishlist?.items?.length">
             <div id="announcements" v-if="announcements.length" :class="styleClass.fragment">
                 <p :class="styleClass.fragmentTitle">Announcements</p>
                 <div :class="styleClass.scrollContainer">

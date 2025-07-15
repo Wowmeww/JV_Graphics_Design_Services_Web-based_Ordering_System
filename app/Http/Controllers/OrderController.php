@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPlaced;
 use App\Models\CartProduct;
 use App\Models\Order;
 use App\Models\WishlistProduct;
@@ -76,29 +77,29 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        // dd($request->items);
         $request->validate([
             'items' => 'required|array',
-            'items.*.id' => 'required|integer|exists:products,id',
             'items.*.note' => 'nullable|string|max:255',
             'from' => 'in:cart,wishlist|nullable',
         ]);
 
-
         $user = Auth::user();
 
+
         foreach ($request->items as $item) {
-            $user->addOrder([
+            $order = $user->addOrder([
                 'total_amount' => $item['total_amount'],
                 'quantity' => $item['quantity'] ?? 12,
                 'note' => $item['note'],
                 'product_id' => $item['product_id'],
                 'option_id' => $item['option_id'] ?? null,
             ]);
-
+            // I think the event is not dispatching in this line, no indicator in my log
+            event(new OrderPlaced($order));
             if ($request->input('from') === 'wishlist')
                 WishlistProduct::find($item['id'])->delete();
-            else {
+            if ($request->input('from') === 'wishlist') {
                 // If from wishlist, delete the wishlist item
                 CartProduct::find($item['id'])->delete();
             }
@@ -130,12 +131,11 @@ class OrderController extends Controller
             'status' => $request->input('status')
         ]);
 
-        sleep(1);
         $message = $request->input('status') == 'cancelled' ?
             'Order cancellation successfully!' :
             'Order received';
-
-        return to_route('order.index')->with('status', [
+            
+        return redirect()->route('order.index')->with('status', [
             'type' => 'success',
             'message' =>  $message,
         ]);

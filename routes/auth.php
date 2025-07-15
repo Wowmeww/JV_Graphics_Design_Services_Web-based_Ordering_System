@@ -25,9 +25,6 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
-
     // Password Reset
     Route::get('/forgot-password', [PasswordResetController::class, 'passRequest'])->name('password.request');
 
@@ -43,6 +40,8 @@ Route::middleware('guest')->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
     Route::get('/email/verify', [AuthenticatedSessionController::class, 'verificationNotice'])
         ->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', [AuthenticatedSessionController::class, 'verificationVerify'])
@@ -50,7 +49,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/email/verification-notification', [AuthenticatedSessionController::class, 'verificationSend'])
         ->middleware(['throttle:6,1'])
         ->name('verification.send');
-
 
     // PASSWORD CONFIRMATION ROUTES
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])

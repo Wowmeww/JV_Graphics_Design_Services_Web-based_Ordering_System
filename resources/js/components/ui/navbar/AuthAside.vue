@@ -42,7 +42,7 @@
                 <span class="ms-3">Dashboard</span>
             </AuthAsideLink>
 
-            <AuthAsideLink :routeName="route('dashboard')">
+            <AuthAsideLink :routeName="route('message.index')">
                 <svg :class="styleClass.icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                     viewBox="0 0 20 20">
                     <path

@@ -17,16 +17,14 @@
             show: true,
             message: 'Do you want to logout?',
             confirmed: false,
-            action: {
-                logout: true
-            },
+            action: { logout: true },
         }
     }
 
     watch(page, () => {
 
         if (page.props.confirm.confirmed && page.props.confirm.action.logout) {
-            router.post(route('logout'));
+            router.delete(route('logout'));
         }
     });
 

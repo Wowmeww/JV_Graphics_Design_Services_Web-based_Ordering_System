@@ -176,7 +176,7 @@
         stat: {
             container: 'bg-white p-4 rounded-lg shadow border-l-4 flex items-center space-x-4 dark:bg-slate-500',
             title: 'text-sm text-gray-500 dark:text-white',
-            count: 'text-2xl font-bold'
+            count: 'text-2xl font-bold text-start'
         }
     }
 
@@ -188,41 +188,43 @@
 
 <template>
 
-    {{ console.log(topProducts) }}
+    <!-- {{ console.log(topProducts) }} -->
     <div class="pt-8 px-2 max-w-7xl mx-auto space-y-3">
 
         <PageTitleHeader title="Dashboard" />
         <ContainerPrimary class="!pt-6">
             <div class="pt-3 flex flex-wrap gap-4 justify-center">
                 <!-- Total Products -->
-                <div :class="[styleClass.stat.container, 'border-blue-500']">
-                    <div class="p-3 bg-blue-100 rounded-full text-blue-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 :class="styleClass.stat.title">Total Products</h3>
-                        <p :class="styleClass.stat.count">{{ shop.products.length }}</p>
-                    </div>
+                <Link :href="route('product.index')" as="button"
+                    :class="[styleClass.stat.container, 'border-blue-500']">
+                <div class="p-3 bg-blue-100 rounded-full text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                    </svg>
                 </div>
+                <div>
+                    <h3 :class="styleClass.stat.title">Total Products</h3>
+                    <p :class="styleClass.stat.count">{{ shop.products.length }}</p>
+                </div>
+                </Link>
 
                 <!-- Total Orders -->
-                <div :class="[styleClass.stat.container, 'border-purple-500']">
-                    <div class="p-3 bg-purple-100 rounded-full text-purple-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 :class="styleClass.stat.title">Total Orders</h3>
-                        <p :class="styleClass.stat.count">{{ shop.orders.length }}</p>
-                    </div>
+                <Link :href="route('manage.orders.index')" as="button"
+                    :class="[styleClass.stat.container, 'border-purple-500']">
+                <div class="p-3 bg-purple-100 rounded-full text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
                 </div>
+                <div>
+                    <h3 :class="styleClass.stat.title">Total Orders</h3>
+                    <p :class="styleClass.stat.count">{{ shop.orders.length }}</p>
+                </div>
+                </Link>
 
                 <!-- Total Customers -->
                 <div :class="[styleClass.stat.container, 'border-green-500']">
@@ -313,7 +315,8 @@
                     </div>
                 </div>
                 <div class="md:col-span-2 grid gap-2 md:grid-cols-12">
-                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4  flex flex-col md:col-span-4" v-if="sales.length">
+                    <div class="bg-white dark:bg-gray-800/5 shadow rounded-lg p-4  flex flex-col md:col-span-4"
+                        v-if="sales.length">
                         <h3 class="text-lg dark:text-slate-300 font-semibold mb-2">Sales by Category</h3>
                         <VueApexCharts :options="charts.categorySales.options" :type="charts.categorySales.type"
                             :height="charts.categorySales.height" :width="charts.categorySales.width"
