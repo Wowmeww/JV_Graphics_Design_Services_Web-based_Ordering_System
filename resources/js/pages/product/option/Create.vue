@@ -30,7 +30,7 @@ const images = ref([null, null, null]);
 function submit() {
     form.images = images.value.map((img) => (img instanceof File ? img : null));
 
-    form.post(route('option.store', { product: props.product }), {
+    form.post(route('product.option.store', { product: props.product }), {
         forceFormData: true,
         preserveScroll: true,
     });

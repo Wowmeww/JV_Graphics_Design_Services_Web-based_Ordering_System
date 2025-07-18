@@ -15,7 +15,7 @@
     const emit = defineEmits(['toggle', 'openCart', 'openWishlist']);
 
     function handleToggle() {
-        emit('toggle')
+        emit('toggle');
     }
 
 </script>
@@ -36,20 +36,20 @@
                             </path>
                         </svg>
                     </button>
-                    <Link :href="route('home')" class="flex gap-3 items-center ms-2 md:me-24">
-                    <img class="w-auto h-6 sm:h-7" src="/favicon.png" alt="logo">
-                    <p class="self-center text-lg font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+                    <div class="flex gap-3 items-center ms-2 md:me-24">
+                        <Link :href="route('dashboard')">
+                        <img class="w-auto h-6 sm:h-7" src="/favicon.png" alt="logo">
+                        </Link>
+                        <Link :href="route('home')"
+                            class="self-center text-lg font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
                         <span class="hidden md:inline">JV Graphics Design Services</span>
                         <span class="md:hidden">JV Graphics</span>
-                    </p>
-                    </Link>
+                        </Link>
+                    </div>
                 </div>
                 <div class="flex items-center">
                     <div class="flex items-center ms-3">
-                        <UserProfile
-                            @openCart="() => emit('openCart')"
-                            @openWishlist="() => emit('openWishlist')"
-                        />
+                        <UserProfile @openCart="() => emit('openCart')" @openWishlist="() => emit('openWishlist')" />
                     </div>
                 </div>
             </div>

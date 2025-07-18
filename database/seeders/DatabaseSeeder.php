@@ -16,16 +16,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            UserSeeder::class,
-            ProductSeeder::class,
-            CartWishlistSeeder::class,
-            OrderSeeder::class,
-            NotificationSeeder::class,
-            MessageSeeder::class,
-            TransactionSeeder::class,
-            RatingSeeder::class
-        ]);
-        Announcement::factory(env('ANNOUNCEMENTS'))->create();
+
+        if (env('APP_ENV') === 'production') {
+            $this->call(ProductionSeeder::class);
+        } else {
+            $this->call([
+                UserSeeder::class,
+                ProductSeeder::class,
+                CartWishlistSeeder::class,
+                OrderSeeder::class,
+                NotificationSeeder::class,
+                MessageSeeder::class,
+                TransactionSeeder::class,
+                RatingSeeder::class
+            ]);
+            Announcement::factory(env('ANNOUNCEMENTS'))->create();
+        }
     }
 }

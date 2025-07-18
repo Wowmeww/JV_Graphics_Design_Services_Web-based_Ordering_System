@@ -2,7 +2,7 @@
     import Layout from '@/components/ui/messages/Layout.vue';
     import Message from '../../../components/ui/messages/Message.vue';
     import { useForm } from '@inertiajs/vue3';
-    import { onMounted, ref, watch } from 'vue';
+    import { computed, onMounted, ref, watch } from 'vue';
     import { useEcho } from '@laravel/echo-vue';
     import { nextTick } from 'vue';
 
@@ -24,7 +24,7 @@
     useEcho(`message-sent.${props.user.id}`, '.MessageSent', async ({ message }) => {
         if (
             message.receiver_id === props.user.id &&
-            message.sender_id === props.receiver.id
+            message.sender_id === props.receiver?.id
         ) {
             tempMessages.value.push(message);
             await nextTick(); // wait for DOM to update
@@ -61,20 +61,20 @@
         })
     }
 
-    const params = route().params;
+    const params = computed(() => route().params);
 </script>
 
 
 <template>
 
-    <Layout :contacts="contacts" :selectedContact="receiver">
-        <div class="h-full flex flex-col max-h-[85vh]">
+    <Layout :contacts="contacts" :selectedContact="receiver" :user="user">
+        <div class="h-full flex flex-col max-h-[85vh]" v-if="receiver">
 
             <!-- Messages Area -->
             <div ref="messagesContainer" id="messages-container"
                 class="flex-1 overflow-y-scroll p-4 space-y-3 scroll-smooth">
                 <div class="text-center ">
-                    <Link v-if="tempMessages?.length >= 20"
+                    <Link v-if="tempMessages?.length >= 20 && !params.all"
                         :href="route('message.store', { receiver: props.receiver.id, all: true })" as="button"
                         class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"

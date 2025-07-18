@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\OrderPlaced;
 use App\Models\CartProduct;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\WishlistProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,11 +33,13 @@ class OrderController extends Controller
         $request->validate([
             'items' => ['array', 'nullable'],
             'from' => ['nullable', 'in:cart,wishlist'],
-            'product_id' => ['nullable', 'integer'],
-            'option_id' => ['nullable', 'integer'],
-            'quantity' => ['nullable', 'integer'],
+            'item' => ['nullable', 'array'],
             'total_amount' => ['nullable', 'numeric'],
         ]);
+        // 'item.product_id' => ['required', 'numeric'],
+        //     'item.option_id' => ['nullable', 'numeric'],
+        //     'item.quantity' => ['required', 'numeric', 'min:12', 'max:24'],
+        //     'item.total_amount' => ['required', 'numeric'],
 
         $items = collect();
 
@@ -49,21 +52,22 @@ class OrderController extends Controller
                 ->with(['product.images', 'option.images'])
                 ->get();
         } else {
-            // Manual item (e.g. Buy Now)
-            $cart = $request->user()->cart;
-
-            $item = CartProduct::create([
-                'cart_id' => $cart->id,
-                'product_id' => $request->input('product_id'),
-                'option_id' => $request->input('option_id'),
-                'quantity' => $request->input('quantity', 1),
-                'total_amount' => $request->input('total_amount', 0),
-                'updated_at' => now(),
-            ]);
-            // Use Eloquent get() to return a collection of model(s)
-            $items = CartProduct::where('id', $item->id)
-                ->with(['product.images', 'option.images'])
-                ->get();
+            $attributes = $request->input('item');
+            $product = Product::with(['images'])->find($attributes['product_id']);
+            $item = [
+                'product' => $product,
+                'product_id' => $attributes['product_id'],
+                'option' => null,
+                'option_id' => null,
+                'quantity' => $attributes['quantity'],
+                'total_amount' => $attributes['total_amount'],
+            ];
+            if ($attributes['option_id']) {
+                $option = $product->options()->with(['images'])->where(['id' => $attributes['option_id']])->first();
+                $item['option'] = $option;
+                $item['option_id'] = $option->id;
+            }
+            $items = [$item];
         }
 
 
@@ -99,7 +103,7 @@ class OrderController extends Controller
             event(new OrderPlaced($order));
             if ($request->input('from') === 'wishlist')
                 WishlistProduct::find($item['id'])->delete();
-            if ($request->input('from') === 'wishlist') {
+            if ($request->input('from') === 'cart') {
                 // If from wishlist, delete the wishlist item
                 CartProduct::find($item['id'])->delete();
             }
@@ -134,7 +138,7 @@ class OrderController extends Controller
         $message = $request->input('status') == 'cancelled' ?
             'Order cancellation successfully!' :
             'Order received';
-            
+
         return redirect()->route('order.index')->with('status', [
             'type' => 'success',
             'message' =>  $message,

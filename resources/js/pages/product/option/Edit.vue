@@ -43,7 +43,7 @@
         form.images = uploadedFiles;
         // form.images = [...images.value];
 
-        form.post(route('option.update', { product: props.option.product_id, option: props.option }));
+        form.post(route('product.option.update', { product: props.option.product_id, option: props.option }));
     }
 
     function handleImagesChange(data) {

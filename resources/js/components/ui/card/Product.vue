@@ -51,12 +51,12 @@
                     :class="{ 'rotate-180': expanded }" @click="toggleExpand"></i>
                 <Link
                     :href=" is_option?
-                        route('option.show', {product: props.product.product, option: props.product }):
+                        route('product.option.show', {product: props.product.product, option: props.product }):
                         route('product.show', {product: props.product })">
                 <i class="fa-solid fa-eye cursor-pointer"></i>
                 </Link>
                 <Link :href=" is_option?
-                        route('option.edit', {product: props.product.product, option: props.product }):
+                        route('product.option.edit', {product: props.product.product, option: props.product }):
                         route('product.edit', {product: props.product })">
                 <i class="bi bi-pencil-square cursor-pointer"></i>
                 </Link>

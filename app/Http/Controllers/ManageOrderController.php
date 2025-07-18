@@ -57,7 +57,6 @@ class ManageOrderController extends Controller
      */
     public function show(Request $request, Order $order)
     {
-
         $order->load(['product.images', 'option.images', 'user.orders']);
         return Inertia::render('manage/order/Show', [
             'order' => $order,
@@ -82,6 +81,29 @@ class ManageOrderController extends Controller
             'status' => ['required', 'string', 'max:100'],
             'message' => ['nullable', 'string', 'max:255'],
         ]);
+
+        if ($validated['status'] === 'completed') {
+            $newStock = $order->option ?
+                $order->option->stock - $order->quantity :
+                $order->product->stock - $order->quantity;
+
+            if ($newStock < 1) {
+                return back()->with('status', [
+                    'type' => 'error',
+                    'message' => 'No stocks for this product'
+                ]);
+            }
+
+            if ($order->option) {
+                $order->option()->update([
+                    'stock' => $newStock
+                ]);
+            } else {
+                $order->product()->update([
+                    'stock' => $newStock
+                ]);
+            }
+        }
 
         $order->update([
             'status' => $validated['status']

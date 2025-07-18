@@ -28,26 +28,28 @@
         return '/images/img-placeholder.jpg';
     });
 </script>
-
 <template>
     <Link type="button" as="button" :href="route('product.show', product.id)"
-        class="flex w-full items-center hover:bg-gray-100 dark:hover:bg-gray-800 justify-between  p-3 rounded-md transition-all duration-200">
-    <div class="flex items-center space-x-3 flex-1">
+        class="flex w-full items-center hover:bg-gray-50 dark:hover:bg-gray-800/50 justify-between p-3.5 rounded-lg transition-all duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
+    <div class="flex items-center space-x-3.5 flex-1 min-w-0">
         <!-- Product Image -->
-        <img :src="image_url" alt="Product Image" class="w-12 h-12 object-cover rounded-md shadow-sm">
+        <img :src="image_url" :alt="product.name"
+            class="w-14 h-14 object-cover rounded-lg shadow-xs border border-gray-100 dark:border-gray-700">
 
-        <div>
-            <p class="font-medium dark:text-gray-300 text-left">{{ product.name }}</p>
-            <div class="flex items-center mt-1">
+        <div class="min-w-0">
+            <p class="font-medium text-gray-900 dark:text-gray-100 text-left truncate">
+                {{ product.name }}
+            </p>
+            <div class="flex items-center mt-1.5">
                 <!-- Stars -->
-                <div class="flex text-yellow-400">
-                    <i v-for="i in starIcons.full" :key="'full-' + i" class="fa-solid fa-star"></i>
-                    <i v-if="starIcons.half" class="fa-regular fa-star-half-stroke"></i>
-                    <i v-for="i in starIcons.empty" :key="'empty-' + i" class="fa-regular fa-star"></i>
+                <div class="flex text-yellow-400 mr-1.5">
+                    <i v-for="i in starIcons.full" :key="'full-' + i" class="fa-solid fa-star text-[15px]"></i>
+                    <i v-if="starIcons.half" class="fa-regular fa-star-half-stroke text-[15px]"></i>
+                    <i v-for="i in starIcons.empty" :key="'empty-' + i" class="fa-regular fa-star text-[15px]"></i>
                 </div>
 
                 <!-- Review Count -->
-                <span class="text-sm ml-1 text-gray-500 dark:text-gray-400">
+                <span class="text-xs text-gray-500 dark:text-gray-400 truncate">
                     ({{ product.ratings?.length }} reviews)
                 </span>
             </div>
@@ -55,7 +57,7 @@
     </div>
 
     <!-- Rating Number -->
-    <div class="ml-3 font-bold text-yellow-400">
+    <div class="ml-3 font-bold text-yellow-400 text-lg whitespace-nowrap">
         {{ product.rating?.toFixed(2) }}/5
     </div>
     </Link>

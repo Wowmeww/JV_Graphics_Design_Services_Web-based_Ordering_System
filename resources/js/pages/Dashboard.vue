@@ -16,7 +16,8 @@
     const props = defineProps({
         user: Object,
         announcements: Object,
-        shop: Object
+        shop: Object,
+        contacts: Array
     });
 
     function openCart() {
@@ -48,19 +49,20 @@
         pageContainer: 'mx-auto max-w-7xl pb-7 px-1'
     }));
 
+    const unseenMessages = computed(() => {
+        return props.user.received_messages?.filter(message => !message.seen)?.length;
+    });
+
 </script>
 
 <template>
-    <!-- {{ user }} -->
 
     <Head title="Dashboard" />
-
-
-    <AdminDashboard v-if="user.is_admin" :shop="shop" />
-
+    <AdminDashboard v-if="user.is_admin" :admin="user" :shop="shop" :contacts="contacts" />
     <!-- CUSTOMER -->
     <div v-else :class="styleClass.pageContainer">
         <div class="py-6 space-y-4 ">
+
             <ContainerPrimary v-if="true" title="Dashboard">
                 <div class="flex flex-wrap justify-center gap-4 pt-2">
                     <DashboardMenuItem is="Link" :href="route('order.index')" type="button" label="orders"
@@ -69,8 +71,8 @@
                         :count="user.wishlist?.items.length" icon="fa-solid fa-heart" />
                     <DashboardMenuItem type="button" @click="openCart" label="cart" :count="user.cart?.items.length"
                         icon="fa-solid fa-cart-shopping" />
-                    <DashboardMenuItem type="button" label="message" :count="user.messages.length"
-                        icon="fa-solid fa-comments" />
+                    <DashboardMenuItem type="button" label="message" is="Link" :href="route('message.index')"
+                        :count="unseenMessages" icon="fa-solid fa-comments" />
                     <a href="#announcements">
                         <DashboardMenuItem type="button" label="announcements" :count="announcements.length"
                             icon="fa-solid fa-bullhorn" />

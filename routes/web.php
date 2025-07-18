@@ -30,3 +30,4 @@ Route::middleware(['guest'])->group(function () {
 require __DIR__ . '/auth.php';
 require __DIR__ . '/message.php';
 require __DIR__ . '/order.php';
+require __DIR__ . '/announcement.php';

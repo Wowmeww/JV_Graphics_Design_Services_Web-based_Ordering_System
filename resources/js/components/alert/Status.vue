@@ -15,7 +15,7 @@
     const page = usePage();
 
 
-    const color = computed(() => colorMap[props.status.type] || colorMap.default);
+    const color = computed(() => colorMap[props.status?.type] || colorMap.default);
 
     const iconContainerClass = computed(() => {
         return {
@@ -47,30 +47,30 @@
     const styleClass = {
         container: 'flex relative right-0 max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800',
         icon: 'w-6 h-6 text-white fill-current ',
-        message: 'text-sm text-gray-600 dark:text-gray-200'
+        message: 'text-sm text-gray-600 dark:text-gray-200 break-all'
     };
 
 </script>
 
 <template>
-    <div v-if="status" @click="close" class="fixed inset-x-0 top-[75vh] px-3 md:px-12 flex justify-center md:justify-end z-50">
+    <div @click="close" class="fixed top-[95vh] left-[95%] -translate-y-full -translate-x-full z-50 w-sm">
         <Transition name="fade">
             <div
-                class="flex relative min-w-sm max-w-md overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800 ">
+                class="flex relative w-full overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800 ">
                 <div :class="iconContainerClass">
-                    <svg v-if="status.type === 'success'" :class="styleClass.icon" viewBox="0 0 40 40"
+                    <svg v-if="status?.type === 'success'" :class="styleClass.icon" viewBox="0 0 40 40"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z" />
                     </svg>
 
-                    <svg v-else-if="status.type === 'warning'" :class="styleClass.icon" viewBox="0 0 40 40"
+                    <svg v-else-if="status?.type === 'warning'" :class="styleClass.icon" viewBox="0 0 40 40"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM21.6667 28.3333H18.3334V25H21.6667V28.3333ZM21.6667 21.6666H18.3334V11.6666H21.6667V21.6666Z" />
                     </svg>
 
-                    <svg v-else-if="status.type === 'error'" :class="styleClass.icon" viewBox="0 0 40 40"
+                    <svg v-else-if="status?.type === 'error'" :class="styleClass.icon" viewBox="0 0 40 40"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z" />
@@ -83,7 +83,7 @@
                 </div>
                 <div class="px-4 py-2 -mx-3 first-letter:uppercase">
                     <div class="mx-3">
-                        <span :class="typeLabelClass">{{ status.type }}</span>
+                        <span :class="typeLabelClass">{{ status.type}}</span>
                         <p :class="styleClass.message">{{ status.message }}</p>
                     </div>
                 </div>

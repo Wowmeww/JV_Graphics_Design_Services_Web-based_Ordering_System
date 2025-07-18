@@ -13,12 +13,19 @@
 
 <template>
     <component @click="emit('click')" :type="type" :is="is" :href="href"
-        class="flex items-center flex-col-reverse p-2.5 border bg-primary text-light border-slate-900 dark:border-slate-100 justify-center gap-y-2 md:flex-col-reverse md:items-start text-xs md:text-sm hover:bg-primary-500 transition rounded-md md:w-40 w-20 min-w-fit relative">
-        <span class="capitalize text-wrap font-semibold">
+        class="flex flex-col-reverse items-center justify-center gap-2 p-3 w-20 md:w-40 min-w-fit relative rounded-lg border border-slate-900 dark:border-slate-100 bg-primary text-light hover:bg-primary-500 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md active:scale-[0.98]">
+        <!-- Icon -->
+        <i :class="`text-xl md:text-3xl ${icon}`"></i>
+
+        <!-- Label -->
+        <span class="text-xs md:text-sm font-semibold text-center capitalize line-clamp-2">
             {{ label }}
         </span>
-        <i :class="`md:text-3xl text-xl ${icon}`"></i>
 
-        <span v-if="count" class="absolute top-1 right-2 text-xs font-semibold">{{ count }}</span>
+        <!-- Count Badge -->
+        <span v-if="count"
+            class="absolute opacity-80 top-2 right-2 text-xs font-semibold bg-white/20 backdrop-blur-sm rounded-full w-5 h-5 flex items-center justify-center">
+            {{ count }}
+        </span>
     </component>
 </template>

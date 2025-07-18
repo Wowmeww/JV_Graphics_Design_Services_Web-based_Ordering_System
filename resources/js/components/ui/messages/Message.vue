@@ -25,25 +25,25 @@
             : `/storage/${url}`;
     });
 
-</script>
+    const senderName = computed(() => props.message.sender.name);
+</script><template>
 
-<template>
-    <!-- Incoming message example -->
     <div :class="{
-        'flex items-start gap-2': !sender,
-        'flex items-start gap-2 flex-row-reverse': sender,
+        'flex items-start gap-2 ': !sender,
+        'flex items-start gap-2 flex-row-reverse ': sender,
     }">
+
         <div :class="{
             'w-8 h-8 rounded-full bg-gradient-to-br overflow-hidden from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-lg shadow-sm': !sender,
             'hidden': sender,
         }">
-            <img v-if="avatarUrl" :src="avatarUrl" alt="">
+            <img v-if="avatarUrl" :src="avatarUrl" alt="" class="h-full w-full object-cover">
             <span v-else class="font-bold dark:text-white">N</span>
         </div>
-        <div class="max-w-[75%]">
-            <div :class="{
-                'bg-gray-100 dark:bg-gray-700 rounded-lg p-3 text-sm text-wrap break-words break-all': !sender,
-                'bg-primary-700 text-white rounded-lg p-3 text-sm text-wrap break-words break-all': sender,
+        <div class="max-w-[75%] ">
+            <div class="animate__animated" :class="{
+                'bg-gray-100 dark:bg-gray-700 rounded-lg p-3 text-sm text-wrap break-words break-all animate__fadeInRight': !sender,
+                'bg-primary-700 text-white rounded-lg p-3 text-sm text-wrap break-words break-all animate__fadeInLeft': sender,
             }">
                 <p>{{ message.content }}</p>
                 <p :class="{

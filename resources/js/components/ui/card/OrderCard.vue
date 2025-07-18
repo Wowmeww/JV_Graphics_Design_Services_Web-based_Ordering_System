@@ -1,7 +1,7 @@
 <script setup>
     import TextInputPrimary from '../TextInputPrimary.vue';
-
-    defineProps({
+    import { computed } from 'vue';
+    const props = defineProps({
         item: Object
     });
 
@@ -9,21 +9,35 @@
         type: String,
     });
 
+    const image_url = computed(() => {
+        let src = (props.item.option?.images[0] || props.item.product.images[0])?.image_path
+        if (src) {
+            return src.includes('https')
+                ? src
+                : `/storage/${src}`;
+        }
+        return '/images/avatar-placeholder.webp';
+    });
 
 
 </script>
-
 <template>
     <div
-        class="animate__animated animate__fadeIn transition text-white glass bg-white/5 hover:bg-white/10 dark:bg-black/5 hover:dark:bg-black/10 border-1 border-white/40 flex flex-col p-2 rounded-lg  gap-2 max-h-fit">
-        <div class="flex gap-2">
-            <img :src="item.option?.images[0]?.image_path || item.product.images[0]?.image_path || '/images/img-placeholder.jpg'"
-                alt="" class="md:max-w-44 md:max-h-44 max-w-20 rounded-lg object-center object-cover" />
-            <div class="flex-1">
-                <h2 class="font-semibold text-md md:text-xl">{{ item.option?.name || item.product?.name }}</h2>
+        class="animate__animated animate__fadeIn transition-all duration-300 text-white glass bg-white/5 hover:bg-white/10 dark:bg-black/5 hover:dark:bg-black/10 border border-white/20 dark:border-white/10 flex flex-col p-3 rounded-xl gap-3 max-h-fit hover:shadow-lg">
+        <div class="flex gap-3 items-start">
+            <!-- Product Image -->
+            <img :src="image_url" :alt="item.option?.name || item.product?.name"
+                class="md:w-44 md:h-44 w-20 h-20 rounded-lg object-cover flex-shrink-0 shadow-sm" />
 
-                <p class="text-medium flex justify-between items-center px-1 pb-2">
-                    <span>
+            <!-- Product Details -->
+            <div class="flex-1 flex flex-col">
+                <h2 class="font-semibold text-md md:text-lg leading-tight">
+                    {{ item.option?.name || item.product?.name }}
+                </h2>
+
+                <!-- Price & Quantity -->
+                <div class="flex justify-between items-center mt-1 mb-2 px-1">
+                    <span class="text-medium font-medium">
                         {{
                             item.total_amount.toLocaleString('en-PH', {
                                 style: 'currency',
@@ -31,38 +45,42 @@
                             })
                         }}
                     </span>
-                    <span class="flex items-center gap-2">
-                        <i class="fa-solid fa-xmark"></i>
+                    <span class="flex items-center gap-1 text-sm text-white/80">
+                        <i class="fa-solid fa-xmark text-xs"></i>
                         {{ item.quantity }}
                     </span>
-                </p>
+                </div>
 
-                <div class="hidden md:block">
-                    <TextInputPrimary v-model="model" customStyle="placeholder:text-white/60" :row="2"
-                        placeholder="Optional message to seller for this order" :required="false" label="Message/ Note"
-                        variant="secondary" type="textarea" />
+                <!-- Desktop Message Input -->
+                <div class="hidden md:block mt-auto">
+                    <TextInputPrimary v-model="model"
+                        customStyle="placeholder:text-white/60 bg-white/5 hover:bg-white/10 focus:bg-white/15 transition-colors"
+                        :row="2" placeholder="Optional message to seller for this order" :required="false"
+                        label="Message/Note" variant="secondary" type="textarea" />
                 </div>
             </div>
         </div>
 
-        <div class=" md:hidden">
-            <TextInputPrimary v-model="model" customStyle="placeholder:text-white/60" :row="2"
-                placeholder="Optional message to seller for this order" :required="false" label="Message/ Note"
+        <!-- Mobile Message Input -->
+        <div class="md:hidden">
+            <TextInputPrimary v-model="model"
+                customStyle="placeholder:text-white/60 bg-white/5 hover:bg-white/10 focus:bg-white/15 transition-colors"
+                :row="2" placeholder="Optional message to seller for this order" :required="false" label="Message/Note"
                 variant="secondary" type="textarea" />
         </div>
     </div>
 </template>
 
-
 <style scoped>
-
     .glass {
-        /* From https://css.glass */
-        /* background: rgba(255, 255, 255, 0.21); */
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(12.6px);
-        -webkit-backdrop-filter: blur(12.6px);
-        /* border: 1px solid rgba(255, 255, 255, 0.89); */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
     }
 
+    .glass:hover {
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+        transform: translateY(-1px);
+    }
 </style>

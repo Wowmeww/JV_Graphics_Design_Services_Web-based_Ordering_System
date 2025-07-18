@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
+
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable  implements MustVerifyEmail
 {
@@ -44,10 +47,11 @@ class User extends Authenticatable  implements MustVerifyEmail
     }
     public function getMessagesAttribute()
     {
-        return [
-            ...$this->sentMessages->toArray(),
-            ...$this->receivedMessages->toArray()
-        ];
+        if (Auth::user()->id === $this->id) {
+            return [
+                ...$this->receivedMessages->toArray()
+            ];
+        }
     }
 
     // one to one - has one
@@ -97,6 +101,28 @@ class User extends Authenticatable  implements MustVerifyEmail
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+
+    public function scopeFilter(Builder $query, array $filters): Builder
+    {
+        $user = Auth::user();
+        $search = isset($filters['search']) ? '%' . $filters['search'] . '%' : '';
+        if ($filters['search'] ?? false) {
+            $query->whereAny(['name', 'email'], 'like', $search);
+        }
+
+        if ($filters['contacts'] ?? false) {
+            if ($user->is_admin) {
+                $query->where('id', '!=', $user->id);
+            } else {
+                $query->where('role', 'admin');
+            }
+
+            $query->orderBy('id');
+        }
+
+        return $query;
     }
 
 

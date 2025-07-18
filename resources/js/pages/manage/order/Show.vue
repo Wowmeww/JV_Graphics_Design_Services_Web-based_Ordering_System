@@ -1,7 +1,7 @@
 <script setup>
     import { router, usePage } from '@inertiajs/vue3';
     import OrderStatus from '../../../components/modal/OrderStatus.vue';
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
     const props = defineProps({
         order: Object,
         searches: Object
@@ -73,6 +73,15 @@
 
     const modalIsOpen = ref(false);
 
+    const image_url = computed(() => {
+        let src = props.order.user.avatar_url;
+        if (src) {
+            return src.includes('https')
+                ? src
+                : `/storage/${src}`;
+        }
+        return '/images/avatar-placeholder.webp';
+    });
 </script>
 
 <template>
@@ -111,10 +120,10 @@
                         </button>
                     </div>
                     <div class="flex gap-3">
-                        <button class="btn btn-primary">
+                        <Link as="button" :href="route('message.index', {receiver: order.user.id})" class="btn btn-primary">
                             <i class="fas fa-envelope"></i>
                             Contact Customer
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -172,7 +181,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div
                             class="px-6 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700">
                             <div class="flex justify-end">
@@ -232,12 +240,9 @@
                         <div class="p-6">
                             <div class="flex items-center gap-4 mb-5">
                                 <div class="relative">
-                                    <img :src="`/storage/${order.user.avatar_url}` || '/images/avatar-placeholder.webp'"
+                                    <img :src="image_url"
                                         class="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow">
-                                    <!-- <span
-                                        class="absolute bottom-0 right-0 bg-green-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-white dark:border-gray-800">
-                                        <i class="fa fa-check"></i>
-                                    </span> -->
+
                                 </div>
                                 <div>
                                     <p class="font-medium text-gray-900 dark:text-white">{{ order.user.name }}</p>
@@ -251,22 +256,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- <div class="space-y-3">
-                                <address
-                                    class="not-italic text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
-                                    <div class="flex items-start gap-3">
-                                        Add address content here
-                                        <i class="fas fa-map-marker-alt text-gray-400 dark:text-gray-500 mt-1"></i>
-                                        <div>
-                                            {{ order.shipping_address.street }}<br />
-                                            {{ order.shipping_address.city }}, {{ order.shipping_address.state }} {{
-                                            order.shipping_address.zip }}<br />
-                                            {{ order.shipping_address.country }}
-                                        </div>
-                                    </div>
-                                </address>
-                            </div> -->
                         </div>
                     </div>
 

@@ -82,7 +82,7 @@
                             <Product v-for="opt of product.options" :key="opt.id" :product="opt" />
 
                             <!---------- OPTION CREATE LINK ------------------------------------------------------->
-                            <Link :href="route('option.create', product)" type="button"
+                            <Link :href="route('product.option.create', product)" type="button"
                                 class="container-primary text-secondary border-secondary dark:text-secondary-100 :text-6xl hover:bg-secondary-200/60 dark:hover:bg-secondary-200/10 inline-block w-full min-w-fit rounded-xl border-2 bg-white p-4 text-center text-4xl text-wrap transition duration-1000 dark:border-white/10 dark:bg-[#1e293b]">
                             <i class="fa-solid fa-plus"></i>
                             </Link>

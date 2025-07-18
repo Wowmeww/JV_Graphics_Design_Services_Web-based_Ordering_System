@@ -178,7 +178,7 @@ class ProductOptionController extends Controller
         }
 
         // dd($product->images);
-        return redirect()->route('option.show', [
+        return redirect()->route('product.option.show', [
             'product' => $product,
             'option' => $option
         ])->with(

@@ -1,20 +1,21 @@
 <script setup>
-import Status from '@/components/alert/Status.vue';
-import ContainerPrimary from '@/components/ContainerPrimary.vue';
-import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
-import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
-import Product from '@/components/ui/card/Product.vue';
-import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
+    import Status from '@/components/alert/Status.vue';
+    import ContainerPrimary from '@/components/ContainerPrimary.vue';
+    import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
+    import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
+    import Product from '@/components/ui/card/Product.vue';
+    import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
 
-const props = defineProps({
-    option: Object,
-});
+    const props = defineProps({
+        option: Object,
+    });
 
-function goBack() {
-    window.history.back();
-}
+    function goBack() {
+        window.history.back();
+    }
 </script>
 <template>
+
     <Head title="View Product Variant" />
     <div class="space-y-3 md:space-y-8 pt-10">
         <PageTitleHeader title="Variant View" />
@@ -84,13 +85,8 @@ function goBack() {
                 </div>
             </div>
             <div class="mx-auto grid max-w-3xl grid-cols-2 gap-3 py-6 pt-8">
-                <PillPrimary
-                    is="Link"
-                    :href="route('option.edit', { product: option.product, option })"
-                    label="Edit"
-                    variant="secondary"
-                    type="button"
-                />
+                <PillPrimary is="Link" :href="route('product.option.edit', { product: option.product, option })"
+                    label="Edit" variant="secondary" type="button" />
                 <PillPrimary @click="goBack()" label="Back" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>

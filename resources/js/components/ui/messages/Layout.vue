@@ -1,6 +1,8 @@
 <script setup>
-    import { computed, ref } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import ContactCard from './ContactCard.vue';
+    import { useForm } from '@inertiajs/vue3';
+    import { debounce } from 'lodash';
 
     const props = defineProps({
         contacts: {
@@ -10,8 +12,24 @@
         selectedContact: {
             type: Object,
             default: null
-        }
+        },
+        user: Object
     });
+
+    const form = useForm({
+        search: null
+    });
+
+    const tempContacts = ref([...props.contacts]);
+
+    watch(() => form.search, debounce((value) => {
+        value = value.trim();
+
+        form.get(route('message.index', { receiver: props.selectedContact?.id }), {
+            preserveState: true,
+            preserveScroll: true
+        });
+    }, 500));
 
     const isDarkMode = ref(false);
     const isSidebarOpen = ref(false);
@@ -19,12 +37,6 @@
     const toggleSidebar = () => {
         isSidebarOpen.value = !isSidebarOpen.value;
     };
-
-    defineExpose({
-        isDarkMode,
-        isSidebarOpen,
-        toggleSidebar
-    });
 
     const avatarUrl = computed(() => {
         if (!props.selectedContact?.avatar_url) return null;
@@ -37,6 +49,13 @@
         if (!props.selectedContact) return 'Offline';
         return props.selectedContact.is_online ? 'Online' : 'Offline';
     });
+
+    function handleUnshift(i, contact) {
+        if (i !== 0) {
+            tempContacts.value.splice(i, 1);
+            tempContacts.value.unshift(contact);
+        }
+    }
 </script>
 
 <template>
@@ -73,11 +92,14 @@
                 <slot name="sidebar">
                     <div class="pb-4 space-y-2">
                         <h2 class="text-xl font-semibold">Messages</h2>
-                        <input type="search" placeholder="Search. . ."
+                        <!-- SEARCH INPUT -->
+                        <input v-model="form.search" type="search" placeholder="Search. . ."
                             class="flex-1 w-full border border-gray-300 dark:border-gray-600 rounded-full py-2 px-4 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
                     <div class="space-y-2 overflow-y-auto max-h-[calc(100vh-120px)]">
-                        <ContactCard v-for="contact in contacts" :key="`contact-${contact.id}`" :contact="contact"
+                        <ContactCard :user="user" v-for="(contact, i) in tempContacts"
+                            @sentAMessage="handleUnshift(i, contact)"
+                            :key="`contact-${contact.id}`" :contact="contact"
                             :selected="contact.id === selectedContact?.id" />
                     </div>
                 </slot>

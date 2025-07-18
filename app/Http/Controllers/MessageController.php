@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use function PHPSTORM_META\type;
+
 class MessageController extends Controller
 {
     /**
@@ -15,20 +17,42 @@ class MessageController extends Controller
      */
     public function index(Request $request, ?User $receiver = null)
     {
-        // how do I sort the contacts?
         $user = $request->user();
-        $contacts = [];
+        $contacts =  User::with(['sentMessages'])
+            ->filter([
+                'contacts' => true,
+                ...request(['search'])
+            ])
+            ->get()->toArray();
+        usort($contacts, function ($a, $b) {
 
-        if ($user->is_admin) {
-            $contacts = User::where('id', '!=', $user->id);
-        } else {
-            $contacts = User::where('role', 'admin');
-            if ($receiver?->role !== 'admin' && $receiver) {
-                abort(403);
-            }
-        }
+            $i = end($a['sent_messages']) ? end($a['sent_messages'])['id'] : null;
+            $j = end($b['sent_messages']) ? end($b['sent_messages'])['id'] : null;
+
+            return  $j <=> $i; // desc
+        });
+        $tempContacts = array_map(function ($contact) use ($user) {
+            // Filter messages to only include those sent to current user
+            $contact['sent_messages'] = array_filter($contact['sent_messages'], function ($message) use ($contact, $user) {
+                return $message['receiver_id'] === $user->id
+                    && $message['sender_id'] === $contact['id'];
+            });
+
+            // Reset array keys if needed
+            $contact['sent_messages'] = array_values($contact['sent_messages']);
+
+            return $contact;
+        }, $contacts);
+
+
 
         if ($receiver) {
+            if ($receiver?->role !== 'admin' && !$user->is_admin) {
+                abort(403);
+            }
+            if ($receiver->id === $user->id) {
+                return back();
+            }
             $messages = Message::with(['sender'])
                 ->where(function ($q) use ($user, $receiver) {
                     $q->where('sender_id', $user->id)
@@ -39,7 +63,12 @@ class MessageController extends Controller
                         ->where('receiver_id', $user->id);
                 });
 
-            if($request->boolean('all')) {
+            Message::where('receiver_id', $user->id)
+                ->where('sender_id', $receiver->id)
+                ->where('seen', false)
+                ->update(['seen' => true]);
+
+            if ($request->boolean('all')) {
                 $messages = $messages->get();
             } else {
                 $messages = $messages->latest('id')
@@ -53,9 +82,8 @@ class MessageController extends Controller
         }
 
 
-
         return Inertia::render('auth/message/Messages', [
-            'contacts' => $contacts->get(),
+            'contacts' => $tempContacts,
             'receiver' => $receiver,
             'messages' => $messages,
             'user' => $user

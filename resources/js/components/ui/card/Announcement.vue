@@ -2,7 +2,8 @@
     import { computed, ref } from 'vue';
 
     const props = defineProps({
-        announcement: Object
+        announcement: Object,
+        withControls: Boolean
     });
 
     const expanded = ref(false);
@@ -33,19 +34,24 @@
 </script>
 
 <template>
+
     <div class="max-w-2xl px-8 py-4 rounded-lg shadow-md bg-white dark:bg-gray-800 dark:border">
         <div class="flex items-center justify-between">
             <span class="text-sm font-light text-gray-600 dark:text-gray-400">
                 {{ formattedDate(announcement.created_at) }}
             </span>
-            <!-- <a class="px-3 py-1 text-sm font-bold text-gray-100 transition-colors duration-300 transform bg-gray-600 rounded cursor-pointer hover:bg-gray-500"
-                            tabindex="0" role="button">Design</a> -->
+            <div v-if="withControls" class="space-x-2">
+                <Link as="button" :href="route('announcement.edit', { announcement: announcement.id })"
+                    class="hover:text-primary dark:hover:text-primary-300">
+                <i class="bi bi-pencil-square"></i>
+                </Link>
+            </div>
         </div>
         <div class="mt-2">
             <a href="#"
-                class="text-xl font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline"
+                class="text-xl font-bold break-all text-wrap text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline"
                 tabindex="0" role="link">{{ announcement.title }}</a>
-            <p class="mt-2 text-gray-600 dark:text-gray-300">
+            <p class="mt-2 text-gray-600 dark:text-gray-300 break-all text-wrap">
                 {{ expanded ? announcement.content : announcement.content?.slice(0, 220) }}
 
                 <span v-if="(announcement.content?.length >= 220) && !expanded">...</span>
@@ -57,14 +63,15 @@
                 class="text-blue-600 dark:text-blue-400 hover:underline" tabindex="0" role="link">
                 {{ expanded ? 'Read less' : 'Read more' }}
             </button>
-
             <div class="flex items-center">
                 <img class="hidden object-cover w-10 h-10 mx-4 rounded-full border border-primary dark:border-primary-200 sm:block"
                     :src="avatar_src" alt="avatar">
-                <a class="font-bold text-gray-700 cursor-pointer dark:text-gray-200" tabindex="0" role="link">
-                    {{ announcement.user.name }}
-                </a>
+                <Link as="button" :href="route('message.index', { receiver: announcement.user.id })"
+                    class="font-bold text-gray-700 cursor-pointer dark:text-gray-200" tabindex="0" role="link">
+                {{ announcement.user.name }}
+                </Link>
             </div>
         </div>
+
     </div>
 </template>

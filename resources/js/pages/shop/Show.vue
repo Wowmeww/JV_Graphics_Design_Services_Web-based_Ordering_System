@@ -72,11 +72,15 @@
         form.post(route('wishlist.store', routeParameters));
     }
     function orderNow() {
-        router.get(route('order.create'), {
+        const item = {
             product_id: props.product.id,
             option_id: tempProduct.value.type === 'Variant' ? tempProduct.value.id : null,
             quantity: form.quantity,
             total_amount: tempProduct.value.price,
+        };
+        router.get(route('order.create'), {
+            item,
+            from: null
         });
     }
 
@@ -167,7 +171,6 @@
                                     </span>
                                     <i class="fa-solid fa-star"></i>
                                 </p>
-
                                 <p :class="styleClass.text">
                                     {{ tempProduct.ratings?.length || 0 }} ratings
                                 </p>

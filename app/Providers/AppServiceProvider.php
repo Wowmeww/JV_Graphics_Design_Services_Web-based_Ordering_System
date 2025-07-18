@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\User;
 use App\Policies\ProductPolicy;
 use App\Policies\ShopPolicy;
 use Illuminate\Database\Eloquent\Model;
@@ -25,13 +26,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
-        // Model::preventLazyLoading();
+        Model::preventLazyLoading();
         Model::automaticallyEagerLoadRelationships();
-
         Gate::policy(Product::class, ProductPolicy::class);
 
-        Gate::define('shop', [ShopPolicy::class, 'shop']);
 
+        Gate::define('accessAsAdmin', function (User $user) {
+            return $user->is_admin;
+        });
         Inertia::share([
             'urlPrevious' => url()->previous()
         ]);

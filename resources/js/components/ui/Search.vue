@@ -22,8 +22,8 @@
 
 <template>
     <form @submit.prevent="submit" class="">
-        <label for="" class="input-label inline-block">{{ label }}</label>
-        <div class="relative">
+        <label for="" class="input-label inline-block" v-if="label">{{ label }}</label>
+        <div class="relative ">
             <input type="text" placeholder="Search products"
                 :class="`form-control form-control-${variant}  pr-16 w-full bg-white dark:bg-transparent`"
                 v-model="model" />

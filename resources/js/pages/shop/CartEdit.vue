@@ -59,6 +59,15 @@
         options: 'border border-slate-400 hover:border-secondary dark:hover:border-secondary-300 flex items-center gap-1 p-2 rounded cursor-pointer font-medium',
         ratingBadge: 'bg-secondary rounded-full py-0.5 px-3 inline-flex items-center gap-1.5 text-white',
     };
+
+       const image_url = (src) => {
+        if (src) {
+            return src.includes('https')
+                ? src
+                : `/storage/${src}`;
+        }
+        return '/images/avatar-placeholder.webp';
+    };
 </script>
 
 
@@ -74,11 +83,11 @@
                     <div class="space-y-2">
                         <img class="h-20 w-20 cursor-pointer"
                             :class="{ 'border-2 border-secondary object-center object-cover dark:border-white': image.image_path === focusedImage }"
-                            v-for="image of product.images" :src="image.image_path" :key="image.id" alt=""
+                            v-for="image of product.images" :src="image_url(image.image_path)" :key="image.id" alt=""
                             @click="changeFocusedImage(image.image_path)" />
                     </div>
                     <div class="flex-1 md:h-[30rem] h-60 sm:h-70">
-                        <img :src="focusedImage ? focusedImage : '/images/img-placeholder.jpg'" alt=""
+                        <img :src="image_url(focusedImage)" alt=""
                             class="object-center object-cover w-full h-full" />
                     </div>
                 </div>

@@ -1,56 +1,57 @@
 <script setup>
-import Status from '@/components/alert/Status.vue';
-import ContainerPrimary from '@/components/ContainerPrimary.vue';
-import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
-import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
-import Dropdown from '@/components/ui/input/Dropdown.vue';
-import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
-import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
-import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+    import Status from '@/components/alert/Status.vue';
+    import ContainerPrimary from '@/components/ContainerPrimary.vue';
+    import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
+    import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
+    import Dropdown from '@/components/ui/input/Dropdown.vue';
+    import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
+    import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
+    import { useForm } from '@inertiajs/vue3';
+    import { ref } from 'vue';
 
-const props = defineProps({
-    categories: Array,
-});
-
-const form = useForm({
-    name: null,
-    category: null,
-    price: null,
-    type: 'Single product',
-    stock: null,
-    size: null,
-    unit: null,
-    description: null,
-    images: [],
-});
-
-const images = ref([null, null, null]);
-
-function submit() {
-    form.images = images.value.map((img) => (img instanceof File ? img : null));
-
-    form.post(route('product.store'), {
-        forceFormData: true,
-        preserveScroll: true,
+    const props = defineProps({
+        categories: Array,
     });
-}
 
-function handleImagesChange(data) {
-    images.value = [...data.images];
-}
-function goBack() {
-    window.history.back();
-}
-function reset() {
-    images.value = [null, null, null];
-    form.reset();
-}
+    const form = useForm({
+        name: null,
+        category: null,
+        price: null,
+        type: 'Single product',
+        stock: null,
+        size: null,
+        unit: null,
+        description: null,
+        images: [],
+    });
+
+    const images = ref([null, null, null]);
+
+    function submit() {
+        form.images = images.value.map((img) => (img instanceof File ? img : null));
+
+        form.post(route('product.store'), {
+            forceFormData: true,
+            preserveScroll: true,
+        });
+    }
+
+    function handleImagesChange(data) {
+        images.value = [...data.images];
+    }
+    function goBack() {
+        window.history.back();
+    }
+    function reset() {
+        images.value = [null, null, null];
+        form.reset();
+    }
 </script>
 <template>
+
     <Head title="Create Product" />
 
-    <form class="space-y-3 md:space-y-8" @submit.prevent="submit">
+    <form class="space-y-3 md:space-y-8 pt-10" @submit.prevent="submit">
         <PageTitleHeader title="Add new Product" />
         <Status :status="$page.props.status" @close="$page.props.status = null" />
         <ContainerPrimary title="Product Setting">
@@ -61,85 +62,40 @@ function reset() {
 
                     <div class="grid grid-cols-12 gap-2 gap-y-3 pt-2">
                         <div class="col-span-8">
-                            <TextInputPrimary
-                                v-model="form.size"
-                                :required="false"
-                                label="Size L*W*H, W*H "
-                                placeholder="L*W*H"
-                                variant="secondary"
-                            />
+                            <TextInputPrimary v-model="form.size" :required="false" label="Size L*W*H, W*H "
+                                placeholder="L*W*H" variant="secondary" />
                         </div>
                         <div class="col-span-4">
-                            <Dropdown
-                                label="Unit"
-                                :value="form.unit"
-                                @select="(option) => (form.unit = option)"
-                                placeholder="Unit"
-                                variant="secondary"
-                                :options="['inc', 'cm', 'foot', 'miter']"
-                            />
+                            <Dropdown label="Unit" :value="form.unit" @select="(option) => (form.unit = option)"
+                                placeholder="Unit" variant="secondary" :options="['inc', 'cm', 'foot', 'miter']" />
                         </div>
                     </div>
-                    <TextInputPrimary
-                        v-model="form.description"
-                        :error="form.errors.description"
-                        :required="false"
-                        type="textarea"
-                        label="Product Description"
-                        placeholder="Enter product description"
-                        variant="secondary"
-                    />
+                    <TextInputPrimary v-model="form.description" :error="form.errors.description" :required="false"
+                        type="textarea" label="Product Description" placeholder="Enter product description"
+                        variant="secondary" />
                 </div>
 
                 <!-- Another Column -->
                 <div class="space-y-3">
-                    <TextInputPrimary
-                        v-model="form.name"
-                        :error="form.errors.name"
-                        label="Product Name"
-                        placeholder="Enter product name"
-                        variant="secondary"
-                    />
+                    <TextInputPrimary v-model="form.name" :error="form.errors.name" label="Product Name"
+                        placeholder="Enter product name" variant="secondary" />
 
                     <div class="grid gap-2 gap-y-3 sm:grid-cols-2">
-                        <Dropdown
-                            :value="form.category"
-                            :error="form.errors.category"
-                            @select="(opt) => (form.category = opt)"
-                            label="Category"
-                            placeholder="Select or add category"
-                            variant="secondary"
-                            :options="categories.map((e) => e.name)"
-                            allow-custom-value
-                        />
+                        <Dropdown :value="form.category" :error="form.errors.category"
+                            @select="(opt) => (form.category = opt)" label="Category"
+                            placeholder="Select or add category" variant="secondary"
+                            :options="categories.map((e) => e.name)" allow-custom-value />
 
-                        <TextInputPrimary
-                            v-model="form.price"
-                            :error="form.errors.price"
-                            type="number"
-                            label="Price"
-                            placeholder="Enter product price"
-                            variant="secondary"
-                        />
+                        <TextInputPrimary v-model="form.price" :error="form.errors.price" type="number" label="Price"
+                            placeholder="Enter product price" variant="secondary" />
 
-                        <Dropdown
-                            :value="form.type"
-                            :error="form.errors.type"
-                            @select="(option) => (form.type = option)"
-                            label="Product Type"
-                            placeholder="Select type"
+                        <Dropdown :value="form.type" :error="form.errors.type"
+                            @select="(option) => (form.type = option)" label="Product Type" placeholder="Select type"
                             variant="secondary"
-                            :options="['Single product', 'Main product with variant', 'unavailable']"
-                        />
+                            :options="['Single product', 'Main product with variant', 'unavailable']" />
 
-                        <TextInputPrimary
-                            v-model="form.stock"
-                            :error="form.errors.stock"
-                            type="number"
-                            label="Stock"
-                            placeholder="Enter product stocks"
-                            variant="secondary"
-                        />
+                        <TextInputPrimary v-model="form.stock" :error="form.errors.stock" type="number" label="Stock"
+                            placeholder="Enter product stocks" variant="secondary" />
                     </div>
                 </div>
             </div>
@@ -150,13 +106,8 @@ function reset() {
                 </PillPrimary>
 
                 <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" />
-                <PillPrimary
-                    label="Clear/ reset"
-                    variant="outlineSecondary"
-                    @click="reset"
-                    type="reset"
-                    :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'"
-                />
+                <PillPrimary label="Clear/ reset" variant="outlineSecondary" @click="reset" type="reset"
+                    :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'" />
             </div>
         </ContainerPrimary>
     </form>
