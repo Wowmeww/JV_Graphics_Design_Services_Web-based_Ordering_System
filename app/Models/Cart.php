@@ -54,6 +54,11 @@ class Cart extends Model
             ->withTimestamps();
     }
 
+    public function resource()
+    {
+        return $this->hasMany(OrderImage::class);
+    }
+
 
     // CUSTOM METHODS
 

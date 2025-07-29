@@ -47,15 +47,26 @@ class CartController extends Controller
     {
         $validated = $request->validate([
             'quantity' => ['required', 'integer', 'min:12', 'max:24'],
+            'type' => ['nullable', 'string'],
+            'images' => ['nullable', 'array'],
+            'images.*.label' => ['required', 'string'],
+            'images.*.file' => ['required', 'image'],
         ]);
 
-        $user = $request->user();
-        $cart = $user->cart;
 
+        $user = $request->user();
+        $cart = $user->cart;;
         if (! $cart) {
             // Optionally create a cart if missing
             $cart = $user->cart()->create(); // or Cart::create(['user_id' => $user->id])
         }
+        if ($validated['type'] === 'custom') {
+            if (count($request->files)) {
+                dd($request->array('images'));
+            }
+        }
+
+        dd('test');
 
         $cart->addItem($product, $option, $validated['quantity']);
 

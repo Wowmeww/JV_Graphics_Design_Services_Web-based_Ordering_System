@@ -188,7 +188,7 @@
     const topProducts = computed(() => (props.shop.products.sort((a, b) => b.rating - a.rating)));
 </script>
 <template>
-    <div class="pt-8 px-4 max-w-7xl mx-auto space-y-6">
+    <div class="pt-8 px-4 max-w-7xl mx-auto space-y-6 pb-7">
         <PageTitleHeader title="Dashboard" />
 
         <!-- Stats Cards -->

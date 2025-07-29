@@ -25,12 +25,6 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->timestamps();
         });
-        Schema::create('product_option_product_option_image', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(ProductOption::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(ProductOptionImage::class)->constrained()->cascadeOnDelete();
-            $table->timestamps();
-        });
     }
 
     /**

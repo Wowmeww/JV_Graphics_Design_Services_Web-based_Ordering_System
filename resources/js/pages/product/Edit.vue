@@ -44,9 +44,8 @@
             return img instanceof File || img == 'delete' ? img : null;
         });
         form.images = uploadedFiles;
-        // form.images = [...images.value];
 
-        form.post(route('product.update', props.product), {});
+        form.post(route('product.update', props.product));
     }
 
     function handleImagesChange(data) {
@@ -89,7 +88,7 @@
 
     <Head title="Edit Product" />
 
-    <form class="space-y-3 md:space-y-8 pt-10" @submit.prevent="submit">
+    <form class="space-y-3 md:space-y-8 py-10 max-w-7xl mx-auto" @submit.prevent="submit">
         <PageTitleHeader title="Product Editor" />
         <!---------- STATUS ALERT ------------------------------------------------------->
         <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->
@@ -144,7 +143,8 @@
                     type="submit" />
                 <PillPrimary @click="handleDelete" label="Delete" variant="outlineSecondary"
                     :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'" />
-                <PillPrimary @click="resetForm" label="Reset" :disabled="is_unchanged || form.processing" variant="outlineSecondary" />
+                <PillPrimary @click="resetForm" label="Reset" :disabled="is_unchanged || form.processing"
+                    variant="outlineSecondary" />
                 <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>

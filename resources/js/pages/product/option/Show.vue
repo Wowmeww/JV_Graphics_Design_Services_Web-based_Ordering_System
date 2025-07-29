@@ -17,7 +17,7 @@
 <template>
 
     <Head title="View Product Variant" />
-    <div class="space-y-3 md:space-y-8 pt-10">
+    <div class="space-y-3 md:space-y-8 py-10 max-w-7xl mx-auto">
         <PageTitleHeader title="Variant View" />
         <!---------- STATUS ALERT ------------------------------------------------------->
         <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->

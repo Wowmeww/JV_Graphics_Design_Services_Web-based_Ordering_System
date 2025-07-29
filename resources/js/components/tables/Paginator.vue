@@ -7,7 +7,7 @@
 
     const styleClass = {
         disabled: ' px-4 py-2 mx-1 text-gray-400 transition-colors duration-300 transform bg-white/80 rounded-md inline dark:bg-gray-800/50 capitalize dark:text-gray-200/40 hover:cursor-not-allowed',
-        link: ' hidden sm:inline px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md dark:bg-gray-800 capitalize dark:text-gray-200 hover:bg-primary dark:hover:bg-primary-500 hover:text-white dark:hover:text-gray-200',
+        link: ' hidden sm:inline inline-grid place-content-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md dark:bg-gray-800 capitalize dark:text-gray-200 hover:bg-primary dark:hover:bg-primary-500 hover:text-white dark:hover:text-gray-200',
         prevNext: ' px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md dark:bg-gray-800 capitalize dark:text-gray-200 hover:bg-primary dark:hover:bg-primary-500 hover:text-white dark:hover:text-gray-200',
         active: ' !dark:bg-primary-500 !bg-primary !text-white !dark:text-gray-200 font-semibold'
     };

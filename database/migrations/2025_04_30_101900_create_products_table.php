@@ -21,16 +21,11 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2)->default(0);
             $table->integer('stock')->default(0);
-            $table->string('type')->default('Single product'); //-> main product with variant, single product
+            $table->string('type')->default('Single product'); //-> main product with variant, single product, custom
             $table->string('size')->nullable();
             $table->timestamps();
         });
-        Schema::create('product_product_image', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(ProductImage::class)->constrained()->cascadeOnDelete();
-            $table->timestamps();
-        });
+    
     }
 
     /**

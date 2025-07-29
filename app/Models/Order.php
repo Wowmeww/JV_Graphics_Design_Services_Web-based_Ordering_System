@@ -47,7 +47,15 @@ class Order extends Model
         return $this->hasOne(Rating::class);
     }
 
-    // many to many - belongs to many
+    // one to many - has many
+
+
+    public function resource()
+    {
+        if ($this->type === 'custom') {
+            return $this->hasMany(OrderImage::class);
+        }
+    }
 
 
     public function scopeFilter(Builder $query, array $filters): Builder

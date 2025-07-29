@@ -9,6 +9,7 @@
         products: Object,
         categories: Array,
         status: Object,
+        productTypes: Array
     });
 </script>
 
@@ -17,7 +18,7 @@
         <PageTitleHeader title="Product Management" />
 
         <!---------------------------------- FILTERS ----------------------------------------------->
-        <ProductFilters :categories="categories" />
+        <ProductFilters :categories="categories" :productTypes="productTypes" />
 
         <!---------------------------------- Status ----------------------------------------------->
         <!-- <Status :status="$page.props.status" @close="$page.props.status = null" /> -->

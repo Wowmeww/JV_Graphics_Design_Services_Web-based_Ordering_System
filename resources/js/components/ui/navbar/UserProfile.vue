@@ -3,6 +3,7 @@
     import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue';
     import ThemToggler from './ThemeToggler.vue';
     import { router } from '@inertiajs/vue3'
+import NotificationDropdown from './NotificationDropdown.vue';
 
     const page = usePage();
     const user = page.props.auth?.user;
@@ -86,15 +87,7 @@
                     <path d="M3 4H5.5L7.5 12H18" stroke="#1E293B" stroke-width="1.5" stroke-linecap="round" />
                 </svg>
             </button>
-            <button>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M12 2C10.8954 2 10 2.89543 10 4V4.28988C7.10851 4.88449 5 7.54258 5 10.618V15.764L4 16.764V17H20V16.764L19 15.764V10.618C19 7.54258 16.8915 4.88449 14 4.28988V4C14 2.89543 13.1046 2 12 2Z"
-                        fill="#334155" />
-                    <path d="M9 17V18C9 19.6569 10.3431 21 12 21C13.6569 21 15 19.6569 15 18V17H9Z" fill="#334155" />
-                    <circle cx="17" cy="6" r="3" fill="#EF4444" stroke="white" stroke-width="1.5" />
-                </svg>
-            </button>
+           <NotificationDropdown />
             <ThemToggler />
             <button type="button" @click.stop="toggleDropdown" :class="styleClass.profile"
                 :aria-expanded="isDropdownOpen.toString()">

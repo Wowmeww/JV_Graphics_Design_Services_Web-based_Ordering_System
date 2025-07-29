@@ -49,7 +49,7 @@
             <span v-show="required" class="text-red-600 dark:text-red-500 font-black">*</span>
         </label>
         <button @click.prevent="openDropdown"
-            :class="`form-control form-control-${variant} relative pr-10 bg-white w-full flex cursor-pointer items-center justify-between text-start dark:bg-transparent  capitalize ${disabled ? '!cursor-not-allowed opacity-60' : ''} ${props.allowCustomValue ? 'overflow-auto' : ''}`">
+            :class="`form-control form-control-${variant} relative pr-10  w-full flex cursor-pointer items-center justify-between text-start dark:bg-transparent  capitalize ${disabled ? '!cursor-not-allowed opacity-60' : ''} ${props.allowCustomValue ? 'overflow-auto' : ''}`">
             <span v-if="value">
                 {{ value }}
             </span>

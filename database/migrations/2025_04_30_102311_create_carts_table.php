@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('carts', function (Blueprint $table) {
@@ -20,23 +17,29 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
+
         Schema::create('cart_product', function (Blueprint $table) {
-            $table->id()->first();
-            $table->foreignIdFor(Cart::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(ProductOption::class, 'option_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->integer('quantity')->default(12);
+            $table->id();
+            $table->enum('type', ['custom', 'normal'])->default('normal');
+
+            $table->unsignedBigInteger('cart_id');
+            $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade');
+
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+
+            $table->unsignedBigInteger('option_id')->nullable();
+            $table->foreign('option_id')->references('id')->on('product_options')->onDelete('cascade');
+
+            $table->integer('quantity')->default(1);
             $table->integer('total_amount');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('carts');
         Schema::dropIfExists('cart_product');
+        Schema::dropIfExists('carts');
     }
 };

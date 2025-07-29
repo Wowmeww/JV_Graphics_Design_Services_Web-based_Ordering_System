@@ -1,49 +1,50 @@
 <script setup>
-import { router } from '@inertiajs/vue3';
-import { computed, reactive } from 'vue';
-import PillPrimary from '../ui/buttons/PillPrimary.vue';
-import Search from '../ui/Search.vue';
-import FilterDropDown from './FilterDropDown.vue';
+    import { router } from '@inertiajs/vue3';
+    import { computed, reactive } from 'vue';
+    import PillPrimary from '../ui/buttons/PillPrimary.vue';
+    import Search from '../ui/Search.vue';
+    import FilterDropDown from './FilterDropDown.vue';
 
-const params = route().params;
+    const params = route().params;
 
-const props = defineProps({
-    categories: Object,
-});
+    const props = defineProps({
+        categories: Object,
+        productTypes: Array
+    });
 
-const filter = reactive({
-    stock: params.stock,
-    category: params.category,
-    search: params.search,
-    type: params.type,
-});
+    const filter = reactive({
+        stock: params.stock,
+        category: params.category,
+        search: params.search,
+        type: params.type,
+    });
 
-function handleSearch(search) {
-    router.get(route('product.index', { ...params, ...filter, search, page: null }), {}, { preserveState: false, preserveScroll: true });
-}
+    function handleSearch(search) {
+        router.get(route('product.index', { ...params, ...filter, search, page: null }), {}, { preserveState: false, preserveScroll: true });
+    }
 
-function handleFilter() {
-    router.get(route('product.index', { ...params, ...filter, page: null }), {}, { preserveState: false, preserveScroll: true });
-}
-function clearFilter() {
-    filter.stock = null;
-    filter.category = null;
-    filter.search = null;
-    filter.type = null;
+    function handleFilter() {
+        router.get(route('product.index', { ...params, ...filter, page: null }), {}, { preserveState: false, preserveScroll: true });
+    }
+    function clearFilter() {
+        filter.stock = null;
+        filter.category = null;
+        filter.search = null;
+        filter.type = null;
 
-    router.get(route('product.index', { ...params, ...filter }), {}, { preserveState: false, preserveScroll: true });
-}
+        router.get(route('product.index', { ...params, ...filter }), {}, { preserveState: false, preserveScroll: true });
+    }
 
-const dropdownOptions = {
-    stock: ['In stock (10+)', 'Low inventory (10-)', 'Out of stock'],
-    category: props.categories.map((category) => category.name),
-    type: ['Single product', 'Main product with variant', 'Unavailable'],
-};
-const hasFilters = computed(() => Object.values(filter).some((val) => val && val !== ''));
+    const dropdownOptions = {
+        stock: ['In stock (10+)', 'Low inventory (10-)', 'Out of stock'],
+        category: props.categories.map((category) => category.name),
+        type: props.productTypes
+    };
+    const hasFilters = computed(() => Object.values(filter).some((val) => val && val !== ''));
 
-function clearFilterKey(key) {
-    filter[key] = null;
-}
+    function clearFilterKey(key) {
+        filter[key] = null;
+    }
 </script>
 
 <template>
@@ -71,14 +72,17 @@ function clearFilterKey(key) {
 
         <!--------------------------- FILTER DROPDOWN ----------------------------------------------->
         <div class="col-span-2 sm:col-span-1">
-            <FilterDropDown placeholder="Stock Status" :options="dropdownOptions.stock" @select="(option) => (filter.stock = option)" />
+            <FilterDropDown placeholder="Stock Status" :options="dropdownOptions.stock"
+                @select="(option) => (filter.stock = option)" />
         </div>
         <div class="col-span-2 sm:col-span-1">
-            <FilterDropDown placeholder="Product Type" :options="dropdownOptions.type" @select="(option) => (filter.type = option)" />
+            <FilterDropDown placeholder="Product Type" :options="dropdownOptions.type"
+                @select="(option) => (filter.type = option)" />
         </div>
 
         <div class="col-span-2 sm:col-span-1">
-            <FilterDropDown placeholder="Product category" :options="dropdownOptions.category" @select="(option) => (filter.category = option)" />
+            <FilterDropDown placeholder="Product category" :options="dropdownOptions.category"
+                @select="(option) => (filter.category = option)" />
         </div>
         <div class="col-span-2 flex justify-center gap-3">
             <!--------------------------- Filter apply ----------------------------------------------->
@@ -122,23 +126,14 @@ function clearFilterKey(key) {
             <div class="flex flex-col gap-3 md:flex-row lg:items-center lg:justify-between">
                 <div class="grid gap-3 sm:grid-flow-col sm:content-stretch lg:justify-start">
                     <!--------------------------- FILTER DROPDOWN ----------------------------------------------->
-                    <FilterDropDown
-                        :placeholder="filter.stock ? filter.stock : 'Stock Status'"
-                        :options="dropdownOptions.stock"
-                        @select="(option) => (filter.stock = option)"
-                    />
+                    <FilterDropDown :placeholder="filter.stock ? filter.stock : 'Stock Status'"
+                        :options="dropdownOptions.stock" @select="(option) => (filter.stock = option)" />
 
-                    <FilterDropDown
-                        :placeholder="filter.type ? filter.type : 'Product Type'"
-                        :options="dropdownOptions.type"
-                        @select="(option) => (filter.type = option)"
-                    />
+                    <FilterDropDown :placeholder="filter.type ? filter.type : 'Product Type'"
+                        :options="dropdownOptions.type" @select="(option) => (filter.type = option)" />
 
-                    <FilterDropDown
-                        :placeholder="filter.category ? filter.category : 'Product Category'"
-                        :options="dropdownOptions.category"
-                        @select="(option) => (filter.category = option)"
-                    />
+                    <FilterDropDown :placeholder="filter.category ? filter.category : 'Product Category'"
+                        :options="dropdownOptions.category" @select="(option) => (filter.category = option)" />
                 </div>
                 <div class="flex justify-center gap-3">
                     <!--------------------------- Filter apply ----------------------------------------------->

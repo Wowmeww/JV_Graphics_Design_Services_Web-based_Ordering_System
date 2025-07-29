@@ -10,7 +10,7 @@
     import { ref } from 'vue';
 
     const props = defineProps({
-        categories: Array,
+        categories: Array
     });
 
     const form = useForm({
@@ -51,9 +51,19 @@
 
     <Head title="Create Product" />
 
-    <form class="space-y-3 md:space-y-8 pt-10" @submit.prevent="submit">
+    <div class="pt-10 px-2 max-w-7xl mx-auto flex justify-center md:justify-end">
+        <Link as="button" :href="route('customize.create')"
+            class="btn w-full md:w-max bg-linear-65 from-secondary-500 hover:from-secondary to-primary-500 hover:to-primary transition text-white gap-4">
+        <span>
+            Create a
+            Customizable
+            Product
+        </span>
+        <i class="fa-solid fa-circle-plus text-xl "></i>
+        </Link>
+    </div>
+    <form class="space-y-3 px-2 md:space-y-8 py-10 max-w-7xl mx-auto" @submit.prevent="submit">
         <PageTitleHeader title="Add new Product" />
-        <Status :status="$page.props.status" @close="$page.props.status = null" />
         <ContainerPrimary title="Product Setting">
             <div class="grid gap-6 pt-2 md:grid-cols-2">
                 <div class="space-y-3">
@@ -74,7 +84,6 @@
                         type="textarea" label="Product Description" placeholder="Enter product description"
                         variant="secondary" />
                 </div>
-
                 <!-- Another Column -->
                 <div class="space-y-3">
                     <TextInputPrimary v-model="form.name" :error="form.errors.name" label="Product Name"
@@ -99,13 +108,12 @@
                     </div>
                 </div>
             </div>
-            <div class="mx-auto grid max-w-3xl grid-cols-3 gap-3 py-6 pt-8">
+            <div class="mx-auto grid max-w-3xl sm:grid-cols-3 gap-3 py-6 pt-8">
                 <PillPrimary label="" variant="secondary" type="submit" :disabled="form.processing">
                     <span v-if="form.processing">Publishing...</span>
                     <span v-else>Publish Product</span>
                 </PillPrimary>
-
-                <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" />
+                <PillPrimary is="Link" :href="route('product.index')" label="Cancel" variant="outlineSecondary" />
                 <PillPrimary label="Clear/ reset" variant="outlineSecondary" @click="reset" type="reset"
                     :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'" />
             </div>

@@ -23,7 +23,7 @@ class ProductController extends Controller
         return Inertia::render('product/Index', [
             'products' => $products,
             'categories' => Category::all(['id', 'name']),
-            'status' => session('status')
+            'productTypes' => Product::query()->pluck('type')->unique()->values()
         ]);
     }
 
@@ -31,7 +31,7 @@ class ProductController extends Controller
     {
 
         return Inertia::render('product/Create', [
-            'categories' => Category::all()
+            'categories' => Category::all(),
         ]);
     }
 
@@ -122,6 +122,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        if ($product->type === 'custom') {
+            return redirect()->route('customize.edit', $product);
+        }
         $product->load(['category', 'options', 'images', 'options.images']);
         [$product->size, $product->unit] = $this->splitSize($product->size);
 

@@ -124,7 +124,6 @@
                                     d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-
                         <!-- Contact Avatar -->
                         <div class="relative">
                             <div
@@ -135,8 +134,8 @@
                                     {{ selectedContact?.name?.charAt(0)?.toUpperCase() }}
                                 </span>
                             </div>
-                            <span v-if="selectedContact?.is_online"
-                                class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800" />
+                            <!-- <span v-if="selectedContact?.is_online"
+                                class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800" /> -->
                         </div>
 
                         <!-- Contact Info -->
@@ -144,13 +143,13 @@
                             <h2 class="font-medium text-gray-900 dark:text-white truncate">
                                 {{ selectedContact?.name }}
                             </h2>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                            <!-- <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                                 <span :class="[
                                     'inline-block w-2 h-2 rounded-full mr-1.5',
                                     selectedContact?.is_online ? 'bg-green-500' : 'bg-gray-400'
                                 ]" />
                                 {{ contactStatus }}
-                            </p>
+                            </p> -->
                         </div>
                     </div>
                 </header>

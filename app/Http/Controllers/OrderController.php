@@ -6,6 +6,7 @@ use App\Events\OrderPlaced;
 use App\Models\CartProduct;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductOption;
 use App\Models\WishlistProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -90,10 +91,12 @@ class OrderController extends Controller
 
         $user = Auth::user();
 
+        // dd($request->all());
 
         foreach ($request->items as $item) {
+            $product = $item['option_id'] ? ProductOption::find($item['option_id']) : Product::find($item['product_id']);
             $order = $user->addOrder([
-                'total_amount' => $item['total_amount'],
+                'total_amount' => $product->price * $item['quantity'] ?? 12,
                 'quantity' => $item['quantity'] ?? 12,
                 'note' => $item['note'],
                 'product_id' => $item['product_id'],
