@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductOptionController;
 
-Route::middleware(['auth', 'verified', 'can:create,App\Models\Product'])->group(function () {
+Route::middleware(['auth', 'verified', 'can:create,App\Models\Product', 'password.confirm'])->group(function () {
 
     Route::get('/customize/create', [CustomizeProductController::class, 'create'])->name('customize.create');
     Route::get('/customize/{product}/edit', [CustomizeProductController::class, 'edit'])->name('customize.edit');
@@ -18,15 +18,12 @@ Route::middleware(['auth', 'verified', 'can:create,App\Models\Product'])->group(
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
 
         Route::post('/', [ProductController::class, 'store'])
-            ->middleware('password.confirm')
             ->name('store');
 
         Route::match(['put', 'patch'], '/{product}', [ProductController::class, 'update'])
-            ->middleware('password.confirm')
             ->name('update');
 
         Route::delete('/{product}', [ProductController::class, 'destroy'])
-            ->middleware('password.confirm')
             ->name('destroy');
 
         // 🎨 Nested Product Option Routes
@@ -39,15 +36,12 @@ Route::middleware(['auth', 'verified', 'can:create,App\Models\Product'])->group(
             Route::get('/{option}/edit', [ProductOptionController::class, 'edit'])->name('edit');
 
             Route::post('/', [ProductOptionController::class, 'store'])
-                ->middleware('password.confirm')
                 ->name('store');
 
             Route::patch('/{option}', [ProductOptionController::class, 'update'])
-                ->middleware('password.confirm')
                 ->name('update');
 
             Route::delete('/{option}', [ProductOptionController::class, 'destroy'])
-                ->middleware('password.confirm')
                 ->name('destroy');
         });
     });

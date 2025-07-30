@@ -31,7 +31,7 @@ return new class extends Migration
             $table->unsignedBigInteger('option_id')->nullable();
             $table->foreign('option_id')->references('id')->on('product_options')->onDelete('cascade');
 
-            $table->integer('quantity')->default(1);
+            $table->integer('quantity')->default(12);
             $table->integer('total_amount');
             $table->timestamps();
         });

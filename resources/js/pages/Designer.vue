@@ -5,6 +5,8 @@ import Element from '@/components/designer/Element.vue';
 import Tools from '@/components/designer/Tools.vue';
 import initializeDragAndDrop from './dragDrop.js';
 import { useForm } from '@inertiajs/vue3';
+import html2canvas from 'html2canvas';
+
 const props = defineProps({
     product: Object,
 });
@@ -43,12 +45,54 @@ const form = useForm({
     images: [],
 });
 
-function addToCart() {
+async function addToCart() {
+    // Start with real uploaded images
     form.images = [
         elements.front.image?.file ? { label: 'front image', file: elements.front.image.file } : null,
         elements.back.image?.file ? { label: 'back image', file: elements.back.image.file } : null,
     ].filter(Boolean);
-    form.images = form.post(route('cart.store', { product: props.product.id }));
+
+    if (form.images[0] || form.images[1]) {
+        const canvasElements = [
+            { el: document.querySelector('#front-canvas'), label: 'uploaded front', filename: 'front-canvas.png' },
+            { el: document.querySelector('#back-canvas'), label: 'uploaded back', filename: 'back-canvas.png' },
+        ];
+
+        for (const { el, label, filename } of canvasElements) {
+            if (!el) continue;
+
+            try {
+                const canvas = await html2canvas(el);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.9); // 90% quality
+
+                const file = dataURLtoFile(dataUrl, filename);
+
+                if (file) {
+                    form.images.push({ label, file });
+                }
+            } catch (err) {
+                console.error(`Failed to render canvas for ${label}`, err);
+            }
+        }
+    }
+
+    // Now post the form
+    form.post(route('cart.store', { product: props.product.id }));
+}
+
+function dataURLtoFile(dataurl, filename) {
+    const arr = dataurl.split(',');
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
 }
 
 const activeView = ref('front'); // 'front' or 'back'
@@ -299,8 +343,9 @@ const styleClasses = {
                             <span>{{ (product.price * form.quantity).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}</span>
                         </div>
 
-                        <div>
-                            <button type="submit">Add to cart</button>
+                        <div class="gap-2 md:flex md:justify-end">
+                            <button class="btn btn-secondary" @click="canvases" type="button">Place order</button>
+                            <button class="btn btn-primary" type="submit">Add to cart</button>
                         </div>
                     </div>
                 </form>

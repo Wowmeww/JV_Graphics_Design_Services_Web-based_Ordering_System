@@ -12,8 +12,8 @@ class OrderImage extends Model
     {
         return $this->belongsTo(Order::class);
     }
-    public function cart()
+    public function cartItem()
     {
-        return $this->belongsTo(Cart::class);
+        return $this->belongsTo(CartProduct::class);
     }
 }

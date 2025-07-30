@@ -13,6 +13,10 @@ class CartProduct extends Pivot
 
     protected $primaryKey = 'id'; // default, but add it if custom
 
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
+    }
 
     public function product()
     {
@@ -22,5 +26,11 @@ class CartProduct extends Pivot
     public function option()
     {
         return $this->belongsTo(ProductOption::class, 'option_id');
+    }
+
+
+    public function resource()
+    {
+        return $this->hasMany(OrderImage::class, 'cart_product_id');
     }
 }

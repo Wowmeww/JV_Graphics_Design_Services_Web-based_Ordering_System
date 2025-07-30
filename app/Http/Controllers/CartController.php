@@ -7,6 +7,7 @@ use App\Models\CartProduct;
 use App\Models\Product;
 use App\Models\ProductOption;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class CartController extends Controller
@@ -41,18 +42,18 @@ class CartController extends Controller
             'shopAsideOpen' => true
         ]);
     }
-
-
-    public function store(Request $request, Product $product, ?ProductOption $option = null)
+    function store(Request $request, Product $product, ?ProductOption $option = null)
     {
+        // dd($request->images);
+
         $validated = $request->validate([
             'quantity' => ['required', 'integer', 'min:12', 'max:24'],
             'type' => ['nullable', 'string'],
             'images' => ['nullable', 'array'],
             'images.*.label' => ['required', 'string'],
-            'images.*.file' => ['required', 'image'],
+            'images.*.file' => ['required', 'file', 'max:2048'], // when i remove the mimes its working
         ]);
-
+        $validated['type'] = isset($validated['type']) ? $validated['type'] : 'normal';
 
         $user = $request->user();
         $cart = $user->cart;;
@@ -60,15 +61,23 @@ class CartController extends Controller
             // Optionally create a cart if missing
             $cart = $user->cart()->create(); // or Cart::create(['user_id' => $user->id])
         }
-        if ($validated['type'] === 'custom') {
+
+        $cartItem = $cart->addItem($product, $option, $validated['quantity']);
+
+        if (($validated['type'] === 'custom')) {
+            $cartItem->update(['type' => 'custom']);
+            // dd($cartItem);
             if (count($request->files)) {
-                dd($request->array('images'));
+                foreach ($validated['images'] as $image) {
+                    $image_path = Storage::disk('public')->put('/product_images/order_resource', $image['file']);
+                    // dd($cartItem->resource());
+                    $cartItem->resource()->create([
+                        'label' => $image['label'],
+                        'image' => $image_path
+                    ]);
+                }
             }
         }
-
-        dd('test');
-
-        $cart->addItem($product, $option, $validated['quantity']);
 
         return redirect()->back()->with([
             'status' => [
@@ -90,20 +99,42 @@ class CartController extends Controller
 
         // Bulk deletion via array of IDs from request
         if ($request->filled('ids')) {
-            CartProduct::whereIn('id', $request->input('ids'))->delete();
+            $cartItems = CartProduct::whereIn('id', $request->input('ids'))->get();
+
+            foreach ($cartItems as $item) {
+                foreach ($item->resource as $resource) {
+                    if ($resource->image && Storage::disk('public')->exists($resource->image)) {
+                        Storage::disk('public')->delete($resource->image);
+                    }
+
+                    $resource->delete();
+                }
+                $item->delete();
+            }
+
             $with['status'] = [
                 'type' => 'success',
                 'message' => 'Selected items removed from cart.',
             ];
         }
+
         // Single deletion via route model binding
         elseif ($cartItem) {
+            foreach ($cartItem->resource as $resource) {
+                if ($resource->image && Storage::disk('public')->exists($resource->image)) {
+                    Storage::disk('public')->delete($resource->image);
+                }
+
+                $resource->delete();
+            }
             $cartItem->delete();
+
             $with['status'] = [
                 'type' => 'success',
                 'message' => 'Item removed from cart.',
             ];
         }
+
         // Nothing was deleted
         else {
             $with['status'] = [

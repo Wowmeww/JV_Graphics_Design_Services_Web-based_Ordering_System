@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Cart;
+use App\Models\CartProduct;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductOption;
@@ -34,10 +35,10 @@ return new class extends Migration
         Schema::create('orders_resource_images', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Order::class)->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Cart::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(CartProduct::class, 'cart_product_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('image');
             $table->string('label');
-            $table->enum('type', ['design_image', 'uploaded_image']);
+            // $table->enum('type', ['design_image', 'uploaded_image']);
             $table->timestamps();
         });
         // Schema::create('order_product', function (Blueprint $table) {

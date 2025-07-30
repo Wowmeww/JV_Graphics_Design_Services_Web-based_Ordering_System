@@ -54,30 +54,28 @@ class Cart extends Model
             ->withTimestamps();
     }
 
-    public function resource()
-    {
-        return $this->hasMany(OrderImage::class);
-    }
-
 
     // CUSTOM METHODS
 
-    public function addItem(Product $product, ?ProductOption $option = null, int $quantity = 12): void
+    public function addItem(Product $product, ?ProductOption $option = null, int $quantity = 12)
     {
         $price = $option ? $option->price : $product->price;
-        CartProduct::updateOrInsert(
-            [ // keys to find existing row
+        $total_amount = $price * $quantity;
+
+        return CartProduct::updateOrCreate(
+            [
                 'cart_id' => $this->id,
                 'product_id' => $product->id,
                 'option_id' => $option?->id,
             ],
-            [ // fields to update or insert
+            [
                 'quantity' => $quantity,
-                'total_amount' => $price * $quantity,
-                'updated_at' => now(),
+                'total_amount' => $total_amount,
             ]
         );
     }
+
+
     public function deleteItem(Product $product, ?ProductOption $option = null): void
     {
         CartProduct::where('cart_id', $this->id)
