@@ -17,8 +17,15 @@ class NotificationSeeder extends Seeder
         $users = User::where('role', 'customer')->get('id');
 
         foreach ($users as $user) {
+            $admins = User::where('role', 'admin')->get('id');
+
+            foreach ($admins as $admin) {
+                Notification::factory()->create(['from' => $user->id, 'receiver' => $admin->id]);
+            }
+
             for ($i = 0; $i < env('NOTIFICATIONS'); $i++) {
-                Notification::factory()->create(['user_id' => $user->id]);
+                $admin = User::where('role', 'admin')->inRandomOrder()->first();
+                Notification::factory()->create(['from' => $admin->id, 'receiver' => $user->id]);
             }
         }
     }

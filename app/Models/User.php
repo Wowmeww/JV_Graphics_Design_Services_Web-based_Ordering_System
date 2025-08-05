@@ -47,11 +47,7 @@ class User extends Authenticatable  implements MustVerifyEmail
     }
     public function getMessagesAttribute()
     {
-        if (Auth::user()->id === $this->id) {
-            return [
-                ...$this->receivedMessages->toArray()
-            ];
-        }
+        return [];
     }
 
     // one to one - has one
@@ -91,7 +87,11 @@ class User extends Authenticatable  implements MustVerifyEmail
     }
     public function notifications()
     {
-        return $this->hasMany(Notification::class, 'admin_id');
+        return $this->hasMany(Notification::class, 'receiver');
+    }
+    public function notifies()
+    {
+        return $this->hasMany(Notification::class, 'from');
     }
 
     public function orders()

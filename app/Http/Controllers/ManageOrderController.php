@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
+use App\Events\NewOrderNotificationEvent;
 use App\Models\Message;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -9,6 +11,9 @@ use Inertia\Inertia;
 use App\Events\OrderStatusEvent;
 use App\Events\Test;
 use App\Models\User;
+
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class ManageOrderController extends Controller
 {
@@ -57,7 +62,7 @@ class ManageOrderController extends Controller
      */
     public function show(Request $request, Order $order)
     {
-        $order->load(['product.images', 'option.images', 'user.orders']);
+        $order->load(['product.images', 'option.images', 'user.orders', 'resource']);
         return Inertia::render('manage/order/Show', [
             'order' => $order,
             'searches' =>  $request->input('searches')
@@ -111,14 +116,25 @@ class ManageOrderController extends Controller
 
         // Optional: send a message if provided
         if (!empty($validated['message'])) {
-            Message::create([
+            $message = Message::create([
                 'sender_id' => $request->user()->id,
                 'receiver_id' => $order->user_id,
                 'content' => $validated['message']
             ]);
+            // dd($message->receiver);
+            broadcast(new MessageSent(User::find($order->user_id), $message));
         }
 
         event(new OrderStatusEvent(User::find($order->user_id), $order));
+        $user = User::find($order->user_id);
+        $notification = $user->notifications()->create([
+            'from' => $request->user()->id,
+            'receiver' => $user->id,
+            // make a better message
+            'header' => 'Order Status Update',
+            'content' => "Order #{$order->id} (₱" . number_format($order->total_amount, 2) . " for {$order->quantity} item(s)) has been updated to \"{$order->status}\" status.",
+        ]);
+        event(new NewOrderNotificationEvent($user, $notification));
 
         return back()->with('status', [
             'type' => 'success',
@@ -134,5 +150,47 @@ class ManageOrderController extends Controller
     public function destroy(Order $order)
     {
         //
+    }
+
+    public function downloadResource(Request $request, Order $order)
+    {
+        $images = $order->resource->pluck('image');
+
+        if ($images->isEmpty()) {
+            return abort(400, 'No images specified');
+        }
+
+        // Create temp directory if needed
+        $tempPath = storage_path('app/temp');
+        if (!file_exists($tempPath)) {
+            mkdir($tempPath, 0755, true);
+        }
+
+        // Optional: cleanup old ZIPs
+        foreach (glob($tempPath . '/*.zip') as $oldZip) {
+            if (filemtime($oldZip) < time() - 86400) {
+                unlink($oldZip);
+            }
+        }
+
+        $zipFileName = 'order_' . $order->id . '_images_' . now()->timestamp . '.zip';
+        $zipPath = $tempPath . '/' . $zipFileName;
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+            foreach ($images as $imageName) {
+                $filePath = storage_path('app/public/product_images/order_resource/' . basename($imageName));
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, basename($imageName));
+                } else {
+                    dd($filePath);
+                }
+            }
+            $zip->close();
+        } else {
+            return abort(500, 'Could not create ZIP file');
+        }
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 }

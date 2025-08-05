@@ -2,7 +2,9 @@
 
 namespace App\Events;
 
+use App\Models\Notification;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,14 +13,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPlaced implements ShouldBroadcast
+class NewOrderNotificationEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public Order $order) {}
+    public function __construct(
+        public User $receiver,
+        public Notification $notification
+    ) {
+        //
+    }
 
     /**
      * Get the channels the event should broadcast on.
@@ -28,20 +35,20 @@ class OrderPlaced implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('order-placed')
+            new PrivateChannel('new-order-notification.' . $this->receiver->id),
         ];
     }
 
-
     public function broadcastAs(): string
     {
-        return 'OrderPlaced';
+        return 'NewOrderNotification';
     }
+
 
     public function broadcastWith(): array
     {
         return [
-            'order' => $this->order->load(['user'])
+            'notification' => $this->notification->load(['from'])
         ];
     }
 }

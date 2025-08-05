@@ -12,7 +12,10 @@ Broadcast::channel('order-placed', function (User $user) {
 Broadcast::channel('update-order-status.{userId}', function (User $user, $userId) {
     return $user->id === (int) $userId;
 });
+Broadcast::channel('new-order-notification.{receiverId}', function (User $user, $receiverId) {
+    return $user->id === (int) $receiverId;
+});
 
-Broadcast::channel('message-sent.{receiverId}', function ($user, $receiverId) {
+Broadcast::channel('message-sent.{receiverId}', function (User $user, $receiverId) {
     return (int) $user->id === (int) $receiverId;
 });

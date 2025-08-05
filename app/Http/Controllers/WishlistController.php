@@ -26,7 +26,8 @@ class WishlistController extends Controller
             'quantity' => ['required', 'integer', 'min:12', 'max:24'],
         ]);
 
-        $wishlistItem->update(['quantity' => $validated['quantity']]);
+        $price = ($wishlistItem->option ?? $wishlistItem->product)->price;
+        $wishlistItem->update(['quantity' => $validated['quantity'], 'total_amount' => $validated['quantity'] * $price]);
 
         return redirect()->route('shop.show', [
             'product' => $wishlistItem->product->id,

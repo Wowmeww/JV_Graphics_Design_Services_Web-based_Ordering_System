@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class CartController extends Controller
@@ -27,7 +28,9 @@ class CartController extends Controller
             'quantity' => ['required', 'integer', 'min:12', 'max:24'],
         ]);
 
-        $cartItem->update(['quantity' => $validated['quantity']]);
+        $price = ($cartItem->option ?? $cartItem->product)->price;
+
+        $cartItem->update(['quantity' => $validated['quantity'], 'total_amount' => $validated['quantity'] * $price]);
 
         return redirect()->route('shop.show', [
             'product' => $cartItem->product->id,
@@ -44,14 +47,33 @@ class CartController extends Controller
     }
     function store(Request $request, Product $product, ?ProductOption $option = null)
     {
-        // dd($request->images);
+        if (count($request->files)) {
+            foreach ($request->images as $image) {
 
+                $validator = Validator::make(['image' => $image['file']], [
+                    'image' => [
+                        'required',
+                        'image',
+                        'mimes:jpeg,png,jpg,gif,webp',
+                        'max:3072', // 3MB max size
+                    ],
+                ]);
+
+                if ($validator->fails()) {
+                    return back()->with('status', [
+                        'type' => 'error',
+                        'message' =>  implode(',', $validator->errors()->get('image'))
+                    ]);
+                }
+            }
+        }
+        // dd($request->images);
         $validated = $request->validate([
             'quantity' => ['required', 'integer', 'min:12', 'max:24'],
             'type' => ['nullable', 'string'],
             'images' => ['nullable', 'array'],
             'images.*.label' => ['required', 'string'],
-            'images.*.file' => ['required', 'file', 'max:2048'], // when i remove the mimes its working
+            'images.*.file' => ['required', 'file', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:3072'],
         ]);
         $validated['type'] = isset($validated['type']) ? $validated['type'] : 'normal';
 

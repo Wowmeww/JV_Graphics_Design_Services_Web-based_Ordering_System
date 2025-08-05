@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewOrderNotificationEvent;
 use App\Events\OrderPlaced;
 use App\Models\CartProduct;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductOption;
+use App\Models\User;
 use App\Models\WishlistProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class OrderController extends Controller
 {
     public function index(Request $request)
     {
+
         $user = Auth::user();
         $orders = $user->orders->load([
             'product.images',
@@ -31,6 +35,7 @@ class OrderController extends Controller
     }
     public function create(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'items' => ['array', 'nullable'],
             'from' => ['nullable', 'in:cart,wishlist'],
@@ -68,31 +73,51 @@ class OrderController extends Controller
                 $item['option'] = $option;
                 $item['option_id'] = $option->id;
             }
+            if ($request->input('item') && isset($request->input('item')['images'])) {
+                $item['images'] = $request->input('item')['images'];
+            }
             $items = [$item];
         }
-
-
         return Inertia::render('shop/order/Create', [
             'items' => $items,
             'from' => $request->input('from'),
         ]);
     }
 
-
-
     public function store(Request $request)
     {
-        // dd($request->items);
+        // dd($request->all());
+        foreach ($request->input('items') as $item) {
+            if (isset($item['images'])) {
+                // dd($item['images']);
+                foreach ($item['images'] as $image) {
+                    $validator = Validator::make(['image' => $image['file']], [
+                        'image' => [
+                            'required',
+                            'image',
+                            'mimes:jpeg,png,jpg,gif,webp',
+                            'max:3072', // 3MB max size
+                        ],
+                    ]);
+
+                    if ($validator->fails()) {
+                        return back()->with('status', [
+                            'type' => 'error',
+                            'message' =>  implode(',', $validator->errors()->get('image'))
+                        ]);
+                    }
+                }
+            };
+        }
+
         $request->validate([
             'items' => 'required|array',
             'items.*.note' => 'nullable|string|max:255',
             'from' => 'in:cart,wishlist|nullable',
+            'type' => 'nullable'
         ]);
 
         $user = Auth::user();
-
-        // dd($request->all());
-
         foreach ($request->items as $item) {
             $product = $item['option_id'] ? ProductOption::find($item['option_id']) : Product::find($item['product_id']);
             $order = $user->addOrder([
@@ -102,8 +127,35 @@ class OrderController extends Controller
                 'product_id' => $item['product_id'],
                 'option_id' => $item['option_id'] ?? null,
             ]);
-            // I think the event is not dispatching in this line, no indicator in my log
+            if (isset($item['type']) && $item['type'] === 'custom') {
+
+                if ($request->input('from') === 'cart') {
+                    $order->update(['type' => 'custom']);
+                    CartProduct::find($item['id'])->resource()->each(function ($resource) use ($order) {
+                        $resource->update([
+                            'order_id' => $order->id,
+                            'cart_product_id' => null
+                        ]);
+                    });
+                }
+            }
+
+            $admins = User::where('role', 'admin')->get('id');
+
+            foreach ($admins as $admin) {
+
+                $notification = $admin->notifications()->create([
+                    'from' => $user->id,
+                    'receiver' => $admin->id,
+                    'header' => 'Order Placed',
+                    'content' => "Customer {$user->name} has placed a new order (#{$order->id}) with {$order->quantity} item(s), totaling ₱" . number_format($order->total_amount, 2) . ".",
+                ]);
+
+                // help this event is not despatching
+                broadcast(new NewOrderNotificationEvent(User::find($admin->id), $notification));
+            }
             event(new OrderPlaced($order));
+
             if ($request->input('from') === 'wishlist')
                 WishlistProduct::find($item['id'])->delete();
             if ($request->input('from') === 'cart') {

@@ -31,6 +31,7 @@ class HomeController extends Controller
     public function dashboard(Request $request)
     {
         $user = $request->user();
+        $user->load(['receivedMessages']);
 
         // Load related models for the logged-in user
         if (! $user->is_admin) {

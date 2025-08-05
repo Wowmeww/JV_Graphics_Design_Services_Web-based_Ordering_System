@@ -11,8 +11,12 @@ class Notification extends Model
     use HasFactory;
 
     // one to many - belongs to
-    public function user()
+    public function from()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'from');
+    }
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'receiver');
     }
 }

@@ -29,9 +29,9 @@ class ShopController extends Controller
 
     public function show(Request $request, Product $product, ?ProductOption $option = null)
     {
-        if ($product->type === 'custom') {
-            return redirect()->route('designer', $product);
-        }
+        // if ($product->type === 'custom') {
+        //     return redirect()->route('designer', $product)->with('status', session('status'));
+        // }
         // Eager load relationships for the product
         $product->load([
             'images',

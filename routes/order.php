@@ -13,4 +13,5 @@ Route::middleware(['auth', 'verified', 'can:create,App\Models\Product'])->group(
     Route::patch('/manage/orders/{order}', [ManageOrderController::class, 'update'])
         ->middleware('password.confirm')
         ->name('manage.orders.update');
+    Route::get('/manage/orders/{order}/download_resource', [ManageOrderController::class, 'downloadResource'])->name('manage.orders.download.resource.zip');
 });

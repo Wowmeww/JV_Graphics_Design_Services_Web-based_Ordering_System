@@ -18,10 +18,12 @@ class NotificationFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'from' => User::factory(),
+            'receiver' => User::factory(),
             'type' => 'primary',
             'header' => fake()->realText(rand(16, 34)),
-            'content'=> fake()->realText(rand(34, 100))
+            'content' => fake()->realText(rand(34, 100)),
+            'seen' => false
         ];
     }
 }

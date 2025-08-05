@@ -10,7 +10,6 @@ class CustomizeProductController extends Controller
 {
     public function create()
     {
-
         return Inertia::render('product/custom/Create');
     }
     public function edit(Product $product)

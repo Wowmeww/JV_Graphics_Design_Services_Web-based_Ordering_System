@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import BackgroundImage from '../../../components/ui/BackgroundImage.vue';
 import OrderCard from '../../../components/ui/card/OrderCard.vue';
 import TextInputPrimary from '../../../components/ui/TextInputPrimary.vue';
@@ -9,6 +9,8 @@ const props = defineProps({
     items: Array,
     from: String,
 });
+
+const page = usePage();
 
 const form = useForm({
     items: props.items,
@@ -33,6 +35,7 @@ function goBack() {
     // alert('tets');
     window.history.back();
 }
+console.log(page.props.custom_order_resource);
 </script>
 
 <template>

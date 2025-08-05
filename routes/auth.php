@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -66,4 +67,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/password/edit', [ProfileController::class, 'editPassword'])->name('password.edit');
     Route::patch('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::get('/appearance/edit', [ProfileController::class, 'editAppearance'])->name('appearance.edit');
+});
+
+
+
+// NOTIFICATION ROUTES
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications/mark_all_as_read', [NotificationController::class, 'markAllRead'])->name('notification.mark.all.read');
+    Route::patch('/notification/{notification}/update', [NotificationController::class, 'update'])->name('notification.update');
+    Route::get('/notifications/index', [NotificationController::class, 'index'])->name('notification.index');
+    Route::get('/notifications/{notification}/show', [NotificationController::class, 'show'])->name('notification.show');
 });

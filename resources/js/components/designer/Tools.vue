@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 
 const tabs = ['text', 'image'];
 const activeTab = ref(tabs[0]);
@@ -11,6 +11,7 @@ const temps = reactive({
     error: {
         image: '',
     },
+    element_id: null,
 });
 function addElement(type) {
     emit('addElement', {
@@ -50,6 +51,8 @@ const styleClass = {
     addButton: 'btn btn-secondary mt-3 w-full',
     errorText: 'form-control-error',
 };
+
+onMounted(() => (temps.element_id = Math.ceil(Math.random() * 9000000000)));
 </script>
 
 <template>
@@ -71,30 +74,31 @@ const styleClass = {
         </div>
 
         <!-- Tab Content with Transitions -->
-       
-            <div v-show="activeTab === 'text'" :key="activeTab" class="animate__animated animate__fadeIn">
-                <div>
-                    <div>
-                        <label for="text-content" :class="styleClass.label">Text Content</label>
-                        <input v-model="temps.text" id="text-content" type="text" placeholder="Text Content" :class="styleClass.textInput" />
-                    </div>
-                </div>
-                <div>
-                    <button :disabled="!temps.text" @click="addElement('text')" :class="styleClass.addButton">Add Text</button>
-                </div>
-            </div>
-      
 
-  
-            <div v-show="activeTab === 'image'" :key="activeTab" class="animate__animated animate__fadeIn">
+        <div v-show="activeTab === 'text'" :key="activeTab" class="animate__animated animate__fadeIn">
+            <div>
                 <div>
-                    <label for="image" :class="styleClass.label">Image</label>
-                    <input type="file" id="image" accept="image/*" @change="handleImageChange" :class="styleClass.fileInput" />
-                    <small v-if="temps.error.image" :class="styleClass.errorText">{{ temps.error.image }}</small>
+                    <label :for="`text-content-${temps.element_id}`" :class="styleClass.label">Text Content</label>
+                    <input
+                        v-model="temps.text"
+                        :id="`text-content-${temps.element_id}`"
+                        type="text"
+                        placeholder="Text Content"
+                        :class="styleClass.textInput"
+                    />
                 </div>
             </div>
-    
+            <div>
+                <button :disabled="!temps.text" @click="addElement('text')" :class="styleClass.addButton">Add Text</button>
+            </div>
+        </div>
+
+        <div v-show="activeTab === 'image'" :key="activeTab" class="animate__animated animate__fadeIn">
+            <div>
+                <label for="image" :class="styleClass.label">Image</label>
+                <input type="file" id="image" accept="image/*" @change="handleImageChange" :class="styleClass.fileInput" />
+                <small v-if="temps.error.image" :class="styleClass.errorText">{{ temps.error.image }}</small>
+            </div>
+        </div>
     </div>
 </template>
-
-

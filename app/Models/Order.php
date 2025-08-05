@@ -52,9 +52,7 @@ class Order extends Model
 
     public function resource()
     {
-        if ($this->type === 'custom') {
-            return $this->hasMany(OrderImage::class);
-        }
+        return $this->hasMany(OrderImage::class);
     }
 
 

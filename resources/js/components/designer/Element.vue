@@ -9,40 +9,76 @@ const props = defineProps({
 const emit = defineEmits(['update:element', 'delete:element']);
 
 const text = ref({ ...props.element.text });
-const image = ref({ ...props.element.image });
-onMounted(function () {
+const image = ref({ ...props.element.image, scale: 100 });
+
+const originalImage = reactive({
+    width: 0,
+    height: 0,
+});
+
+onMounted(() => {
     if (props.element.type === 'text') {
         text.value = { ...props.element.text };
     }
+
     if (props.element.type === 'image') {
-        image.value = { ...props.element.image };
+        image.value = { ...props.element.image, scale: 100 };
+
+        // Set original only if not set yet
+        if (!originalImage.width && !originalImage.height) {
+            originalImage.width = props.element.image.width;
+            originalImage.height = props.element.image.height;
+        }
+
+        // Initialize current dimensions
+        image.value.width = originalImage.width;
+        image.value.height = originalImage.height;
     }
 });
+
+watch(
+    () => image.value.scale,
+    (newScale) => {
+        if (originalImage.width && originalImage.height) {
+            image.value.width = Math.round(originalImage.width * newScale) / 100;
+            image.value.height = Math.round(originalImage.height * newScale) / 100;
+        }
+    },
+);
+
 watch(
     () => props.element,
-    function (element) {
+    (element) => {
         if (element.type === 'text') {
-            text.value = { ...props.element.text };
+            text.value = { ...element.text };
         }
-        if (props.element.type === 'image') {
-            image.value = { ...props.element.image };
+
+        if (element.type === 'image') {
+            image.value = { ...element.image, scale: image.value.scale };
+
+            // Only set original if not yet set
+            if (!originalImage.width && !originalImage.height) {
+                originalImage.width = element.image.width;
+                originalImage.height = element.image.height;
+            }
         }
     },
     { deep: true },
 );
 
-// update
+// Emits updates
 watch(
     () => text.value,
-    function (newText) {
-        emit('update:element', { value: newText, type: props.element.type });
+    (newText) => {
+        emit('update:element', { value: newText, type: 'text' });
     },
     { deep: true },
 );
+
 watch(
     () => image.value,
-    function (image) {
-        emit('update:element', { value: image, type: props.element.type });
+    (img) => {
+        emit('update:element', { value: img, type: 'image' });
     },
     { deep: true },
 );
@@ -75,12 +111,12 @@ const styleClass = {
             <h1 :class="styleClass.heading">Edit Element</h1>
             <div :class="styleClass.formGroup">
                 <div>
-                    <label for="text-content" :class="styleClass.label">Text Content</label>
+                    <label :for="`text-content-${element.from}`" :class="styleClass.label">Text Content</label>
                     <input
                         v-model="text.text"
                         type="text"
                         placeholder="Text Content"
-                        id="text-content"
+                        :id="`text-content-${element.from}`"
                         :class="styleClass.input.base"
                         :style="{ fontFamily: text.font }"
                     />
@@ -88,10 +124,10 @@ const styleClass = {
                 <Dropdown @update:model-value="(e) => (text.font = e)" :value="text.font" />
 
                 <div>
-                    <label for="text-color" :class="styleClass.label">Text Color</label>
+                    <label :for="`text-color-${element.from}`" :class="styleClass.label">Text Color</label>
                     <input
                         v-model="text.color"
-                        id="text-content"
+                        :id="`text-color-${element.from}`"
                         type="color"
                         placeholder="Text Color"
                         :class="[styleClass.input.base, styleClass.input.color]"
@@ -99,16 +135,37 @@ const styleClass = {
                 </div>
 
                 <div>
-                    <label for="text-size" :class="styleClass.sizeLabel">
+                    <label :for="`text-size-${element.from}`" :class="styleClass.sizeLabel">
                         <span>Font Size</span>
                         <span>{{ text.size }}</span>
                     </label>
+                    <input v-model="text.size" type="number" min="6" :id="`text-size-${element.from}`" :class="styleClass.input.base" />
+                </div>
+
+                <div>
+                    <label :for="`text-rotate-${element.from}`" :class="styleClass.sizeLabel">
+                        <span>Angle</span>
+                        <span>{{ text.rotate }}</span>
+                    </label>
                     <input
-                        v-model="text.size"
-                        type="number"
-                        min="6"
-                        id="text-size"
-                        :class="styleClass.input.base"
+                        type="range"
+                        min="0"
+                        max="360"
+                        v-model="text.rotate"
+                        :id="`text-rotate-${element.from}`"
+                        :class="[
+                            'h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200',
+                            'focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700',
+                            'focus:ring-opacity-50 transition-all duration-200',
+                            '[&::-webkit-slider-thumb]:appearance-none',
+                            '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4',
+                            '[&::-webkit-slider-thumb]:rounded-full',
+                            '[&::-webkit-slider-thumb]:bg-blue-600',
+                            '[&::-webkit-slider-thumb]:dark:bg-blue-500',
+                            '[&::-webkit-slider-thumb]:hover:scale-125',
+                            '[&::-webkit-slider-thumb]:transition-transform',
+                            '[&::-webkit-slider-thumb]:duration-100',
+                        ]"
                     />
                 </div>
 
@@ -121,16 +178,70 @@ const styleClass = {
             <h1 :class="styleClass.heading">Edit Element</h1>
             <div :class="styleClass.formGroup">
                 <div>
-                    <label for="image-width" :class="styleClass.sizeLabel">
+                    <label :for="`image-width-${element.from}`" :class="styleClass.sizeLabel">
                         <span>Width</span>
                     </label>
-                    <input type="number" min="1" v-model="image.width" id="image-width" :class="styleClass.input.base" />
+                    <input type="number" min="1" v-model="image.width" :id="`image-width-${element.from}`" :class="styleClass.input.base" />
                 </div>
                 <div>
-                    <label for="image-height" :class="styleClass.sizeLabel">
+                    <label :for="`image-height-${element.from}`" :class="styleClass.sizeLabel">
                         <span>Height</span>
                     </label>
-                    <input type="number" min="1" v-model="image.height" id="image-height" :class="styleClass.input.base" />
+                    <input type="number" min="1" v-model="image.height" :id="`image-height-${element.from}`" :class="styleClass.input.base" />
+                </div>
+
+                <div>
+                    <label :for="`image-scale-${element.from}`" :class="styleClass.sizeLabel">
+                        <span>Size</span>
+                        <span>{{ image.scale }}</span>
+                    </label>
+                    <input
+                        type="range"
+                        min="1"
+                        max="200"
+                        v-model="image.scale"
+                        :id="`image-scale-${element.from}`"
+                        :class="[
+                            'h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200',
+                            'focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700',
+                            'focus:ring-opacity-50 transition-all duration-200',
+                            '[&::-webkit-slider-thumb]:appearance-none',
+                            '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4',
+                            '[&::-webkit-slider-thumb]:rounded-full',
+                            '[&::-webkit-slider-thumb]:bg-blue-600',
+                            '[&::-webkit-slider-thumb]:dark:bg-blue-500',
+                            '[&::-webkit-slider-thumb]:hover:scale-125',
+                            '[&::-webkit-slider-thumb]:transition-transform',
+                            '[&::-webkit-slider-thumb]:duration-100',
+                        ]"
+                    />
+                </div>
+
+                <div>
+                    <label :for="`image-rotate-${element.from}`" :class="styleClass.sizeLabel">
+                        <span>Angle</span>
+                        <span>{{ image.rotate }}</span>
+                    </label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="360"
+                        v-model="image.rotate"
+                        :id="`image-rotate-${element.from}`"
+                        :class="[
+                            'h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200',
+                            'focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700',
+                            'focus:ring-opacity-50 transition-all duration-200',
+                            '[&::-webkit-slider-thumb]:appearance-none',
+                            '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4',
+                            '[&::-webkit-slider-thumb]:rounded-full',
+                            '[&::-webkit-slider-thumb]:bg-blue-600',
+                            '[&::-webkit-slider-thumb]:dark:bg-blue-500',
+                            '[&::-webkit-slider-thumb]:hover:scale-125',
+                            '[&::-webkit-slider-thumb]:transition-transform',
+                            '[&::-webkit-slider-thumb]:duration-100',
+                        ]"
+                    />
                 </div>
 
                 <button @click="deleteElement" :class="styleClass.deleteButton">Delete</button>

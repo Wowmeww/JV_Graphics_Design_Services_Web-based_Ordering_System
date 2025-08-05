@@ -14,10 +14,12 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'from')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'receiver')->nullable()->constrained()->cascadeOnDelete();
             $table->string('type')->default('primary');
             $table->string('header');
             $table->text('content');
+            $table->boolean('seen')->default(false);
             $table->timestamps();
         });
     }

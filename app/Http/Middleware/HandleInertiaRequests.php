@@ -44,7 +44,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request?->user() ?
-                    $request->user()->load(['cart', 'wishlist', 'orders']) :
+                    $request->user()->load(['cart', 'wishlist', 'orders', 'notifications.from', 'notifies']) :
                     null,
             ],
             'ziggy' => [
@@ -64,6 +64,7 @@ class HandleInertiaRequests extends Middleware
                 'action' => null
             ],
             'github' => env('GITHUB_REPO'),
+            'custom_order_resource' => null
 
         ];
     }

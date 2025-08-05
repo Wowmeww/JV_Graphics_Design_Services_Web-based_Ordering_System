@@ -1,15 +1,18 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import Colors from '@/components/designer/Colors.vue';
 import Element from '@/components/designer/Element.vue';
 import Tools from '@/components/designer/Tools.vue';
 import initializeDragAndDrop from './dragDrop.js';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import html2canvas from 'html2canvas';
 
 const props = defineProps({
     product: Object,
 });
+const page = usePage();
+
+const processing = ref(false);
 
 const images = computed(() => ({
     front: props.product.images[0] ? `/storage/${props.product.images[0].image_path}` : null,
@@ -38,61 +41,139 @@ const elements = reactive({
 // ------ FORM --------------------------------------------------------------------------------------------
 const form = useForm({
     product_id: props.product.id,
-    option_id: null,
+    option_id: '',
     quantity: 12,
-    total_amount: props.product.price * 12,
+    total_amount: 0,
     type: 'custom',
     images: [],
+    from: '',
 });
 
-async function addToCart() {
-    // Start with real uploaded images
-    form.images = [
-        elements.front.image?.file ? { label: 'front image', file: elements.front.image.file } : null,
-        elements.back.image?.file ? { label: 'back image', file: elements.back.image.file } : null,
-    ].filter(Boolean);
+watch(
+    () => elements,
+    async (newElements) => {
+        try {
+            processing.value = true;
+            // 1. Define canvas configurations
+            const canvasConfigs = [
+                {
+                    selector: '#front-canvas',
+                    shouldCapture: newElements.front.image?.file || newElements.front.texts?.length > 0,
+                    label: 'front uploaded design',
+                    filename: 'front-design.png',
+                },
+                {
+                    selector: '#front-preview',
+                    shouldCapture: newElements.front.image?.file || newElements.front.texts?.length > 0,
+                    label: 'front preview',
+                    filename: 'front-preview.png',
+                },
+                {
+                    selector: '#back-canvas',
+                    shouldCapture: newElements.back.image?.file || newElements.back.texts?.length > 0,
+                    label: 'back uploaded design',
+                    filename: 'back-design.png',
+                },
+                {
+                    selector: '#back-preview',
+                    shouldCapture: newElements.back.image?.file || newElements.back.texts?.length > 0,
+                    label: 'back preview',
+                    filename: 'back-preview.png',
+                },
+            ];
 
-    if (form.images[0] || form.images[1]) {
-        const canvasElements = [
-            { el: document.querySelector('#front-canvas'), label: 'uploaded front', filename: 'front-canvas.png' },
-            { el: document.querySelector('#back-canvas'), label: 'uploaded back', filename: 'back-canvas.png' },
-        ];
+            // 2. Process captures in parallel with error handling
+            canvasConfigs.map(async (config) => {
+                if (!config.shouldCapture) return null;
 
-        for (const { el, label, filename } of canvasElements) {
-            if (!el) continue;
-
-            try {
-                const canvas = await html2canvas(el);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.9); // 90% quality
-
-                const file = dataURLtoFile(dataUrl, filename);
-
-                if (file) {
-                    form.images.push({ label, file });
+                const el = document.querySelector(config.selector);
+                if (!el) {
+                    console.warn(`Element not found: ${config.selector}`);
+                    return null;
                 }
-            } catch (err) {
-                console.error(`Failed to render canvas for ${label}`, err);
-            }
+
+                try {
+                    const canvas = await html2canvas(el, {
+                        scale: 2,
+                        logging: false,
+                        useCORS: true,
+                        backgroundColor: null,
+                        allowTaint: true,
+                    });
+
+                    const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.9));
+
+                    form.images.push(blob ? { label: config.label, file: new File([blob], config.filename, { type: 'image/png' }) } : null);
+
+                    form.images = form.images.filter(Boolean);
+                    processing.value = false;
+                } catch (error) {
+                    console.error(`Failed to capture ${config.label}:`, error);
+                    return null;
+                }
+            });
+        } catch (error) {
+            console.error('Canvas processing error:', error);
+            toast.error('Failed to process design images');
+        } finally {
+            // processing.value = false;
         }
-    }
+    },
+    { deep: true },
+);
 
-    // Now post the form
-    form.post(route('cart.store', { product: props.product.id }));
+async function addToCart() {
+    processing.value = true;
+
+    form.images = form.images
+        .reduceRight((acc, current) => {
+            if (!acc.some((item) => item.label === current.label)) {
+                acc.push(current);
+            }
+            return acc;
+        }, [])
+        .reverse();
+    form.post(
+        route('cart.store', {
+            product: props.product.id,
+        }),
+        {
+            onFinish: () => {
+                processing.value = false;
+            },
+        },
+    );
 }
+async function orderNow() {
+    processing.value = true;
 
-function dataURLtoFile(dataurl, filename) {
-    const arr = dataurl.split(',');
-    const mimeMatch = arr[0].match(/:(.*?);/);
-    const mime = mimeMatch ? mimeMatch[1] : 'image/png';
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
+    form.images = form.images
+        .reduceRight((acc, current) => {
+            if (!acc.some((item) => item.label === current.label)) {
+                acc.push(current);
+            }
+            return acc;
+        }, [])
+        .reverse();
 
-    while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-    }
+    processing.value = false;
+    page.props.custom_order_resource = form.images;
+    console.log(page.props.custom_order_resource);
 
-    return new File([u8arr], filename, { type: mime });
+    router.get(
+        route('order.create', {
+            item: {
+                product_id: form.product_id,
+                option_id: form.option_id,
+                quantity: form.quantity,
+                total_amount: form.quantity * props.product.price,
+                type: form.type,
+                images: form.images,
+                from: form.from,
+            },
+        }),
+        {},
+    );
 }
 
 const activeView = ref('front'); // 'front' or 'back'
@@ -136,6 +217,7 @@ function addText(text) {
         color: '#000000',
         index: 0,
         from: activeView.value,
+        rotate: 0,
     });
 }
 function addImage(imageFile) {
@@ -144,6 +226,7 @@ function addImage(imageFile) {
     elements[to].image = {
         from: activeView.value,
         file: imageFile,
+        rotate: 0,
     };
 }
 
@@ -155,6 +238,7 @@ function selectElement(type, value, event) {
     } else {
         elements[from].image.width = event.currentTarget.clientWidth;
         elements[from].image.height = event.currentTarget.clientHeight;
+
         selectedElement.text = null;
         selectedElement.image = elements[from].image;
     }
@@ -190,7 +274,11 @@ const styleClasses = {
             <!-- T-Shirt Preview Section -->
             <div :class="styleClasses.previewSection">
                 <div :class="styleClasses.headerContainer">
-                    <h1 :class="styleClasses.title">T-Shirt Designer</h1>
+                    <div>
+                        <h1 :class="styleClasses.title">T-Shirt Designer</h1>
+                        <small>For best results, we recommend uploading only image.</small>
+                    </div>
+
                     <div :class="styleClasses.viewToggleContainer">
                         <button
                             @click="switchView('front')"
@@ -216,7 +304,7 @@ const styleClasses = {
 
                 <!-- Canvas -->
                 <div :class="styleClasses.canvasContainer">
-                    <div v-show="activeView === 'front'" :class="styleClasses.canvasImage">
+                    <div v-show="activeView === 'front'" :class="styleClasses.canvasImage" id="front-preview">
                         <img class="" :src="images.front" alt="front" />
 
                         <div :class="styleClasses.canvasOverlay" id="front-canvas">
@@ -231,6 +319,7 @@ const styleClasses = {
                                     color: text.color,
                                     zIndex: i + 1,
                                     position: 'absolute',
+                                    transform: `rotate(${text.rotate}deg)`,
                                 }"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
                                 >{{ text.text }}</span
@@ -247,12 +336,13 @@ const styleClasses = {
                                     width: elements.front.image.width + 'px', // Customize width as needed
                                     height: elements.front.image.height + 'px', // Customize height as needed
                                     zIndex: '0',
+                                    transform: `rotate(${elements.front.image.rotate}deg)`,
                                 }"
                                 :class="styleClasses.uploadedImage"
                             />
                         </div>
                     </div>
-                    <div v-show="activeView === 'back'" :class="styleClasses.canvasImage">
+                    <div v-show="activeView === 'back'" :class="styleClasses.canvasImage" id="back-preview">
                         <img class="" :src="images.back" alt="back" />
 
                         <div :class="styleClasses.canvasOverlay" id="back-canvas">
@@ -267,8 +357,7 @@ const styleClasses = {
                                     color: text.color,
                                     zIndex: i + 1,
                                     position: 'absolute',
-                                    top: 4,
-                                    left: 4,
+                                    transform: `rotate(${text.rotate}deg)`,
                                 }"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
                                 >{{ text.text }}</span
@@ -285,6 +374,7 @@ const styleClasses = {
                                     width: elements.back.image.width + 'px', // Customize width as needed
                                     height: elements.back.image.height + 'px', // Customize height as needed
                                     zIndex: '0',
+                                    transform: `rotate(${elements.back.image.rotate}deg)`,
                                 }"
                                 :class="styleClasses.uploadedImage"
                             />
@@ -343,9 +433,9 @@ const styleClasses = {
                             <span>{{ (product.price * form.quantity).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}</span>
                         </div>
 
-                        <div class="gap-2 md:flex md:justify-end">
-                            <button class="btn btn-secondary" @click="canvases" type="button">Place order</button>
-                            <button class="btn btn-primary" type="submit">Add to cart</button>
+                        <div class="flex flex-col gap-2">
+                            <!-- <button class="btn btn-secondary" @click="orderNow" type="button" :disabled="processing">Place order</button> -->
+                            <button class="btn btn-primary" type="submit" :disabled="processing">Add to cart</button>
                         </div>
                     </div>
                 </form>
