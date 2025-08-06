@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Log;
 Broadcast::channel('order-placed', function (User $user) {
     return $user->is_admin;
 });
+Broadcast::channel('transaction', function (User $user) {
+    return $user->is_admin;
+});
 Broadcast::channel('update-order-status.{userId}', function (User $user, $userId) {
     return $user->id === (int) $userId;
 });

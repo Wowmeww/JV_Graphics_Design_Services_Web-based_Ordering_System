@@ -100,7 +100,7 @@ Developed by [@Wowmeww](https://github.com/Wowmeww) 🚀
 
 ## 🙏 Acknowledgments
 
-Thanks to [ChatGPT](https://chatgpt.com/) and [GitHub Copilot](https://github.com/features/copilot) for assisting in code generation and project planning.
+Thanks to [ChatGPT](https://chatgpt.com/), [GitHub Copilot](https://github.com/features/copilot) and [DeepSeek](https://chat.deepseek.com) for assisting in code generation and project planning.
 
 ---
 

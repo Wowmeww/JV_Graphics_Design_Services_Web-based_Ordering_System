@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,7 +20,11 @@ class TransactionSeeder extends Seeder
 
         foreach ($users as $user) {
             for ($i = 0; $i < env('TRANSACTIONS'); $i++) {
-                Transaction::factory()->create(['user_id' => $user->id]);
+                $order = Order::inRandomOrder()->first();
+                Transaction::factory()->create([
+                    'user_id' => $user->id,
+                    'order_id' => $order->id
+                ]);
             }
         }
     }

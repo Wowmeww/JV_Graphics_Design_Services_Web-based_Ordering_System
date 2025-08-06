@@ -47,8 +47,12 @@ class Order extends Model
         return $this->hasOne(Rating::class);
     }
 
-    // one to many - has many
+    // one to oen - belongs to
 
+    public function transaction()
+    {
+        $this->hasOne(Transaction::class);
+    }
 
     public function resource()
     {

@@ -90,6 +90,11 @@ const styleClass = {
                 <i class="fa-solid fa-cart-shopping text-lg" :class="styleClass.icon"></i>
                 <span class="ms-3 flex-1 whitespace-nowrap">Shop</span>
             </AuthAsideLink>
+       
+            <AuthAsideLink :active="page.component === 'auth/transaction/Transactions'" :routeName="route('transactions')">
+                <i class="fa-solid fa-receipt text-lg" :class="styleClass.icon"></i>
+                <span class="ms-3 flex-1 whitespace-nowrap">Transaction</span>
+            </AuthAsideLink>
 
             <!-- <li>
                 <a href="#"

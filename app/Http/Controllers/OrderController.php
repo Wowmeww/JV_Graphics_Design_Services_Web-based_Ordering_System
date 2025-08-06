@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewOrderNotificationEvent;
 use App\Events\OrderPlaced;
+use App\Events\TransactionEvent;
 use App\Models\CartProduct;
 use App\Models\Order;
 use App\Models\Product;
@@ -194,6 +195,29 @@ class OrderController extends Controller
             'Order cancellation successfully!' :
             'Order received';
 
+        if ($request->input('status') === 'received') {
+            $admins = User::where('role', 'admin')->get();
+
+            $admins->each(function ($admin) use ($order) {
+                $from = request()->user();
+                $notification = $admin->notifications()->create([
+                    'from' => $from->id,
+                    'receiver' => $admin->id,
+                    'header' => 'Order Received Confirmed',
+                    'content' => "{$from->name} has confirmed receipt of Order #{$order->id}, totaling ₱" . number_format($order->total_amount, 2) . " for {$order->quantity} item(s).",
+                ]);
+
+                event(new NewOrderNotificationEvent($admin, $notification));
+            });
+
+            $transaction = $order->user->transactions()->create([
+                'order_id' => $order->id,
+                'header' => 'Order Paid & Received',
+                'content' => "Order #{$order->id} with {$order->quantity} item(s) has been paid and confirmed received. Total payment: ₱" . number_format($order->total_amount, 2) . ".",
+            ]);
+
+            event(new TransactionEvent($transaction));
+        }
         return redirect()->route('order.index')->with('status', [
             'type' => 'success',
             'message' =>  $message,
@@ -205,8 +229,6 @@ class OrderController extends Controller
         $order->update([
             'status' => 'cancelled'
         ]);
-
-        sleep(1);
 
         return to_route('order.index')->with('status', [
             'type' => 'success',

@@ -4,60 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $auth = $request->user();
+        $request->validate(['search' => 'nullable|string']);
+        // dd($request->input('search'));
+        $transactions = Transaction::with(['user', 'order'])
+            ->when(!$auth->is_admin, function ($q) use ($auth) {
+                $q->where('user_id', $auth->id);
+            })
+
+            ->when($request->input('search'), function ($q) use ($request) {
+                $search = '%' . $request->input('search') . '%';
+
+                $q->where(function ($query) use ($search) {
+                    $query->where('header', 'like', $search)
+                        ->orWhereHas('user', function ($subQuery) use ($search) {
+                            $subQuery->where('name', 'like', $search);
+                        })
+                        ->orWhereHas('order', function ($subQuery) use ($search) {
+                            $subQuery->where('id', 'like', $search)
+                                ->orWhere('total_amount', 'like', $search);
+                        })
+                        ->orWhere('id', 'like', $search)
+                        ->orWhere('created_at', 'like', $search);
+                });
+            })
+            ->latest()
+            ->get();
+
+        return Inertia::render('auth/transaction/Transactions', [
+            'transactions' => $transactions,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Transaction $transaction)
     {
         //
