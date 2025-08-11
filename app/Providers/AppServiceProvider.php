@@ -34,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('accessAsAdmin', function (User $user) {
             return $user->is_admin;
         });
+        Gate::define('not.suspended', function (User $user) {
+            return $user->role !== 'suspended';
+        });
         Inertia::share([
             'urlPrevious' => url()->previous()
         ]);

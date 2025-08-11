@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 use Illuminate\Support\Facades\Auth;
 
+use Carbon\Carbon;
+
+
 class User extends Authenticatable  implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -40,7 +43,7 @@ class User extends Authenticatable  implements MustVerifyEmail
     }
 
     // APPENDED ATTRIBUTE
-    protected $appends = ['is_admin', 'messages'];
+    protected $appends = ['is_admin', 'messages', 'age'];
     public function getIsAdminAttribute()
     {
         return $this->role === 'admin';
@@ -50,6 +53,12 @@ class User extends Authenticatable  implements MustVerifyEmail
         return [];
     }
 
+    public function getAgeAttribute()
+    {
+        return Carbon::parse($this->birth_date)->age;
+    }
+
+
     // one to one - has one
     public function cart()
     {
@@ -58,6 +67,10 @@ class User extends Authenticatable  implements MustVerifyEmail
     public function wishlist()
     {
         return $this->hasOne(Wishlist::class);
+    }
+    public function idCard()
+    {
+        return $this->hasOne(UserID::class);
     }
 
     // one to many - has many
@@ -101,12 +114,18 @@ class User extends Authenticatable  implements MustVerifyEmail
     }
 
 
+
+
     public function scopeFilter(Builder $query, array $filters): Builder
     {
         $user = Auth::user();
         $search = isset($filters['search']) ? '%' . $filters['search'] . '%' : '';
         if ($filters['search'] ?? false) {
-            $query->whereAny(['name', 'email'], 'like', $search);
+            $query->whereAny(['name', 'email', 'role'], 'like', $search);
+        }
+
+        if ($filters['role'] ?? false) {
+            $query->where('role', $filters['role']);
         }
 
         if ($filters['contacts'] ?? false) {

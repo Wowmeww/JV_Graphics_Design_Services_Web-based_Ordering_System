@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,14 +18,25 @@ return new class extends Migration
             $table->string('name');
             $table->string('sex')->nullable();
             $table->string('email')->unique();
-            $table->string('role')->default('customer');
+            $table->enum('role', ['customer', 'admin', 'suspended'])->default('customer');
             $table->string('address')->nullable();
             $table->date('birth_date')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('verified_at')->nullable();
             $table->string('password');
-            $table->string('google_id')->nullable(); 
-            $table->string('facebook_id')->nullable(); 
+            $table->string('google_id')->nullable();
+            $table->string('facebook_id')->nullable();
             $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('users_identification_cards', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->string('selfie');
+            $table->string('type');
+            $table->string('front');
+            $table->string('back');
             $table->timestamps();
         });
 

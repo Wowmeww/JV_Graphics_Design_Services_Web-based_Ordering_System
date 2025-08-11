@@ -57,6 +57,26 @@ const unseenMessages = computed(() => {
 
 <template>
     <Head title="Dashboard" />
+
+    <div class="pt-8" v-if="user.role === 'suspended'">
+        <div class="w-full bg-red-500 text-white">
+            <div class="container mx-auto flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <svg viewBox="0 0 40 40" class="h-6 w-6 fill-current">
+                        <path
+                            d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z"
+                        ></path>
+                    </svg>
+
+                    <p class="mx-3">
+                        Your account is currently <strong>Suspended</strong>. You cannot place orders or access certain features until it is
+                        reactivated.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <AdminDashboard v-if="user.is_admin" :admin="user" :shop="shop" :contacts="contacts" />
     <!-- CUSTOMER -->
     <div v-else :class="styleClass.pageContainer">

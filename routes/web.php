@@ -33,3 +33,4 @@ require __DIR__ . '/order.php';
 require __DIR__ . '/announcement.php';
 require __DIR__ . '/designer.php';
 require __DIR__ . '/transaction.php';
+require __DIR__ . '/user.php';

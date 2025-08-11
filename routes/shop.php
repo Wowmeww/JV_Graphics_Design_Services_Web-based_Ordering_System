@@ -25,13 +25,16 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/shop-wishlist/item/{wishlistItem?}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 
     // ORDER ROUTES
-    Route::get('/shop-orders', [OrderController::class, 'index'])->name('order.index');
-    Route::get('/shop-orders/create', [OrderController::class, 'create'])->name('order.create');
-    Route::get('/shop-orders/{order}', [OrderController::class, 'show'])->name('order.show');
-    Route::post('/shop-orders', [OrderController::class, 'store'])->name('order.store');
-    Route::get('/shop-orders/{order}/edit', [OrderController::class, 'edit'])->name('order.edit');
-    Route::patch('/shop-orders/{order}', [OrderController::class, 'update'])->name('order.update');
-    Route::delete('/shop-orders/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
+    Route::middleware(['can:not.suspended'])->group(function () {
+
+        Route::get('/shop-orders', [OrderController::class, 'index'])->name('order.index');
+        Route::get('/shop-orders/create', [OrderController::class, 'create'])->name('order.create');
+        Route::get('/shop-orders/{order}', [OrderController::class, 'show'])->name('order.show');
+        Route::post('/shop-orders', [OrderController::class, 'store'])->name('order.store');
+        Route::get('/shop-orders/{order}/edit', [OrderController::class, 'edit'])->name('order.edit');
+        Route::patch('/shop-orders/{order}', [OrderController::class, 'update'])->name('order.update');
+        Route::delete('/shop-orders/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
+    });
 
     // RATING
     Route::post('/rating/{order}', [RatingController::class, 'store'])->name('rating.store');

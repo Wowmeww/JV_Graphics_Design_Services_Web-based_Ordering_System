@@ -23,9 +23,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
         return Inertia::render('profile/UserSettings', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'user' => $request->user()
+            'user' => $user->load(['idCard'])
         ]);
     }
 
@@ -38,6 +39,8 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+
+        $idCardRequired = count(array_filter($request->idCard, fn($prop) => $prop));
         $validated = $request->validate([
             'name'       => ['required', 'string', 'max:100'],
             'sex'        => ['required', 'string'],
@@ -45,7 +48,13 @@ class ProfileController extends Controller
             'birth_date' => ['nullable', 'string'],
             'address'    => ['nullable', 'string', 'max:255'],
             'avatar'     => ['nullable', 'image', 'max:1024'],
+            'idCard' => ['nullable', 'array'],
+            'idCard.type' => $idCardRequired ? 'required' : 'nullable|string',
+            'idCard.selfie' => $idCardRequired ? 'required' : 'nullable|image|max:1024',
+            'idCard.front' => $idCardRequired ? 'required' : 'nullable|image|max:1024',
+            'idCard.back' => $idCardRequired ? 'required' : 'nullable|image|max:1024',
         ]);
+
 
         $updateData = [
             'name'       => $validated['name'],
@@ -58,6 +67,26 @@ class ProfileController extends Controller
         if ($validated['email'] !== $user->email) {
             $updateData['email'] = $validated['email'];
             $updateData['email_verified_at'] = null;
+        }
+
+        if ($idCardRequired) {
+            $idCard = [];
+
+            if ($user->idCard) {
+                Storage::disk('public')->delete($user->idCard->selfie);
+                Storage::disk('public')->delete($user->idCard->front);
+                Storage::disk('public')->delete($user->idCard->back);
+                $user->idCard()->delete();
+            }
+            foreach ($request->idCard as $key => $file) {
+                if (is_file($file)) {
+                    $idCard[$key] = Storage::disk('public')->put('/users/id', $file);
+                } else {
+                    $idCard[$key] = $file;
+                }
+            }
+
+            $user->idCard()->create($idCard);
         }
 
         $user->update($updateData);

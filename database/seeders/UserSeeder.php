@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             'sex' => 'male',
             'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
-            'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
+            'avatar_url' => 'https://www.freepik.com/premium-vector/cute-vector-illustration-penguin-children-book_202182884.htm'
         ]);
 
         $customer = User::factory()->create([
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             'sex' => 'male',
             'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
-            'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
+            'avatar_url' => 'https://www.freepik.com/premium-vector/cute-vector-illustration-penguin-children-book_202182884.htm'
         ]);
 
         User::factory()->create([
