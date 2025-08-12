@@ -1,0 +1,38 @@
+services:
+  server:
+    build: .
+    ports:
+      - "8000:80"
+    environment:
+      - APP_ENV=local
+      - APP_KEY=base64:T4J81rIRqenk/w/Z53qltJnc4xS/g+QFvxBO8XOgyWI=
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=capstone
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    depends_on:
+      - db
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /var/www/html
+          ignore:
+            - vendor/
+            - node_modules/
+        - action: rebuild
+          path: Dockerfile
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: capstone
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

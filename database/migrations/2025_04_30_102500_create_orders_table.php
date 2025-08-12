@@ -41,13 +41,6 @@ return new class extends Migration
             // $table->enum('type', ['design_image', 'uploaded_image']);
             $table->timestamps();
         });
-        // Schema::create('order_product', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignIdFor(Order::class)->constrained()->cascadeOnDelete();
-        //     $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
-        //     $table->foreignIdFor(ProductOption::class, 'option_id')->nullable()->default(null)->constrained()->cascadeOnDelete();
-        //     $table->timestamps();
-        // });
     }
 
     /**
