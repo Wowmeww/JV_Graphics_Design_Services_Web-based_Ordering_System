@@ -76,7 +76,7 @@ const unseenMessages = computed(() => {
             </div>
         </div>
     </div>
-
+    <!---- ADMIN DASHBOARD ------------------------------------------------------------------------------------------------->
     <AdminDashboard v-if="user.is_admin" :admin="user" :shop="shop" :contacts="contacts" />
     <!-- CUSTOMER -->
     <div v-else :class="styleClass.pageContainer">

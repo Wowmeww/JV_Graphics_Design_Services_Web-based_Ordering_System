@@ -135,7 +135,7 @@ class User extends Authenticatable  implements MustVerifyEmail
                 $query->where('role', 'admin');
             }
 
-            $query->orderBy('id');
+            $query->when($search, fn($q)=> $q->whereAny(['name', 'email', 'role'], 'like', $search))->orderBy('id');
         }
 
         return $query;

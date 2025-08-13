@@ -69,7 +69,6 @@
 
     <Layout :contacts="contacts" :selectedContact="receiver" :user="user">
         <div class="h-full flex flex-col max-h-[85vh]" v-if="receiver">
-
             <!-- Messages Area -->
             <div ref="messagesContainer" id="messages-container"
                 class="flex-1 overflow-y-scroll p-4 space-y-3 scroll-smooth">

@@ -29,14 +29,13 @@ class ManageOrderController extends Controller
         ]);
 
         // ->whereNotIn('status', ['received', 'rated', 'cancelled'])
-        $orders = Order::query()
-            ->with([
-                'user:id,name,email',
-                'product:id,name,slug', // Only select essential product fields
-                'product.images:id,imageable_id,path',
-                'option:id,name',
-                'option.images:id,imageable_id,path'
-            ])
+        $orders = Order::with([
+            'user:id,name,email',
+            'product:id,name', // Only select essential product fields
+            'product.images:id',
+            'option:id,name',
+            'option.images:id'
+        ])
             ->latest()
             ->filter($validated)
             ->paginate(8)

@@ -15,7 +15,6 @@ watch(
         tempNotifications.value = [...notifications.reverse().slice(0, 4)];
     },
 );
-
 useEcho(`new-order-notification.${user.value?.id}`, '.NewOrderNotification', async ({ notification }) => {
     tempNotifications.value?.unshift(notification);
     tempNotifications.value.pop();

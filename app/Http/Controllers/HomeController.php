@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Message;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -47,7 +48,8 @@ class HomeController extends Controller
             'orders'    => [],
             'customers' => 0,
             'products'  => [],
-            'announcements' => []
+            'announcements' => [],
+            'visitors' => []
         ];
 
         $contacts =  User::with(['sentMessages'])
@@ -87,6 +89,12 @@ class HomeController extends Controller
                 $q->where('seen', false)
                     ->where('receiver_id', $user->id);
             })->count();
+
+            $shop['visitors'] = json_decode(
+                Setting::where('key', 'daily_visitors')
+                    ->value('value'),
+                true
+            );
         }
         $announcements = Announcement::with('user')->latest()->take(10)->get();
 

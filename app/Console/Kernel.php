@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule): void
     {
-        // You can schedule artisan commands here if needed
+        $schedule->command('visitor:reset-daily')->dailyAt('00:00');
     }
 
     protected function commands(): void
@@ -22,4 +22,5 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+    
 }
