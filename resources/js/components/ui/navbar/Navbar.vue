@@ -36,7 +36,7 @@
                     <NavLink routeName="product.index" v-if="user ? user.is_admin : false" label="Products"
                         :active="component === 'product/Index'" />
                     <NavLink routeName="shop.index" label="Shop" :active="component === 'shop/Index'" />
-                    <NavLink routeName="register" label="About" :active="component === 'About'" />
+                    <NavLink routeName="about" label="About" :active="component === 'About'" />
 
                     <!------------ THEME TOGGLER BUTTON DROPDOWN --------------------------------------------------------------------->
 

@@ -23,9 +23,6 @@ const form = useForm({
 
 // Handle form submit
 function updateUser() {
-    if (form.verified_at) {
-        form.verified_at = new Date().toISOString();
-    }
     form.patch(route('manage.users.update', { user: props.user.id }));
 }
 

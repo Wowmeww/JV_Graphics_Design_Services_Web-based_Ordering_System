@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -37,10 +38,17 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+
         $validated = $request->validate([
             'role' => ['required', 'string'],
-            'verified_at' => ['nullable', 'string']
+            'verified_at' => ['nullable', 'boolean']
         ]);
+
+        // Option 2: Explicit check
+        $validated['verified_at'] = isset($validated['verified_at']) && $validated['verified_at']
+            ? Carbon::now()
+            : null;
+
 
         $user->update($validated);
 

@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $penguinImageUrl = "https://models-online-persist.shakker.cloud/img/7d6730dea17347de84385f3aa4adef7b/428aeb864beb860a7883bfba4a310874416fb1514a73ef581aee30eef43b7155.png?x-oss-process=image/resize,w_764,m_lfit/format,webp";
         User::factory()->create([
             'role' => 'admin',
             'name' => 'Nico Bernard B. Firmanes',
@@ -23,7 +24,7 @@ class UserSeeder extends Seeder
             'sex' => 'male',
             'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
-            'avatar_url' => 'https://www.freepik.com/premium-vector/cute-vector-illustration-penguin-children-book_202182884.htm'
+            'avatar_url' => $penguinImageUrl
         ]);
 
         $customer = User::factory()->create([
@@ -32,7 +33,7 @@ class UserSeeder extends Seeder
             'sex' => 'male',
             'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
-            'avatar_url' => 'https://www.freepik.com/premium-vector/cute-vector-illustration-penguin-children-book_202182884.htm'
+            'avatar_url' => $penguinImageUrl
         ]);
 
         User::factory()->create([
@@ -42,7 +43,7 @@ class UserSeeder extends Seeder
             'sex' => 'male', // <-- add this
             'birth_date' => '2000-01-01', // <-- add this
             'password' => bcrypt(123),
-            'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
+            'avatar_url' => $penguinImageUrl
         ]);
 
         Cart::create([

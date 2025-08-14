@@ -105,4 +105,9 @@ class HomeController extends Controller
             'contacts' => $tempContacts,
         ]);
     }
+
+    public function about() {
+        
+        return Inertia::render('About');
+    }
 }

@@ -213,7 +213,7 @@ const recentOrders = computed(() => props.shop.orders.filter((_, i) => i < 10));
 const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating - a.rating));
 </script>
 <template>
-    {{ console.dir(dailyVisits) }}
+
     <div class="mx-auto max-w-7xl space-y-6 px-4 pt-8 pb-7">
         <PageTitleHeader title="Dashboard" />
 
@@ -376,9 +376,9 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
         </div>
 
         <!-- Bottom Section -->
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-12">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
             <!-- Sales by Category -->
-            <div class="rounded-xl bg-white p-5 shadow md:col-span-4 dark:bg-gray-800">
+            <div class="rounded-xl bg-white p-5 shadow lg:col-span-4 dark:bg-gray-800">
                 <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Sales by Category</h3>
                 <VueApexCharts
                     :options="charts.categorySales.options"
@@ -390,7 +390,7 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
             </div>
 
             <!-- Messages -->
-            <div class="rounded-xl bg-white p-5 shadow md:col-span-3 dark:bg-gray-800" v-if="topProducts.length">
+            <div class="rounded-xl bg-white p-5 shadow lg:col-span-3 dark:bg-gray-800" v-if="topProducts.length">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Messages</h3>
                 </div>
@@ -398,9 +398,8 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
                     <ContactCard :user="admin" v-for="contact in contacts" :contact="contact" :key="contact.id" />
                 </div>
             </div>
-
             <!-- Top Products -->
-            <div class="rounded-xl bg-white p-5 shadow md:col-span-5 dark:bg-gray-800" v-if="topProducts.length">
+            <div class="rounded-xl bg-white p-5 shadow lg:col-span-5 dark:bg-gray-800" v-if="topProducts.length">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Top Products</h3>
                 </div>
@@ -423,7 +422,7 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
             <!-- Announcements -->
             <div class="rounded-xl bg-white p-5 shadow dark:bg-gray-800" v-if="shop.announcements.length">
                 <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Announcements</h3>
-                <div class="max-h-96 space-y-4 overflow-y-auto pr-2">
+                <div class="max-h-96 space-y-4 overflow-y-auto pr-2 py-4">
                     <Announcement v-for="announcement in shop.announcements" :key="`announcement-${announcement.id}`" :announcement="announcement" />
                 </div>
             </div>

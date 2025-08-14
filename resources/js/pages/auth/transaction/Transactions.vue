@@ -39,7 +39,7 @@ useEcho('transaction', '.Transaction', ({ transaction }) => {
     <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mb-8 flex flex-col justify-center md:flex-row md:items-center md:justify-between">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Notifications</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Transactions</h1>
 
             <input
                 v-model="searchTerm"

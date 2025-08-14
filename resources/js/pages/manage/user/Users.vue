@@ -198,7 +198,7 @@ const badges = {
                                                             title="Unverified user"
                                                         ></i>
                                                     </button>
-
+                                                    
                                                     <!-- Tooltip -->
                                                     <div
                                                         class="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform group-hover:block group-focus:block"
@@ -222,6 +222,7 @@ const badges = {
                                             </td>
                                             <td :class="[styleClass.td, 'space-x-2']">
                                                 <div class="group relative inline-flex">
+                                                 
                                                     <!-- Verification Status Button -->
                                                     <button
                                                         class="text-gray-600 transition-all duration-200 hover:scale-110 hover:text-blue-500 focus:outline-none dark:text-gray-200 dark:hover:text-blue-400"
@@ -234,7 +235,7 @@ const badges = {
                                                         ></i>
                                                         <i
                                                             v-else
-                                                            class="fa-solid fa-circle-xmark text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                                                            class="fa-solid fa-circle-xmark text-amber-500 hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300"
                                                             title="Unverified email"
                                                         ></i>
                                                     </button>

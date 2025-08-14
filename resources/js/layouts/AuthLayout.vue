@@ -38,7 +38,7 @@
 </script>
 
 <template>
-    <div v-cloak class="overflow-y-scroll">
+    <div v-cloak>
         <AuthNavbar @toggle="toggleExpand" @openCart="openCart" @openWishlist="openWishlist" />
 
         <AuthAside :expanded="asideExpanded" @close="toggleExpand" />

@@ -10,8 +10,8 @@
         <div class="container px-6 py-8 mx-auto">
 
             <div class="flex flex-wrap justify-center mt-3 -mx-4">
-                <FooterLink label="Home" routeName="register" />
-                <FooterLink label="About" routeName="register" />
+                <FooterLink label="Home" routeName="home" />
+                <FooterLink label="About" routeName="about" />
                 <FooterLink label="Privacy" routeName="register" />
                 <FooterLink label="Cookies" routeName="register" />
             </div>

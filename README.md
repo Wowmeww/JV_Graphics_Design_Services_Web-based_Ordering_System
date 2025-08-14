@@ -1,44 +1,58 @@
-# 🎨 JV Graphics Design Services Web-based Ordering System
+# 🎨 JV Graphics Design Services - Web Ordering System
 
-![License](https://img.shields.io/badge/License-MIT-green.svg)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)
-![Made with Laravel](https://img.shields.io/badge/Made%20with-Laravel-red)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Active Development](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
+[![Laravel 12](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
+[![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?logo=vue.js&logoColor=white)](https://vuejs.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![MySQL 8](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com)
+[![Docker](https://img.shields.io/badge/Docker-✓-2496ED?logo=docker&logoColor=white)](https://www.docker.com)
+[![PHP 8.2+](https://img.shields.io/badge/PHP-8.2+-777BB4?logo=php&logoColor=white)](https://www.php.net)
 
-> **JV Graphics Design Services Web-based Ordering System** is a web-based ordering system built to simplify graphics order management, streamline client requests, and enhance administrative efficiency.
+> Professional web-based ordering system that streamlines graphics design service requests and order management.
 
----
 
-## ✨ Features
+### ✨ Key Features
 
-- ✅ Customer registration & login
-- 🖼️ Submit custom graphics design orders
-- 🧑‍💼 Admin dashboard for managing orders
-- 🔔 Real-time order status updates
+### 👤 Client Features
+- 🔐 Secure user authentication (registration/login)
+- 🖼️ Intuitive order submission with file uploads
+- 📊 Real-time order status tracking
+- 💬 Integrated messaging system
 
----
 
-## 🛠️ Built With
 
-### 🔧 Backend
+### 👨‍💼 Admin Features
+- 🎛️ Comprehensive dashboard with analytics
+- 📝 Order management tools
+- 👥 Client management portal
 
-- [Laravel 12](https://laravel.com/) — Robust PHP framework for building modern web apps.
-- [PHP](https://www.php.net/) — Server-side scripting language.
-- [SQLite](https://www.sqlite.org/) — Lightweight database for local development.
-- [SQL](https://www.w3schools.com/sql/) — Standard language for database management.
-- [Composer](https://getcomposer.org/) — Dependency manager for PHP.
 
-### 🎨 Frontend
 
-- [TailwindCSS 4.1](https://tailwindcss.com/) — Utility-first CSS framework.
-- [Vue.js](https://vuejs.org/) — Progressive JavaScript framework for UI development.
-- [Vite](https://vite.dev/) — Lightning-fast development server and bundler.
-- [Inertia.js](https://inertiajs.com/) — Modern SPA framework without the complexity.
-- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) — For client-side logic.
+## 🛠 Tech Stack
 
-### 🖼️ Icons
+### Backend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Laravel | 12 | MVC Framework |
+| PHP | 8.2+ | Server-side logic |
+| MySQL | 8.0 | Primary database |
+| Sqlite | latest | Database during development |
 
-- [Bootstrap Icons](https://icons.getbootstrap.com/)
-- [Font Awesome](https://fontawesome.com/)
+### Frontend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Vue.js | 3 | Reactive UI |
+| TailwindCSS | 4.1 | Utility-first CSS |
+| Inertia.js | latest | SPA-like experience |
+| Vite | latest | Build tool |
+
+
+### 🖼️ Icons & Fonts
+
+- [Bootstrap Icons](https://icons.getbootstrap.com/) – Free, high-quality SVG icons from Bootstrap.
+- [Font Awesome](https://fontawesome.com/) – Popular icon library (free + paid tiers).
+- [Google Fonts](https://fonts.google.com/) – Free, open-source fonts for web projects.
 
 ### 📦 Tools & Utilities
 
@@ -47,79 +61,133 @@
 - [GitHub Copilot](https://github.com/features/copilot) — AI-powered coding assistant.
 - [ChatGPT](https://chatgpt.com/) — AI assistant for code review, brainstorming, and writing help.
 - [Figma](https://www.figma.com/) — Collaborative interface design and prototyping tool.
+- [Docker](https://www.docker.com) — A platform for containerizing applications (note: the description seems incorrect; it’s not for design but for DevOps).
 
----
 
-### 🧩 Installation
+## 🚀 Quick Start, Installation guide
 
-Clone the repo:
-
+### Clone the Repository
 ```bash
 git clone https://github.com/Wowmeww/JV_Graphics_Design_Services_Web-based_Ordering_System.git
 cd JV_Graphics_Design_Services_Web-based_Ordering_System
 ```
 
-Install dependencies:
-
+### Traditional Installation
 ```bash
 composer install
-npm install && npm run dev
-```
-
-Create environment file `(new terminal)`:
-
-```bash
+npm install
 cp .env.example .env
 php artisan key:generate
 php artisan storage:link
+npm run build
+composer run dev #this should run (npm run dev, php artisan serve, php artisan reverb:start)
 ```
 
-Run migrations:
+### With Docker (Recommended)
+```bash
+# Build and launch containers
+docker compose up -d --build
+# docker compose up -d    # if built
+# docker exec -it <container_name> bash 
+# Replace <container_name> with your actual container name
+docker exec -it capstone-app bash
+npm run build
+```
 
+
+### Database preparation
+##### Configure your database in .env file:
+```bash
+# traditional
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=jv_graphics_design_services
+DB_USERNAME=root
+DB_PASSWORD=
+```
+```bash
+# docker
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=jv_graphics_design_services
+DB_USERNAME=root
+DB_PASSWORD=
+
+```bash
+# for sqlite
+DB_CONNECTION=sqlite
+```
+##### Create database structure
 ```bash
 php artisan migrate
 ```
-
-Run migrations with dummy data:
-
+##### Create structure with sample data
 ```bash
 php artisan migrate --seed
 ```
-
-Serve the application:
-
+##### Reset entire database (DANGER: destroys all data)
 ```bash
-php artisan serve
+php artisan migrate:fresh
+```
+##### Reset and repopulate with sample data
+```bash
+php artisan migrate:fresh --seed
 ```
 
+
+### 📂 Project Structure
+```bash
+├── app/               # Application core
+├── assets/            # Uploaded resource by developer
+├── bootstrap/         # Framework initialization
+├── config/            # Configuration files
+├── database/          # Migrations & seeders
+├── public/            # Entry point
+├── resources/         # Views & assets
+├── routes/            # Application routes
+├── storage/           # Uploads & logs
+└── tests/             # Test cases
+```
+
+| | |
 ## 📬 Contact
 
 Developed by [@Wowmeww](https://github.com/Wowmeww) 🚀
 
----
+Support: [nicobernardfirmanes@gmail.com ](https://github.com/Wowmeww)
 
+* f
 ## 🙏 Acknowledgments
 
 Thanks to [ChatGPT](https://chatgpt.com/), [GitHub Copilot](https://github.com/features/copilot) and [DeepSeek](https://chat.deepseek.com) for assisting in code generation and project planning.
 
----
 
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
+
 
 <!--
 ## 🚀 Live Demo
 
 👉 [Visit the live project here](https://your-live-demo-link.com) *(update link)*
 
+
 ---
 
 ## 📸 Screenshots
 
-| Home Page | Admin Dashboard |
+| Home Page | Login Page |
 |:---------:|:---------------:|
-| ![Home Screenshot](https://via.placeholder.com/400x250.png?text=Home+Page) | ![Dashboard Screenshot](https://via.placeholder.com/400x250.png?text=Admin+Dashboard) |
+| ![Home Screenshot](./assets/screenshots/landing.png) | ![Login Page Screenshot](./assets/screenshots/login.png) |
+
+| Customer Dashboard | Admin Dashboard |
+|:---------:|:---------------:|
+| ![Dashboard Screenshot](./assets/screenshots/customer_dashboard.png) | ![Dashboard Screenshot](./assets/screenshots/admin_dashboard.png) |
 
 ---
+
 -->

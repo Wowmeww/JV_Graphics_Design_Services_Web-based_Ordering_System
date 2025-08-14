@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
 
 require __DIR__ . '/shop.php';
 require __DIR__ . '/products.php';
