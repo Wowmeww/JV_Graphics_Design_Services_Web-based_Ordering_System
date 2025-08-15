@@ -1,35 +1,35 @@
-FROM php:8.2-apache
+### Step 1: Node.js for frontend (Vite)
+FROM node:18 AS node-builder
 
-WORKDIR /var/www/html
+WORKDIR /app
+COPY . .
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+RUN npm install && npm run build
 
-# Install PHP extensions and dependencies
+
+### Step 2: PHP for Laravel backend
+FROM php:8.2-fpm
+
+WORKDIR /var/www
+
 RUN apt-get update && apt-get install -y \
-    libicu-dev libzip-dev unzip zip libpng-dev libjpeg-dev libfreetype6-dev \
-    git curl supervisor \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd intl pdo_mysql zip pcntl \
-    && rm -rf /var/lib/apt/lists/*
+    zip unzip curl git libxml2-dev libzip-dev libpng-dev libjpeg-dev libonig-dev \
+    sqlite3 libsqlite3-dev
 
-# Install Node.js 20.x
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configure Apache document root
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
+COPY . /var/www
+COPY --chown=www-data:www-data . /var/www
 
-# Copy source code
-COPY . /var/www/html
+# Copy only built frontend assets (from Vite)
+COPY --from=node-builder /app/public/build /var/www/public/build
 
-# Set permissions for Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN composer install
+RUN php artisan reverb:start
+COPY .env.example .env
+RUN php artisan key:generate
 
-EXPOSE 80
-
+EXPOSE 8000
+CMD php artisan serve --host=0.0.0.0 --port=8000
