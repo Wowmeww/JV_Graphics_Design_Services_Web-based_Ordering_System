@@ -151,14 +151,12 @@ php artisan migrate:fresh --seed
 └── tests/             # Test cases
 ```
 
-| | |
 ## 📬 Contact
 
 Developed by [@Wowmeww](https://github.com/Wowmeww) 🚀
 
 Support: [nicobernardfirmanes@gmail.com ](https://github.com/Wowmeww)
 
-* f
 ## 🙏 Acknowledgments
 
 Thanks to [ChatGPT](https://chatgpt.com/), [GitHub Copilot](https://github.com/features/copilot) and [DeepSeek](https://chat.deepseek.com) for assisting in code generation and project planning.
