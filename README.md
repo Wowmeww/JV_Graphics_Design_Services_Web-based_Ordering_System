@@ -114,7 +114,7 @@ DB_PORT=3306
 DB_DATABASE=jv_graphics_design_services
 DB_USERNAME=root
 DB_PASSWORD=
-
+```
 ```bash
 # for sqlite
 DB_CONNECTION=sqlite

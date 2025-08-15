@@ -85,7 +85,7 @@ const styleClass = {
             <!-- --  NotificationDropdown  ------------------------------------------------------------------------------------------------ -->
             <NotificationDropdown/>
 
-            <ThemToggler />
+            <!-- <ThemToggler /> -->
             <button type="button" @click.stop="toggleDropdown" :class="styleClass.profile" :aria-expanded="isDropdownOpen.toString()">
                 <span class="sr-only">Open user menu</span>
                 <img :class="styleClass.image" :src="user_avatar_path" alt="user photo" />
