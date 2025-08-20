@@ -26,7 +26,7 @@ function submit() {
 <template>
     <Head title="Sign in" />
     <ContainerPrimary
-        class="animate__animated animate__slideInUp mx-auto max-w-xl mt-10"
+        class="animate__animated animate__slideInUp mx-auto mt-10 max-w-xl"
         title="Login to account"
         lead="Enter your email & password to login"
     >
@@ -61,7 +61,12 @@ function submit() {
 
                 <div class="mb-7 flex flex-col justify-center gap-3.5 md:flex-row">
                     <a :href="route('google.login')" class="btn btn-outline-primary"> <i class="fa-brands fa-google" /> Login with Google </a>
-                    <a :href="route('facebook.login')" class="btn btn-outline-primary"><i class="fa-brands fa-facebook" /> Login with Facebook</a>
+                    <!-- <a :href="route('facebook.login')" class="btn btn-outline-primary">  <i class="fa-brands fa-facebook" type="button" />
+                        <span>Login with Facebook</span> </a> -->
+                    <button disabled class="btn btn-outline-primary">
+                        <i class="fa-brands fa-facebook" type="button" />
+                        <span>Login with Facebook</span>
+                    </button>
                 </div>
 
                 <p class="text-sm leading-5 font-normal">

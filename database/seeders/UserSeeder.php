@@ -8,6 +8,7 @@ use App\Models\Wishlist;
 use Database\Factories\WishlistFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class UserSeeder extends Seeder
 {
@@ -24,7 +25,20 @@ class UserSeeder extends Seeder
             'sex' => 'male',
             'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
-            'avatar_url' => $penguinImageUrl
+            'avatar_url' => $penguinImageUrl,
+            'email_verified_at' => Carbon::now(),
+            'verified_at' => Carbon::now(),
+        ]);
+        User::factory()->create([
+            'role' => 'admin',
+            'name' => "JV Graphics Design Services",
+            'email' => 'jvgraphicsdesignservices@mail.com',
+            'sex' => 'male', // <-- add this
+            'birth_date' => '2000-01-01', // <-- add this
+            'password' => bcrypt(123),
+            'avatar_url' => $penguinImageUrl,
+            'email_verified_at' => Carbon::now(),
+            'verified_at' => Carbon::now(),
         ]);
 
         $customer = User::factory()->create([
@@ -33,26 +47,12 @@ class UserSeeder extends Seeder
             'sex' => 'male',
             'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
-            'avatar_url' => $penguinImageUrl
+            'avatar_url' => $penguinImageUrl,
+            'email_verified_at' => Carbon::now(),
+            'verified_at' => Carbon::now(),
         ]);
-
-        User::factory()->create([
-            'role' => 'admin',
-            'name' => "JV Graphics Design Services",
-            'email' => 'jvgraphicsdesignservices@mail.com',
-            'sex' => 'male', // <-- add this
-            'birth_date' => '2000-01-01', // <-- add this
-            'password' => bcrypt(123),
-            'avatar_url' => $penguinImageUrl
-        ]);
-
-        Cart::create([
-            'user_id' => $customer->id
-        ]);
-        Wishlist::create([
-            'user_id' => $customer->id
-        ]);
-
+        $customer->cart()->create();
+        $customer->wishlist()->create();
 
 
         // CREATE USER WITH CART AND WISHLIST

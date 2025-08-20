@@ -31,7 +31,6 @@ class UserFactory extends Factory
             'role' => 'customer',
             'address' => fake()->address(),
             'birth_date' => fake()->date('Y-m-d'),
-            'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];

@@ -37,6 +37,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('not.suspended', function (User $user) {
             return $user->role !== 'suspended';
         });
+        // Gate::define('user.verified', function (User $user) {
+        //     return $user->role !== 'suspended' && $user->verified_at;
+        // });
         Inertia::share([
             'urlPrevious' => url()->previous()
         ]);

@@ -50,7 +50,6 @@ const styleClass = computed(() => ({
 }));
 
 const unseenMessages = computed(() => {
-    console.dir(props.user);
     return props.user.received_messages?.filter((message) => !message.seen)?.length;
 });
 </script>

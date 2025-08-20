@@ -12,5 +12,7 @@
 <template>
 
     <Head title="Products Management" />
-    <ProductsManagement :status="status" :productTypes="productTypes" :products="products" :categories="categories" />
+    <div class="max-w-7xl mx-auto">
+        <ProductsManagement :status="status" :productTypes="productTypes" :products="products" :categories="categories" />
+    </div>
 </template>

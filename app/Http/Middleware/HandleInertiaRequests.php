@@ -65,7 +65,6 @@ class HandleInertiaRequests extends Middleware
             ],
             'github' => env('GITHUB_REPO'),
             'custom_order_resource' => null
-
         ];
     }
 }

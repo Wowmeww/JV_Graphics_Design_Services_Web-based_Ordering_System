@@ -73,12 +73,12 @@ const styleClass = {
             image: 'flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-600 dark:bg-gray-700',
             name: 'font-medium text-gray-800 dark:text-gray-200',
             stock: {
-                base: 'text-center',
+                base: '',
                 high: 'text-green-600 dark:text-green-400',
                 medium: 'text-yellow-600 dark:text-yellow-400',
                 low: 'text-red-600 dark:text-red-400',
             },
-            price: 'text-center font-medium',
+            price: 'font-medium',
             size: 'text-gray-600 dark:text-gray-400',
             emptySize: 'text-gray-400',
             date: 'text-gray-600 dark:text-gray-400',
@@ -192,7 +192,7 @@ const styleClass = {
                         <td :class="styleClass.table.cell.base + ' col-span-1'">
                             {{ product.category.name }}
                         </td>
-                        <td class="col-span-1 text-center">
+                        <td class="col-span-1">
                             <span
                                 :class="
                                     product.stock > 10
@@ -217,7 +217,7 @@ const styleClass = {
                             <span v-if="product.size">
                                 {{ product.size.replaceAll(',', ' ') }}
                             </span>
-                            <span v-else :class="styleClass.table.cell.emptySize">-</span>
+                            <span v-else :class="styleClass.table.cell.emptySize">none</span>
                         </td>
                         <td :class="styleClass.table.cell.date + ' col-span-2'">
                             {{

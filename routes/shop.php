@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Middleware\UserVerified;
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/products/fetch', [ShopController::class, 'fetch'])->name('shop.fetch');
@@ -25,13 +26,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/shop-wishlist/item/{wishlistItem?}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 
     // ORDER ROUTES
-    Route::middleware(['can:not.suspended'])->group(function () {
-
-        Route::get('/shop-orders', [OrderController::class, 'index'])->name('order.index');
+    Route::get('/shop-orders', [OrderController::class, 'index'])->middleware('can:not.suspended')->name('order.index');
+    Route::middleware(['can:not.suspended', UserVerified::class])->group(function () {
         Route::get('/shop-orders/create', [OrderController::class, 'create'])->name('order.create');
         Route::get('/shop-orders/{order}', [OrderController::class, 'show'])->name('order.show');
         Route::post('/shop-orders', [OrderController::class, 'store'])->name('order.store');
-        Route::get('/shop-orders/{order}/edit', [OrderController::class, 'edit'])->name('order.edit');
+        // Route::get('/shop-orders/{order}/edit', [OrderController::class, 'edit'])->name('order.edit');
         Route::patch('/shop-orders/{order}', [OrderController::class, 'update'])->name('order.update');
         Route::delete('/shop-orders/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
     });
