@@ -87,11 +87,17 @@ class AuthenticatedSessionController extends Controller
     public function verificationSend(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('dashboard', absolute: false))->with('status', [
+            'type' => 'info',
+            'message' => 'The email ' . $request->user()->email . ' already verified.',
+        ]);
         }
 
         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('message', 'email sent');
+        return back()->with('status', [
+            'type' => 'info',
+            'message' => 'Verification link sent to ' . $request->user()->email,
+        ]);
     }
 }

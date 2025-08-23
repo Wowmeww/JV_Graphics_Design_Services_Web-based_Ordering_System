@@ -61,7 +61,6 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])
-        ->middleware(['auth', 'verified'])
         ->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::get('/password/edit', [ProfileController::class, 'editPassword'])->name('password.edit');

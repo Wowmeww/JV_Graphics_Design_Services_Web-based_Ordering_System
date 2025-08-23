@@ -78,6 +78,27 @@ class Order extends Model
             $query->where('status', $filters['status']);
         }
 
+        $filters['sort'] = $filters['sort'] ?? 'Sort by date (new to old)';
+
+        switch ($filters['sort']) {
+            case 'Sort by price (low to high)':
+                $query->orderBy('total_amount', 'asc');
+                break;
+            case 'Sort by price (high to low)':
+                $query->orderBy('total_amount', 'desc');
+                break;
+            case 'Sort by date (new to old)':
+                $query->orderBy('created_at', 'desc'); // fixed
+                break;
+            case 'Sort by date (old to new)':
+                $query->orderBy('created_at', 'asc'); // fixed
+                break;
+            case 'Sort by status':
+                $query->orderByRaw("FIELD(status, 'pending', 'processing', 'completed', 'cancelled')");
+                break;
+        }
+
+
         return $query;
     }
 }

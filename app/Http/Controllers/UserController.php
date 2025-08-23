@@ -14,9 +14,12 @@ class UserController extends Controller
         $request->validate([
             'search' => 'nullable:string',
             'role' => 'nullable:string',
+            'sort' => 'nullable:string',
         ]);
 
-        $users = User::with(['orders'])->filter(request(['search', 'role']))->paginate(8)->withQueryString();
+        $request['sort'] =  $request['sort'] ?? 'Sort by date (new to old)';
+
+        $users = User::with(['orders'])->filter(request(['search', 'role', 'sort']))->paginate(8)->withQueryString();
         return Inertia::render('manage/user/Users', [
             'users' => $users
         ]);

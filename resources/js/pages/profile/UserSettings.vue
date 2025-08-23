@@ -7,6 +7,7 @@ import ContainerPrimary from '@/components/ContainerPrimary.vue';
 import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary.vue';
 import Dropdown from '@/components/ui/input/Dropdown.vue';
 import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
+import { route } from 'ziggy-js';
 
 defineOptions({ layout: Layout });
 
@@ -224,13 +225,28 @@ const styleClass = {
                                 placeholder="Enter your birth date"
                             />
 
-                            <TextInputPrimary
-                                v-model="form.address"
-                                label="Address (street, baranggay, municipality, city)"
-                                :error="form.errors.address"
-                                :required="false"
-                                placeholder="Enter address"
-                            />
+                            <div class="space-y-3">
+                                <TextInputPrimary
+                                    v-model="form.address"
+                                    label="Address (street, baranggay, municipality, city)"
+                                    :error="form.errors.address"
+                                    :required="false"
+                                    placeholder="Enter address"
+                                />
+                                <!-- make tailwind style for this link -->
+                                <Link
+                                    v-if="!user.email_verified_at"
+                                    :href="route('verification.notice')"
+                                    class="group block w-full rounded-lg bg-indigo-50 px-4 py-3 text-center font-medium text-indigo-700 transition-all duration-200 hover:bg-indigo-100"
+                                >
+                                    <i class="fas fa-shield-alt mr-2 text-indigo-600"></i>
+                                    Verify email address
+                                    <i class="fas fa-arrow-right ml-2 text-xs transition-transform duration-200 group-hover:translate-x-1"></i>
+                                </Link>
+                             
+                               
+                                
+                            </div>
 
                             <!-- Verification info---------------------------------------------------------- -->
                             <!-- Enhanced Verification Info Banner -->
@@ -255,7 +271,7 @@ const styleClass = {
                                     </div>
                                 </div>
                             </div>
-                             <div v-if="!user.id_card && !user.verified_at" class="w-full bg-yellow-500/90 dark:bg-yellow-600/90">
+                            <div v-if="!user.id_card && !user.verified_at" class="w-full bg-yellow-500/90 dark:bg-yellow-600/90">
                                 <div class="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
                                     <div class="flex flex-wrap items-center justify-between">
                                         <div class="flex w-0 flex-1 items-center">
@@ -269,7 +285,8 @@ const styleClass = {
                                                 </svg>
                                             </span>
                                             <p class="ml-3 font-medium text-white">
-                                                To be able to make order you need to be verified so please provide needed documents (selfie, id) pictures and fill-up profile info. This process typically takes 1-3 business days.
+                                                To be able to make order you need to be verified so please provide needed documents (selfie, id)
+                                                pictures and fill-up profile info. This process typically takes 1-3 business days.
                                             </p>
                                         </div>
                                     </div>

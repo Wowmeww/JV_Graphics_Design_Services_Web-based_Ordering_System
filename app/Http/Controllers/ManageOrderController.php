@@ -22,10 +22,10 @@ class ManageOrderController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'search' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:50',
+            'sort' => 'nullable|string|max:50',
         ]);
 
         // ->whereNotIn('status', ['received', 'rated', 'cancelled'])
@@ -36,7 +36,6 @@ class ManageOrderController extends Controller
             'option:id,name',
             'option.images:id'
         ])
-            ->latest()
             ->filter($validated)
             ->paginate(8)
             ->withQueryString();

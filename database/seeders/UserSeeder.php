@@ -48,8 +48,8 @@ class UserSeeder extends Seeder
             'birth_date' => '2004-02-25',
             'password' => bcrypt(123),
             'avatar_url' => $penguinImageUrl,
-            'email_verified_at' => Carbon::now(),
-            'verified_at' => Carbon::now(),
+            // 'email_verified_at' => Carbon::now(),
+            // 'verified_at' => Carbon::now(),
         ]);
         $customer->cart()->create();
         $customer->wishlist()->create();

@@ -24,6 +24,7 @@ watch(
 const form = reactive({
     search: params.search || null,
     role: params.role || null,
+    sort: params.sort || 'Sort by date (new to old)',
 });
 
 useEcho('order-placed', '.OrderPlaced', () => {});
@@ -67,9 +68,10 @@ function clearSearch() {
     applyFilters();
 }
 
-function clearStatus() {
-    // form.status = null;
-    // applyFilters();
+function clearRole() {
+    form.role = null;
+
+    applyFilters();
 }
 
 const styleClass = computed(() => ({
@@ -101,9 +103,21 @@ const badges = {
     received: { label: 'received', icon: 'bi bi-download' },
     rated: { label: 'rated', icon: 'fa-solid fa-star-half-stroke' },
 };
+
+const sortOptionOpen = ref(false);
+const sortOptions = ['Sort by date (new to old)', 'Sort by date (old to new)', 'Sort by name (A to Z)', 'Sort by name (Z to A)', 'Sort by role'];
+
+function handleSort(sortOption) {
+    form.sort = sortOption;
+    sortOptionOpen.value = false;
+}
 </script>
 <template>
     <Head title="Manage orders" />
+
+    <!-- Overlay for mobile sort options -->
+    <div v-if="sortOptionOpen" @click="sortOptionOpen = false" class="fixed inset-0 z-30 bg-black/10 backdrop-blur-sm"></div>
+
     <div class="px-2 py-3">
         <div class="mx-auto max-w-7xl py-6">
             <PageTitleHeader title="Users" />
@@ -129,7 +143,7 @@ const badges = {
                 </div>
                 <!-- APPLIED FILTERS -->
 
-                <div class="flex gap-2 pt-2" v-if="form.search || form.status">
+                <div class="flex gap-2 pt-2" v-if="form.search || form.role">
                     <span class="font-medium">Applied filters:</span>
 
                     <small class="badge badge-secondary" v-if="form.search">
@@ -138,10 +152,9 @@ const badges = {
                             <i class="fas fa-times"></i>
                         </button>
                     </small>
-
-                    <small class="badge badge-secondary" v-if="form.status">
-                        Status: "{{ form.status }}"
-                        <button @click="clearStatus" class="ml-2 text-xs">
+                    <small class="badge badge-secondary" v-if="form.role">
+                        Role: "{{ form.role }}"
+                        <button @click="clearRole" class="ml-2 text-xs">
                             <i class="fas fa-times"></i>
                         </button>
                     </small>
@@ -157,11 +170,26 @@ const badges = {
                                         <tr>
                                             <th scope="col" :class="styleClass.th">
                                                 <div class="flex items-center gap-x-3">
-                                                    <button class="flex items-center gap-x-2">
-                                                        <span>Name</span>
-
-                                                        <i class="fa-solid fa-arrow-down-9-1"></i>
-                                                    </button>
+                                                    <span>Name</span>
+                                                    <div>
+                                                        <!-- Sort Options Dropdown (Shared for both mobile and desktop) -->
+                                                        <div
+                                                            v-if="sortOptionOpen"
+                                                            class="dark:bg-[#1e293b]' fixed z-40 mt-2 min-w-[180px] overflow-hidden rounded-lg border border-gray-200 bg-white text-left shadow-lg md:absolute md:right-auto dark:border-gray-600"
+                                                        >
+                                                            <span
+                                                                v-for="option in sortOptions"
+                                                                :class="{ 'bg-gray-100 font-semibold dark:bg-gray-700': form.sort === option }"
+                                                                class="block cursor-pointer px-4 py-2 font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                                                                @click="handleSort(option)"
+                                                            >
+                                                                {{ option }}
+                                                            </span>
+                                                        </div>
+                                                        <button type="button" @click="sortOptionOpen = true">
+                                                            <i class="fa-solid fa-arrow-down-9-1"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </th>
 
@@ -198,7 +226,7 @@ const badges = {
                                                             title="Unverified user"
                                                         ></i>
                                                     </button>
-                                                    
+
                                                     <!-- Tooltip -->
                                                     <div
                                                         class="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform group-hover:block group-focus:block"
@@ -222,7 +250,6 @@ const badges = {
                                             </td>
                                             <td :class="[styleClass.td, 'space-x-2']">
                                                 <div class="group relative inline-flex">
-                                                 
                                                     <!-- Verification Status Button -->
                                                     <button
                                                         class="text-gray-600 transition-all duration-200 hover:scale-110 hover:text-blue-500 focus:outline-none dark:text-gray-200 dark:hover:text-blue-400"
