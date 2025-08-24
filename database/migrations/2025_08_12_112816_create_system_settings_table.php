@@ -15,15 +15,9 @@ return new class extends Migration
         Schema::create('system_settings', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
-            $table->longText('value');
+            $table->longText('value')->nullable();
             $table->timestamps();
         });
-
-        // Default value for daily visitors
-        DB::table('settings')->insert([
-            ['key' => 'daily_visitors', 'value' => '0'],
-            ['key' => 'last_reset_date', 'value' => now()->toDateString()],
-        ]);
     }
 
     /**

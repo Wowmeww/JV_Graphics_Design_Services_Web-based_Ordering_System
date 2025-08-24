@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\SystemSetting;
+
 class ResetDailyVisitorCount extends Command
 {
     /**
@@ -25,10 +26,10 @@ class ResetDailyVisitorCount extends Command
      */
     public function handle()
     {
-        $setting = SystemSetting::where('key', 'daily_visitor')->first();
+        $setting = SystemSetting::where('key', 'daily_visitors')->first();
 
         if ($setting) {
-            $setting->value = 0;
+            $setting->value = '';
             $setting->save();
             $this->info('Daily visitor count reset.');
         } else {

@@ -151,7 +151,6 @@ const styleClass = {
                     </div>
 
                     <div class="mx-auto mt-8 grid">
-                        <!-- Enhanced Avatar Section -->
                         <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
                             <!-- Avatar Preview with Reset Button -->
                             <div class="group relative">

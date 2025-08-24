@@ -8,9 +8,11 @@ use App\Models\Message;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PHPUnit\Event\Telemetry\System;
 
 class HomeController extends Controller
 {
@@ -91,7 +93,7 @@ class HomeController extends Controller
             })->count();
 
             $shop['visitors'] = json_decode(
-                Setting::where('key', 'daily_visitors')
+                SystemSetting::where('key', 'daily_visitors')
                     ->value('value'),
                 true
             );

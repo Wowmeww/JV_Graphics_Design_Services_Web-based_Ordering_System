@@ -71,7 +71,7 @@
                     :error="form.errors.password_confirmation" placeholder="Re-enter your new password" />
 
                 <div class="pt-6">
-                    <ButtonPrimary type="submit" label="Update Password" />
+                    <ButtonPrimary type="submit" label="Update Password" :with-spinner="form.processing" :disable="!form.isDirty" />
                 </div>
             </form>
         </main>

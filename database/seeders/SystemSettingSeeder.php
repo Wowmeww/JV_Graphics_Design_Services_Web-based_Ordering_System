@@ -16,7 +16,9 @@ class SystemSettingSeeder extends Seeder
         // can ypu recommend any settings key inhere
         $settings = [
             ['key' => 'app_name', 'value' => 'JV Graphics Design Services'],
-            ['key' => 'daily_visitor', 'value' => 0],
+            ['key' => 'app_name_short', 'value' => 'JV Graphics'],
+            ['key' => 'app_logo', 'value' => ''],
+            ['key' => 'daily_visitors', 'value' => ''],
         ];
 
         foreach ($settings as $setting) {

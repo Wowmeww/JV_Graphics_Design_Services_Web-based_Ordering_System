@@ -19,16 +19,16 @@ class CountDailyVisitors
 
         $ip = $request->ip();
         $userId = $request?->user()?->id;
-
         // Cache check
         $cacheKey = "visit_{$userId}_{$ip}_{$today}";
+
         if (Cache::has($cacheKey)) {
             $this->updateLastVisitTime($ip, $userId, $currentHour);
             return $next($request);
         }
 
         DB::transaction(function () use ($ip, $userId, $currentHour, $today) {
-            $settings = DB::table('settings')
+            $settings = DB::table('system_settings')
                 ->where('key', 'daily_visitors')
                 ->lockForUpdate()
                 ->first();
@@ -48,6 +48,8 @@ class CountDailyVisitors
                 }
             }
 
+            // dd($visitorData);
+
             // Ensure visits_by_hour is always an array
             if (!isset($visitorData['visits_by_hour']) || !is_array($visitorData['visits_by_hour'])) {
                 $visitorData['visits_by_hour'] = [];
@@ -63,7 +65,7 @@ class CountDailyVisitors
 
             $visitorData['total_visits']++;
 
-            DB::table('settings')
+            DB::table('system_settings')
                 ->where('key', 'daily_visitors')
                 ->update(['value' => json_encode($visitorData)]);
         });

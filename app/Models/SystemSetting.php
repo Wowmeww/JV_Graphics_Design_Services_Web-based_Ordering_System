@@ -10,8 +10,9 @@ class SystemSetting extends Model
     /** @use HasFactory<\Database\Factories\SystemSettingFactory> */
     use HasFactory;
 
-    protected $casts = [
-    'value' => 'string',
-];
+    protected $table = 'system_settings';
 
+    protected $casts = [
+        'value' => 'string',
+    ];
 }

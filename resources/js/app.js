@@ -14,9 +14,14 @@ import { initializeTheme } from './composables/useAppearance';
 import SolveLayout from './layouts/SolveLayout.vue';
 
 import './echo';
+import axios from 'axios';
 
+let appName = import.meta.env.VITE_APP_NAME;
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+axios.get(route('page.settings', { what: 'app_name' })).then(function async(res) {
+    appName = res.data || appName;
+});
+
 
 createInertiaApp({
     title: (title) => title ? `${title} - ${appName}` : appName,

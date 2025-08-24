@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\SystemSettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -68,7 +69,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/appearance/edit', [ProfileController::class, 'editAppearance'])->name('appearance.edit');
 });
 
-
+// SYSTEM SETTINGS ROUTE
+Route::middleware(['auth', 'verified', 'can:create,App\Models\Product', 'can:accessAsAdmin', 'password.confirm'])->group(function () {
+    Route::get('/system-settings', [SystemSettingController::class, 'edit'])->name('system.settings');
+    Route::patch('/system-settings', [SystemSettingController::class, 'update']);
+});
 
 // NOTIFICATION ROUTES
 Route::middleware(['auth'])->group(function () {

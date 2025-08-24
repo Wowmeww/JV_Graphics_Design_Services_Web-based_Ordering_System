@@ -3,10 +3,12 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\HomeController;
+use App\Models\SystemSetting;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\Event\Telemetry\System;
 
-
+use function Pest\Laravel\json;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
@@ -14,8 +16,6 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 
 require __DIR__ . '/shop.php';
 require __DIR__ . '/products.php';
-
-// Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::middleware(['guest'])->group(function () {
     // Sign in with Google and Facebook
@@ -35,3 +35,21 @@ require __DIR__ . '/announcement.php';
 require __DIR__ . '/designer.php';
 require __DIR__ . '/transaction.php';
 require __DIR__ . '/user.php';
+
+
+
+// GET THE WEB APP NAME
+
+Route::get('/page-settings/{what}', function (string $what) {
+    $res = '';
+    $value = SystemSetting::where('key', $what)->first()->value;
+    switch ($what) {
+        case 'app_name':
+            $res = $value;
+            break;
+        case 'app_logo':
+            $res = $value ? "/storage/$value" : '/favicon.jpg';
+            break;
+    }
+    return $res;
+})->name('page.settings');

@@ -29,7 +29,7 @@
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
     {{-- favicon --}}
-    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.jpg" type="image/x-icon" />
     @routes
     @vite(['resources/js/app.js'])
     @inertiaHead

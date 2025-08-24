@@ -1,60 +1,71 @@
 <script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue';
-    import UserProfile from './UserProfile.vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
+import UserProfile from './UserProfile.vue';
+import { usePage } from '@inertiajs/vue3';
+import axios from 'axios';
 
-    const isDropdownOpen = ref(false);
+const isDropdownOpen = ref(false);
+const page = usePage();
 
-    function toggleDropdown() {
-        isDropdownOpen.value = !isDropdownOpen.value;
-    }
+function toggleDropdown() {
+    isDropdownOpen.value = !isDropdownOpen.value;
+}
 
-    function closeDropdown() {
-        isDropdownOpen.value = false;
-    }
+function closeDropdown() {
+    isDropdownOpen.value = false;
+}
 
-    const emit = defineEmits(['toggle', 'openCart', 'openWishlist']);
+const emit = defineEmits(['toggle', 'openCart', 'openWishlist']);
 
-    function handleToggle() {
-        emit('toggle');
-    }
+function handleToggle() {
+    emit('toggle');
+}
 
+const logoSrc = ref('');
+
+axios.get(route('page.settings', { what: 'app_logo' })).then((res) => (logoSrc.value = res.data));
 </script>
 
 <template>
-    <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <nav class="fixed top-0 z-50 w-full border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
-            <div class="flex items-center justify-between ">
+            <div class="flex items-center justify-between">
                 <div class="flex items-center justify-start rtl:justify-end">
-                    <button @click="handleToggle" type="button"
-                        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg hover:bg-secondary-100/60 transition focus:outline-none focus:ring-2 focus:ring-secondary-200 dark:text-gray-400 dark:hover:bg-secondary-400/20 dark:focus:ring-secondary-400"
-                        aria-controls="logo-sidebar">
+                    <button
+                        @click="handleToggle"
+                        type="button"
+                        class="hover:bg-secondary-100/60 focus:ring-secondary-200 dark:hover:bg-secondary-400/20 dark:focus:ring-secondary-400 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 transition focus:ring-2 focus:outline-none dark:text-gray-400"
+                        aria-controls="logo-sidebar"
+                    >
                         <span class="sr-only">Open sidebar</span>
-                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path clip-rule="evenodd" fill-rule="evenodd"
-                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
-                            </path>
+                        <svg class="h-6 w-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                clip-rule="evenodd"
+                                fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+                            ></path>
                         </svg>
                     </button>
-                    <div class="flex gap-3 items-center ms-2 md:me-24">
+                    <div class="ms-2 flex items-center gap-3 md:me-24">
                         <Link :href="route('dashboard')">
-                        <img class="w-auto h-6 sm:h-7" src="/favicon.png" alt="logo">
+                            <img class="h-6 w-auto sm:h-7" :src="logoSrc" alt="logo" />
                         </Link>
-                        <Link :href="route('home')"
-                            class="self-center text-lg font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                        <span class="hidden md:inline">JV Graphics Design Services</span>
-                        <span class="md:hidden">JV Graphics</span>
+                        <Link :href="route('home')" class="self-center text-lg font-semibold whitespace-nowrap sm:text-2xl dark:text-white">
+                            <span class="hidden md:inline">
+                                {{ page.props.settings.app_name }}
+                            </span>
+                            <span class="md:hidden">
+                                {{ page.props.settings.app_name_short }}
+                            </span>
                         </Link>
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <div class="flex items-center ms-3">
+                    <div class="ms-3 flex items-center">
                         <UserProfile @openCart="() => emit('openCart')" @openWishlist="() => emit('openWishlist')" />
                     </div>
                 </div>
             </div>
         </div>
     </nav>
-
-
 </template>
