@@ -41,7 +41,7 @@ class ProductOptionController extends Controller
                 $validated['size']) : null;
 
         // Store product
-        $product = ProductOption::create([
+        $option = ProductOption::create([
             'name' => $validated['name'],
             'product_id' => $product->id,
             'price' => $validated['price'],
@@ -57,14 +57,14 @@ class ProductOptionController extends Controller
                 if ($image) {
                     $path = $image->store('product_images/variants', 'public');
 
-                    $product->images()->create([
+                    $option->images()->create([
                         'image_path' => $path,
                     ]);
                 }
             }
         }
 
-        return redirect()->route('product.show', $product)->with('status', [
+        return redirect()->route('product.option.show', [$product, $option])->with('status', [
             'type' => 'success',
             'message' => 'Product variant named ' .  $validated['name'] . ' created successfully.',
         ]);
@@ -209,7 +209,7 @@ class ProductOptionController extends Controller
 
         return redirect()->route('product.show', $product)->with('status', [
             'type' => 'success',
-            'message' => 'Product variant named '. $option->name .'deleted successfully.'
+            'message' => 'Product variant named ' . $option->name . 'deleted successfully.'
         ]);
     }
 }

@@ -52,7 +52,6 @@ function reset() {
 
     <form class="space-y-3 md:space-y-8" @submit.prevent="submit">
         <PageTitleHeader title="Product Editor" />
-        <Status :status="$page.props.status" @close="$page.props.status = null" />
         <ContainerPrimary title="Product Setting">
             <div class="grid gap-6 pt-2 md:grid-cols-2">
                 <div class="space-y-3">
