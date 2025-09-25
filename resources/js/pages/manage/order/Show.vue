@@ -152,9 +152,16 @@ const image_url = computed(() => {
                                     <div class="flex-1">
                                         <div class="flex justify-between">
                                             <div>
-                                                <h3 class="font-medium text-gray-900 transition-colors hover:text-blue-600 dark:text-white">
+                                                <Link
+                                                    :href="
+                                                        order.option
+                                                            ? route('product.option.show', { product: order.product.id, option: order.option.id })
+                                                            : route('product.show', { product: order.product.id })
+                                                    "
+                                                    class="text-2xl font-medium text-gray-900 transition-colors hover:text-blue-600 dark:text-white"
+                                                >
                                                     {{ (order.option || order.product)?.name }}
-                                                </h3>
+                                                </Link>
                                                 <p v-if="(order.option || order.product)?.size" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                                     <i class="fas fa-tag mr-1 text-xs"></i>
                                                     {{ (order.option || order.product)?.size }}

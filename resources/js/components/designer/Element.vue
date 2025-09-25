@@ -168,7 +168,6 @@ const styleClass = {
                         ]"
                     />
                 </div>
-
                 <button @click="deleteElement" :class="styleClass.deleteButton">Delete</button>
             </div>
         </div>
@@ -189,7 +188,6 @@ const styleClass = {
                     </label>
                     <input type="number" min="1" v-model="image.height" :id="`image-height-${element.from}`" :class="styleClass.input.base" />
                 </div>
-
                 <div>
                     <label :for="`image-scale-${element.from}`" :class="styleClass.sizeLabel">
                         <span>Size</span>

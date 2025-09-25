@@ -1,40 +1,46 @@
 <script setup>
-    import { computed, ref } from 'vue';
-    import MobileMenuButton from './MobileMenuButton.vue';
-    import { usePage } from '@inertiajs/vue3';
-    import ButtonLink from './ButtonLink.vue';
-    import NavLink from './NavLink.vue';
-    import ThemeToggler from './ThemeToggler.vue';
+import { computed, ref } from 'vue';
+import MobileMenuButton from './MobileMenuButton.vue';
+import { usePage } from '@inertiajs/vue3';
+import ButtonLink from './ButtonLink.vue';
+import NavLink from './NavLink.vue';
+import ThemeToggler from './ThemeToggler.vue';
+import axios from 'axios';
 
-    const isNavigationOpen = ref(false);
-    const toggleNavigation = () => {
-        isNavigationOpen.value = !isNavigationOpen.value;
-    };
+const isNavigationOpen = ref(false);
+const toggleNavigation = () => {
+    isNavigationOpen.value = !isNavigationOpen.value;
+};
 
-    const component = computed(() => usePage().component);
+const component = computed(() => usePage().component);
 
-    const user = computed(() => usePage().props.auth.user);
+const user = computed(() => usePage().props.auth.user);
+
+const logoSrc = ref('');
+
+axios.get(route('page.settings', { what: 'app_logo' })).then((res) => (logoSrc.value = res.data));
 </script>
 
 <template>
-    <nav class="relative bg-white shadow dark:bg-gray-800 z-50">
-        <div class="container px-6 py-3 mx-auto md:flex">
+    <nav class="relative z-50 bg-white shadow dark:bg-gray-800">
+        <div class="container mx-auto px-6 py-3 md:flex">
             <div class="flex items-center justify-between pr-6">
                 <Link :href="route('home')">
-                <img class="w-auto h-6 sm:h-7" src="/favicon.png" alt="logo">
-
+                    <img class="h-6 w-auto sm:h-7" :src="logoSrc" alt="logo" />
                 </Link>
                 <MobileMenuButton :isNavigationOpen="isNavigationOpen" @toggleNavigation="toggleNavigation" />
             </div>
 
             <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
-            <div v-cloak :class="[isNavigationOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
-                class="absolute  inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 md:mt-0 md:p-0 md:top-0 md:relative md:opacity-100 md:translate-x-0 md:flex md:items-center md:justify-between border-b border-b-gray-300 dark:border-b-gray-500 md:border-0">
-                <div class="flex flex-col px-2 -mx-4 md:flex-row md:mx-00 md:py-0 gap-y-0.5 ">
+            <div
+                v-cloak
+                :class="[isNavigationOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0']"
+                class="absolute inset-x-0 z-20 w-full border-b border-b-gray-300 bg-white px-6 py-4 transition-all duration-300 ease-in-out md:relative md:top-0 md:mt-0 md:flex md:translate-x-0 md:items-center md:justify-between md:border-0 md:p-0 md:opacity-100 dark:border-b-gray-500 dark:bg-gray-800"
+            >
+                <div class="md:mx-00 -mx-4 flex flex-col gap-y-0.5 px-2 md:flex-row md:py-0">
                     <NavLink routeName="home" label="Home" :active="component === 'Welcome'" />
                     <NavLink routeName="register" v-if="user" label="Dashboard" :active="component === 'Dashboard'" />
-                    <NavLink routeName="product.index" v-if="user ? user.is_admin : false" label="Products"
-                        :active="component === 'product/Index'" />
+                    <NavLink routeName="product.index" v-if="user ? user.is_admin : false" label="Products" :active="component === 'product/Index'" />
                     <NavLink routeName="shop.index" label="Shop" :active="component === 'shop/Index'" />
                     <NavLink routeName="about" label="About" :active="component === 'About'" />
 
@@ -43,18 +49,15 @@
                     <!-- <div class="pl-4 flex items-center md:hidden">
                         <ThemeToggler />
                     </div> -->
-
                 </div>
 
                 <!------------ GUEST --------------------------------------------------------------------->
-                <div v-if="!user" class="flex items-center flex-col md:flex-row gap-2 mt-2">
-                    <ButtonLink as="Link" :href="route('login')" :active="component === 'auth/Login'">
-                        Login</ButtonLink>
-                    <ButtonLink as="Link" :href="route('register')" :active="component === 'auth/Register'">
-                        Register</ButtonLink>
+                <div v-if="!user" class="mt-2 flex flex-col items-center gap-2 md:flex-row">
+                    <ButtonLink as="Link" :href="route('login')" :active="component === 'auth/Login'"> Login</ButtonLink>
+                    <ButtonLink as="Link" :href="route('register')" :active="component === 'auth/Register'"> Register</ButtonLink>
                 </div>
                 <!------------ AUTH USER non ADMIN --------------------------------------------------------------------->
-                <div v-else class="flex items-center flex-col md:flex-row gap-2 mt-2">
+                <div v-else class="mt-2 flex flex-col items-center gap-2 md:flex-row">
                     <ButtonLink v-if="!user.is_admin" :active="component === 'auth/Login'">
                         <i class="fa-solid fa-cart-shopping" />
                         Cart

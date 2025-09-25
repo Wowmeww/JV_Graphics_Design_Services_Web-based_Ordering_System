@@ -222,12 +222,17 @@ function addText(text) {
 }
 function addImage(imageFile) {
     const to = activeView.value;
+    const canvas = document.querySelector(`#${to}-canvas`);
     elements[to].imagePreview = URL.createObjectURL(imageFile);
     elements[to].image = {
         from: activeView.value,
         file: imageFile,
         rotate: 0,
+        width: canvas.clientWidth - canvas.clientWidth * 0.6,
+        height: canvas.clientWidth - canvas.clientWidth * 0.6,
     };
+
+    console.dir(elements[to].imagePreview);
 }
 
 function selectElement(type, value, event) {
@@ -236,8 +241,8 @@ function selectElement(type, value, event) {
     if (type === 'text') {
         selectedElement.text = value;
     } else {
-        elements[from].image.width = event.currentTarget.clientWidth;
-        elements[from].image.height = event.currentTarget.clientHeight;
+        // elements[from].image.width = event.currentTarget.clientWidth;
+        // elements[from].image.height = event.currentTarget.clientHeight;
 
         selectedElement.text = null;
         selectedElement.image = elements[from].image;
@@ -301,7 +306,6 @@ const styleClasses = {
                         </button>
                     </div>
                 </div>
-
                 <!-- Canvas -->
                 <div :class="styleClasses.canvasContainer">
                     <div v-show="activeView === 'front'" :class="styleClasses.canvasImage" id="front-preview">
@@ -324,7 +328,6 @@ const styleClasses = {
                                 @mousedown="(e) => initializeDragAndDrop(e)"
                                 >{{ text.text }}</span
                             >
-
                             <img
                                 v-if="elements.front.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
@@ -391,7 +394,6 @@ const styleClasses = {
                     @update:element="({ type, value }) => updateElement(type, value)"
                     @delete:element="({ type, value }) => deleteElement(type, value)"
                 />
-
                 <Tools v-show="activeView === 'front'" @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))" />
                 <Tools v-show="activeView === 'back'" @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))" />
 

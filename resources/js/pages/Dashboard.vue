@@ -119,6 +119,7 @@ const unseenMessages = computed(() => {
                 </div>
             </ContainerPrimary>
         </div>
+        
         <div
             :class="styleClass.fragmentsContainer"
             v-if="

@@ -91,11 +91,15 @@ const styleClass = {
                 <span class="ms-3 flex-1 whitespace-nowrap">Shop</span>
             </AuthAsideLink>
 
+            <AuthAsideLink :active="page.component === 'auth/announcement/Announcements'" :routeName="route('announcement.index')">
+                <i class="fa-solid fa-bullhorn text-lg" :class="styleClass.icon"></i>
+                <span class="ms-3 flex-1 whitespace-nowrap">Announcements</span>
+            </AuthAsideLink>
+
             <AuthAsideLink :active="page.component === 'auth/transaction/Transactions'" :routeName="route('transactions')">
                 <i class="fa-solid fa-receipt text-lg" :class="styleClass.icon"></i>
                 <span class="ms-3 flex-1 whitespace-nowrap">Transaction</span>
             </AuthAsideLink>
-
             <!-- <li>
                 <a href="#"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">

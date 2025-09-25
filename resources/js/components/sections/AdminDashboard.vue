@@ -208,12 +208,11 @@ const styleClass = {
     },
 };
 
-const recentOrders = computed(() => props.shop.orders.filter((_, i) => i < 10));
-
+const processingOrders = computed(() => props.shop.orders.filter((order) => order.status === 'processing'));
+const pendingOrders = computed(() => props.shop.orders.filter((order) => order.status === 'pending'));
 const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating - a.rating));
 </script>
 <template>
-
     <div class="mx-auto max-w-7xl space-y-6 px-4 pt-8 pb-7">
         <PageTitleHeader title="Dashboard" />
 
@@ -303,7 +302,7 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
                 </div>
 
                 <!-- Announcements -->
-                <Link
+                <!-- <Link
                     :href="route('announcement.index')"
                     as="button"
                     class="flex items-center gap-4 rounded-lg border-l-4 border-yellow-500 bg-white p-4 shadow-xs transition-all duration-200 hover:shadow-sm dark:bg-gray-800"
@@ -322,10 +321,10 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
                         <h3 class="text-sm font-medium break-words break-all text-gray-500 dark:text-gray-400">Announcements</h3>
                         <p class="text-xl font-semibold text-gray-900 dark:text-white">{{ shop.announcements.length }}</p>
                     </div>
-                </Link>
+                </Link> -->
 
                 <!-- Messages -->
-                <Link
+                <!-- <Link
                     :href="route('message.index')"
                     as="button"
                     class="flex items-center gap-4 rounded-lg border-l-4 border-purple-500 bg-white p-4 shadow-xs transition-all duration-200 hover:shadow-sm dark:bg-gray-800"
@@ -344,7 +343,7 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
                         <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Messages</h3>
                         <p class="text-xl font-semibold text-gray-900 dark:text-white">{{ shop.messages }}</p>
                     </div>
-                </Link>
+                </Link> -->
             </div>
         </ContainerPrimary>
 
@@ -363,7 +362,7 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
             </div>
 
             <!-- Daily Site Visitors -->
-            <div class="rounded-xl bg-white p-5 shadow md:col-span-5 dark:bg-gray-800">
+            <!-- <div class="rounded-xl bg-white p-5 shadow md:col-span-5 dark:bg-gray-800">
                 <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Daily Site Visitors</h3>
                 <VueApexCharts
                     :options="charts.visits.options"
@@ -372,11 +371,25 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
                     :width="charts.visits.width"
                     :series="charts.visits.series"
                 />
+            </div> -->
+            <!-- Pending Orders -->
+            <div class="rounded-xl bg-white p-5 shadow md:col-span-5 dark:bg-gray-800">
+                <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Pending Orders</h3>
+                <div class="max-h-96 space-y-4 overflow-y-auto pr-2">
+                    <DashboardRecentOrder v-for="order in pendingOrders" :key="`order-${order.id}`" :order="order" />
+                </div>
             </div>
         </div>
 
         <!-- Bottom Section -->
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div class="grid grid-cols-1 gap-y-6 gap-x-3 lg:grid-cols-12">
+            <!-- Recent Orders -->
+            <div class="rounded-xl bg-white p-5 shadow lg:col-span-4 dark:bg-gray-800">
+                <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Processing Orders</h3>
+                <div class="max-h-96 space-y-4 overflow-y-auto pr-2">
+                    <DashboardRecentOrder v-for="order in processingOrders" :key="`order-${order.id}`" :order="order" />
+                </div>
+            </div>
             <!-- Sales by Category -->
             <div class="rounded-xl bg-white p-5 shadow lg:col-span-4 dark:bg-gray-800">
                 <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Sales by Category</h3>
@@ -390,7 +403,7 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
             </div>
 
             <!-- Messages -->
-            <div class="rounded-xl bg-white p-5 shadow lg:col-span-3 dark:bg-gray-800" v-if="topProducts.length">
+            <div class="rounded-xl bg-white p-5 shadow lg:col-span-4 dark:bg-gray-800" v-if="topProducts.length">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Messages</h3>
                 </div>
@@ -398,8 +411,12 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
                     <ContactCard :user="admin" v-for="contact in contacts" :contact="contact" :key="contact.id" />
                 </div>
             </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <!-- Top Products -->
-            <div class="rounded-xl bg-white p-5 shadow lg:col-span-5 dark:bg-gray-800" v-if="topProducts.length">
+            <div class="rounded-xl bg-white p-5 shadow dark:bg-gray-800" v-if="topProducts.length">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Top Products</h3>
                 </div>
@@ -407,22 +424,10 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
                     <TopProduct v-for="product in topProducts" :key="product.id" :product="product" />
                 </div>
             </div>
-        </div>
-
-        <!-- Recent Orders & Announcements -->
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2" v-if="recentOrders.length">
-            <!-- Recent Orders -->
-            <div class="rounded-xl bg-white p-5 shadow dark:bg-gray-800">
-                <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Recent Orders</h3>
-                <div class="max-h-96 space-y-4 overflow-y-auto pr-2">
-                    <DashboardRecentOrder v-for="order in recentOrders" :key="`order-${order.id}`" :order="order" />
-                </div>
-            </div>
-
             <!-- Announcements -->
             <div class="rounded-xl bg-white p-5 shadow dark:bg-gray-800" v-if="shop.announcements.length">
                 <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Announcements</h3>
-                <div class="max-h-96 space-y-4 overflow-y-auto pr-2 py-4">
+                <div class="max-h-96 space-y-4 overflow-y-auto py-4 pr-2">
                     <Announcement v-for="announcement in shop.announcements" :key="`announcement-${announcement.id}`" :announcement="announcement" />
                 </div>
             </div>
