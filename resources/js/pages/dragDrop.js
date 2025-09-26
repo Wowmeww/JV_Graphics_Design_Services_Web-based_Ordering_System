@@ -1,77 +1,81 @@
 function initializeDragAndDrop(event) {
-    // Prevent default to avoid text selection during drag
     event.preventDefault();
 
     const element = event.currentTarget;
+    if (element.getAttribute("draggable") === "false") return;
 
-    // Only proceed if the element is draggable (could also check a data-draggable attribute)
-    if (element.getAttribute('draggable') === 'false') return;
-
-    // Store initial positions and cursor offset
-    const startX = element.offsetLeft;
-    const startY = element.offsetTop;
-    const offsetX = event.clientX - element.getBoundingClientRect().left;
-    const offsetY = event.clientY - element.getBoundingClientRect().top;
-
-    // Ensure element has positioning and higher z-index during drag
-    element.style.cursor = 'grabbing';
-
-    // Boundary constraints (optional)
-    const parentRect = element.parentElement.getBoundingClientRect();
-    const maxX = parentRect.width - element.offsetWidth;
-    const maxY = parentRect.height - element.offsetHeight;
-
-    // Mouse move handler
-    function onMouseMove(e) {
-        // Calculate new position with boundary checks
-        let newX = e.clientX - offsetX - parentRect.left;
-        let newY = e.clientY - offsetY - parentRect.top;
-
-        // // Constrain within parent boundaries
-        // newX = Math.max(0, Math.min(newX, maxX));
-        // newY = Math.max(0, Math.min(newY, maxY));
-
-        // Apply new position with smooth transition
-        element.style.left = `${newX}px`;
-        element.style.top = `${newY}px`;
+    // Ensure element is absolutely positioned
+    if (getComputedStyle(element).position === "static") {
+        element.style.position = "absolute";
     }
 
-    // Mouse up handler
+    const parentRect = element.parentElement.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+
+    const offsetX = event.clientX - elementRect.left;
+    const offsetY = event.clientY - elementRect.top;
+
+    // Initialize with current position so it doesn’t “jump”
+    let newX = element.offsetLeft;
+    let newY = element.offsetTop;
+    let isDragging = true;
+
+    element.style.cursor = "grabbing";
+    element.style.transition = "none"; // disable animation while dragging
+
+    // Smooth updates via RAF
+    function updatePosition() {
+        if (!isDragging) return;
+        element.style.left = `${newX}px`;
+        element.style.top = `${newY}px`;
+        requestAnimationFrame(updatePosition);
+    }
+
+    function onMouseMove(e) {
+        const bounds = element.parentElement.getBoundingClientRect();
+
+        newX = e.clientX - offsetX - bounds.left;
+        newY = e.clientY - offsetY - bounds.top;
+
+        // Optional boundaries
+        // const width = element.offsetWidth;
+        // const height = element.offsetHeight;
+        // newX = Math.max(0, Math.min(newX, bounds.width - width));
+        // newY = Math.max(0, Math.min(newY, bounds.height - height));
+    }
+
     function onMouseUp() {
-        // Restore cursor and remove temp styles
-        element.style.cursor = '';
-        element.style.transition = 'all 0.18s ease';
+        isDragging = false;
+        element.style.cursor = "";
+        element.style.transition = "all 0.18s ease"; // enable smooth release
 
-        // Snap to grid (optional)
-        // const snappedX = Math.round(parseInt(element.style.left) / 10) * 10;
-        // const snappedY = Math.round(parseInt(element.style.top) / 10) * 10;
-        // element.style.left = `${snappedX}px`;
-        // element.style.top = `${snappedY}px`;
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
 
-        // Clean up event listeners
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-
-        // Dispatch custom event
         element.dispatchEvent(
-            new CustomEvent('drag-end', {
-                detail: {
-                    x: parseInt(element.style.left),
-                    y: parseInt(element.style.top),
+            new CustomEvent("drag-end", {
+                detail: { 
+                    x: parseInt(element.style.left, 10) || 0,
+                    y: parseInt(element.style.top, 10) || 0,
                 },
-            }),
+            })
         );
     }
 
-    // Add event listeners with passive: false for better control
-    document.addEventListener('mousemove', onMouseMove, { passive: false });
-    document.addEventListener('mouseup', onMouseUp, { once: true });
+    // Listeners
+    document.addEventListener("mousemove", onMouseMove, { passive: false });
+    document.addEventListener("mouseup", onMouseUp, { once: true });
 
-    // Dispatch custom drag start event
+    // Start loop
+    requestAnimationFrame(updatePosition);
+
     element.dispatchEvent(
-        new CustomEvent('drag-start', {
-            detail: { startX, startY },
-        }),
+        new CustomEvent("drag-start", {
+            detail: { 
+                x: element.offsetLeft,
+                y: element.offsetTop,
+            },
+        })
     );
 }
 

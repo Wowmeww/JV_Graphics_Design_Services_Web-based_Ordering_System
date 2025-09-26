@@ -37,7 +37,7 @@ onMounted(() => {
 });
 
 watch(
-    () => image.value.scale,
+    () => image.value?.scale,
     (newScale) => {
         if (originalImage.width && originalImage.height) {
             image.value.width = Math.round(originalImage.width * newScale) / 100;
@@ -84,9 +84,6 @@ watch(
 );
 
 function deleteElement() {
-    if (props.element.type === 'image') {
-        image.value = null;
-    }
     emit('delete:element', { value: text.value, type: props.element.type });
 }
 
@@ -173,7 +170,7 @@ const styleClass = {
         </div>
 
         <!-- Image Element Form -->
-        <div v-if="element.type === 'image'" :class="styleClass.container">
+        <div v-if="image" :class="styleClass.container">
             <h1 :class="styleClass.heading">Edit Element</h1>
             <div :class="styleClass.formGroup">
                 <div>

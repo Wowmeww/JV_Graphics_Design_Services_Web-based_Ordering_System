@@ -6,6 +6,7 @@ import Tools from '@/components/designer/Tools.vue';
 import initializeDragAndDrop from './dragDrop.js';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import html2canvas from 'html2canvas';
+import { transform } from 'lodash';
 
 const props = defineProps({
     product: Object,
@@ -223,16 +224,13 @@ function addText(text) {
 function addImage(imageFile) {
     const to = activeView.value;
     const canvas = document.querySelector(`#${to}-canvas`);
+    let imageElement = null;
     elements[to].imagePreview = URL.createObjectURL(imageFile);
     elements[to].image = {
         from: activeView.value,
         file: imageFile,
         rotate: 0,
-        width: canvas.clientWidth - canvas.clientWidth * 0.6,
-        height: canvas.clientWidth - canvas.clientWidth * 0.6,
     };
-
-    console.dir(elements[to].imagePreview);
 }
 
 function selectElement(type, value, event) {
@@ -241,8 +239,8 @@ function selectElement(type, value, event) {
     if (type === 'text') {
         selectedElement.text = value;
     } else {
-        // elements[from].image.width = event.currentTarget.clientWidth;
-        // elements[from].image.height = event.currentTarget.clientHeight;
+        elements[from].image.width = event.currentTarget.clientWidth;
+        elements[from].image.height = event.currentTarget.clientHeight;
 
         selectedElement.text = null;
         selectedElement.image = elements[from].image;
@@ -270,6 +268,24 @@ const styleClasses = {
     textInput:
         'mt-2 block w-full rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 placeholder-gray-400/70 focus:border-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:placeholder-gray-500 dark:focus:border-blue-300',
 };
+
+function initialSizer(size = 0, dimension, from) {
+    let temp = 0;
+    dimension = dimension.toLowerCase();
+    const canvas = document.querySelector(`#${from}-canvas`);
+    console.dir(size);
+    switch (`#${from}-canvas`) {
+        case 'w' || 'width':
+            temp = size;
+            break;
+
+        case 'h' || 'height':
+            temp = size;
+            break;
+    }
+
+    return 600 + 'px';
+}
 </script>
 
 <template>
@@ -329,6 +345,7 @@ const styleClasses = {
                                 >{{ text.text }}</span
                             >
                             <img
+                                id="front-image"
                                 v-if="elements.front.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
                                 @click="(e) => selectElement('image', null, e)"
@@ -336,13 +353,14 @@ const styleClasses = {
                                 alt="front-view-uploaded-image"
                                 :style="{
                                     position: 'absolute',
-                                    width: elements.front.image.width + 'px', // Customize width as needed
-                                    height: elements.front.image.height + 'px', // Customize height as needed
+                                    width: elements.front?.image?.width ? elements.front?.image?.width + 'px' : '35%',
+                                    height: elements.front?.image?.height ? elements.front?.image?.height + 'px' : 'auto',
                                     zIndex: '0',
                                     transform: `rotate(${elements.front.image.rotate}deg)`,
                                 }"
                                 :class="styleClasses.uploadedImage"
                             />
+                            {{}}
                         </div>
                     </div>
                     <div v-show="activeView === 'back'" :class="styleClasses.canvasImage" id="back-preview">
@@ -365,8 +383,8 @@ const styleClasses = {
                                 @mousedown="(e) => initializeDragAndDrop(e)"
                                 >{{ text.text }}</span
                             >
-
                             <img
+                                id="back-image"
                                 v-if="elements.back.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
                                 @click="(e) => selectElement('image', null, e)"
@@ -374,8 +392,8 @@ const styleClasses = {
                                 alt="back-view-uploaded-image"
                                 :style="{
                                     position: 'absolute',
-                                    width: elements.back.image.width + 'px', // Customize width as needed
-                                    height: elements.back.image.height + 'px', // Customize height as needed
+                                    width: elements.back?.image?.width ? elements.back?.image?.width + 'px' : '35%',
+                                    height: elements.back?.image?.height ? elements.back?.image?.height + 'px' : 'auto',
                                     zIndex: '0',
                                     transform: `rotate(${elements.back.image.rotate}deg)`,
                                 }"

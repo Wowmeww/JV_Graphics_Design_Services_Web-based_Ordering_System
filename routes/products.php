@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductOptionController;
 
-Route::middleware(['auth', 'verified', 'can:create,App\Models\Product', 'password.confirm'])->group(function () {
+Route::middleware(['auth', 'verified', 'can:create,App\Models\Product'])->group(function () {
 
     Route::get('/customize/create', [CustomizeProductController::class, 'create'])->name('customize.create');
     Route::get('/customize/{product}/edit', [CustomizeProductController::class, 'edit'])->name('customize.edit');
