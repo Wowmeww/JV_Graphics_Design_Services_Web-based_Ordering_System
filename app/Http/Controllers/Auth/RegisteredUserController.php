@@ -47,6 +47,9 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
-        return redirect()->intended('dashboard'); // or intended page
+        if ($request->user()->is_admin) {
+            return redirect()->intended('dashboard'); // or intended page
+        }
+        return redirect()->intended('shop'); // or intended page
     }
 }

@@ -10,29 +10,40 @@ const emit = defineEmits(['update:element', 'delete:element']);
 
 const text = ref({ ...props.element.text });
 const image = ref({ ...props.element.image, scale: 100 });
+const design = ref({ ...props.element.design, scale: 100 });
 
 const originalImage = reactive({
     width: 0,
     height: 0,
 });
+const originalDesign = reactive({
+    width: 0,
+    height: 0,
+});
 
 onMounted(() => {
-    if (props.element.type === 'text') {
-        text.value = { ...props.element.text };
-    }
+    switch (props.element.type) {
+        case 'text':
+            text.value = { ...props.element.text };
+            break;
 
-    if (props.element.type === 'image') {
-        image.value = { ...props.element.image, scale: 100 };
+        case 'image':
+            image.value = { ...props.element.image, scale: 100 };
 
-        // Set original only if not set yet
-        if (!originalImage.width && !originalImage.height) {
-            originalImage.width = props.element.image.width;
-            originalImage.height = props.element.image.height;
-        }
+            // Set original only if not set yet
+            if (!originalImage.width && !originalImage.height) {
+                originalImage.width = props.element.image.width;
+                originalImage.height = props.element.image.height;
+            }
 
-        // Initialize current dimensions
-        image.value.width = originalImage.width;
-        image.value.height = originalImage.height;
+            // Initialize current dimensions
+            image.value.width = originalImage.width;
+            image.value.height = originalImage.height;
+            break;
+
+        case 'design':
+           
+            break;
     }
 });
 
@@ -42,6 +53,15 @@ watch(
         if (originalImage.width && originalImage.height) {
             image.value.width = Math.round(originalImage.width * newScale) / 100;
             image.value.height = Math.round(originalImage.height * newScale) / 100;
+        }
+    },
+);
+watch(
+    () => design.value?.scale,
+    (newScale) => {
+        if (originalDesign.width && originalDesign.height) {
+            design.value.width = Math.round(originalDesign.width * newScale) / 100;
+            design.value.height = Math.round(originalDesign.height * newScale) / 100;
         }
     },
 );
@@ -61,6 +81,9 @@ watch(
                 originalImage.width = element.image.width;
                 originalImage.height = element.image.height;
             }
+        }
+        if (element.type === 'design') {
+            design.value = { ...element.design, scale: design.value.scale };
         }
     },
     { deep: true },
@@ -82,9 +105,19 @@ watch(
     },
     { deep: true },
 );
+watch(
+    () => design.value,
+    (d) => {
+        emit('update:element', { value: d, type: 'design' });
+    },
+    { deep: true },
+);
 
 function deleteElement() {
-    emit('delete:element', { value: text.value, type: props.element.type });
+    emit('delete:element', {
+        type: props.element.type,
+        value: { ...props.element },
+    });
 }
 
 const styleClass = {
@@ -170,7 +203,7 @@ const styleClass = {
         </div>
 
         <!-- Image Element Form -->
-        <div v-if="image" :class="styleClass.container">
+        <div v-if="element.type === 'image'" :class="styleClass.container">
             <h1 :class="styleClass.heading">Edit Element</h1>
             <div :class="styleClass.formGroup">
                 <div>
@@ -223,6 +256,68 @@ const styleClass = {
                         max="360"
                         v-model="image.rotate"
                         :id="`image-rotate-${element.from}`"
+                        :class="[
+                            'h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200',
+                            'focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700',
+                            'focus:ring-opacity-50 transition-all duration-200',
+                            '[&::-webkit-slider-thumb]:appearance-none',
+                            '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4',
+                            '[&::-webkit-slider-thumb]:rounded-full',
+                            '[&::-webkit-slider-thumb]:bg-blue-600',
+                            '[&::-webkit-slider-thumb]:dark:bg-blue-500',
+                            '[&::-webkit-slider-thumb]:hover:scale-125',
+                            '[&::-webkit-slider-thumb]:transition-transform',
+                            '[&::-webkit-slider-thumb]:duration-100',
+                        ]"
+                    />
+                </div>
+
+                <button @click="deleteElement" :class="styleClass.deleteButton">Delete</button>
+            </div>
+        </div>
+
+        <!-- Design Element Form -->
+        <div v-if="element.type === 'design'" :class="styleClass.container">
+            <h1 :class="styleClass.heading">Edit Element</h1>
+            <div :class="styleClass.formGroup">
+                <div>
+                    <label :for="`design-scale-${element.from}`" :class="styleClass.sizeLabel">
+                        <span>Size</span>
+                        <span>{{ design.scale }}</span>
+                    </label>
+                    <input
+                        type="range"
+                        min="1"
+                        max="200"
+                        v-model="design.scale"
+                        :id="`design-scale-${element.from}`"
+                        :class="[
+                            'h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200',
+                            'focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700',
+                            'focus:ring-opacity-50 transition-all duration-200',
+                            '[&::-webkit-slider-thumb]:appearance-none',
+                            '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4',
+                            '[&::-webkit-slider-thumb]:rounded-full',
+                            '[&::-webkit-slider-thumb]:bg-blue-600',
+                            '[&::-webkit-slider-thumb]:dark:bg-blue-500',
+                            '[&::-webkit-slider-thumb]:hover:scale-125',
+                            '[&::-webkit-slider-thumb]:transition-transform',
+                            '[&::-webkit-slider-thumb]:duration-100',
+                        ]"
+                    />
+                </div>
+
+                <div>
+                    <label :for="`design-rotate-${element.from}`" :class="styleClass.sizeLabel">
+                        <span>Angle</span>
+                        <span>{{ design.rotate }}</span>
+                    </label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="360"
+                        v-model="design.rotate"
+                        :id="`design-rotate-${element.from}`"
                         :class="[
                             'h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200',
                             'focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700',

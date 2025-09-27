@@ -157,7 +157,8 @@ class ProductController extends Controller
             'size' => ['nullable', 'string'],
             'unit' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
+            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:1024'],
+            'design' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:1024']
         ]);
 
         $size = $validated['size'] ?
@@ -202,6 +203,14 @@ class ProductController extends Controller
                             ]);
                     }
                 }
+            }
+        }
+
+        if ($request->hasFile('design')) {
+            $path = $validated['design']->store('product_images', 'public');
+
+            if ($path) {
+                $product->designs()->create(['image' => $path]);
             }
         }
 

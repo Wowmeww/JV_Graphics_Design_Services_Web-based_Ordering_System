@@ -75,7 +75,7 @@ function clearRole() {
 }
 
 const styleClass = computed(() => ({
-    table: 'min-w-full divide-y divide-gray-200 dark:divide-gray-700',
+    table: 'min-w-full divide-y divide-gray-200 dark:divide-gray-700 border rounded overflow-hidden border-gray-200 md:rounded-lg dark:border-gray-700',
     tableHead: 'bg-gray-50 dark:bg-gray-800',
     th: 'py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400',
     td: 'px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap capitalize',
@@ -162,9 +162,9 @@ function handleSort(sortOption) {
             </div>
             <section class="container mx-auto mt-4" v-if="tempUsers.length">
                 <div class="flex flex-col">
-                    <div class="overflow-x-auto">
+                    <div class="">
                         <div class="w-full py-2">
-                            <div class="overflow-hidden border border-gray-200 md:rounded-lg dark:border-gray-700">
+                            <div class="w-full">
                                 <table :class="styleClass.table">
                                     <thead :class="styleClass.tableHead">
                                         <tr>

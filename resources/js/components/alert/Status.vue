@@ -53,7 +53,7 @@
 </script>
 
 <template>
-    <div @click="close" class="fixed top-[95vh] left-[95%] -translate-y-full -translate-x-full z-50 w-sm">
+    <div @click="close" class="fixed top-[95vh] left-[95%] -translate-y-full -translate-x-full z-50 w-3xs md:w-sm">
         <Transition name="fade">
             <div
                 class="flex relative w-full overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800 ">

@@ -5,6 +5,7 @@ import Dropdown from '@/components/ui/input/Dropdown.vue';
 import AddImages from '@/components/designer/AddImages.vue';
 import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary.vue';
 import { onMounted, ref, watch } from 'vue';
+import ExampleDesigns from '@/components/designer/ExampleDesigns.vue';
 const page = usePage();
 
 const props = defineProps({
@@ -20,6 +21,7 @@ const form = useForm({
     category: props.product.category.name,
     unit: props.product.unit,
     images: props.product.images,
+    design: null,
     _method: 'PATCH',
 });
 const is_unchanged = ref(true);
@@ -65,6 +67,13 @@ watch(
     },
 );
 
+watch(
+    () => images.value,
+    (imgs) => {
+        is_unchanged.value = !(imgs[0] instanceof File || imgs[0] === 'delete' || imgs[1] instanceof File || imgs[1] === 'delete');
+    },
+);
+
 function goBack() {
     let url = page.props.urlPrevious;
     router.get(url);
@@ -104,7 +113,6 @@ function goBack() {
                             type="textarea"
                             variant="secondary"
                         />
-
                         <TextInputPrimary
                             v-model="form.price"
                             :error="form.errors.price"
@@ -113,8 +121,7 @@ function goBack() {
                             type="number"
                             variant="secondary"
                         />
-                    </div>
-                    <div class="space-y-3">
+
                         <TextInputPrimary
                             v-model="form.stock"
                             :error="form.errors.stock"
@@ -147,8 +154,12 @@ function goBack() {
                                 />
                             </div>
                         </div>
-
+                    </div>
+                    <div class="space-y-3">
                         <AddImages :images="images" @changed="handleImagesChange" :default-images="form.images" allow-delete />
+                        <ExampleDesigns :designs="product.designs" @change:new="({ file }) => (form.design = file)" />
+
+                        <small class="form-control-error" v-if="form.errors.design">{{ form.errors.design }}</small>
                     </div>
                 </div>
 
@@ -159,7 +170,7 @@ function goBack() {
                         class="md:max-w-fit"
                         label="Update product"
                         type="submit"
-                        :disable="false"
+                        :disable="is_unchanged"
                         :with-spinner="form.processing"
                         variant="secondary"
                     />

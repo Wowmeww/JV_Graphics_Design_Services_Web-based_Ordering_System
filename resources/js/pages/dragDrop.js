@@ -12,10 +12,12 @@ function initializeDragAndDrop(event) {
     const parentRect = element.parentElement.getBoundingClientRect();
     const elementRect = element.getBoundingClientRect();
 
-    const offsetX = event.clientX - elementRect.left;
-    const offsetY = event.clientY - elementRect.top;
+    const startX = ("touches" in event ? event.touches[0].clientX : event.clientX);
+    const startY = ("touches" in event ? event.touches[0].clientY : event.clientY);
 
-    // Initialize with current position so it doesn’t “jump”
+    const offsetX = startX - elementRect.left;
+    const offsetY = startY - elementRect.top;
+
     let newX = element.offsetLeft;
     let newY = element.offsetTop;
     let isDragging = true;
@@ -31,11 +33,18 @@ function initializeDragAndDrop(event) {
         requestAnimationFrame(updatePosition);
     }
 
-    function onMouseMove(e) {
+    function moveHandler(e) {
+        const clientX = e.type.startsWith("touch")
+            ? e.touches[0].clientX
+            : e.clientX;
+        const clientY = e.type.startsWith("touch")
+            ? e.touches[0].clientY
+            : e.clientY;
+
         const bounds = element.parentElement.getBoundingClientRect();
 
-        newX = e.clientX - offsetX - bounds.left;
-        newY = e.clientY - offsetY - bounds.top;
+        newX = clientX - offsetX - bounds.left;
+        newY = clientY - offsetY - bounds.top;
 
         // Optional boundaries
         // const width = element.offsetWidth;
@@ -44,17 +53,19 @@ function initializeDragAndDrop(event) {
         // newY = Math.max(0, Math.min(newY, bounds.height - height));
     }
 
-    function onMouseUp() {
+    function endHandler() {
         isDragging = false;
         element.style.cursor = "";
-        element.style.transition = "all 0.18s ease"; // enable smooth release
+        element.style.transition = "all 0.18s ease";
 
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
+        document.removeEventListener("mousemove", moveHandler);
+        document.removeEventListener("mouseup", endHandler);
+        document.removeEventListener("touchmove", moveHandler);
+        document.removeEventListener("touchend", endHandler);
 
         element.dispatchEvent(
             new CustomEvent("drag-end", {
-                detail: { 
+                detail: {
                     x: parseInt(element.style.left, 10) || 0,
                     y: parseInt(element.style.top, 10) || 0,
                 },
@@ -62,16 +73,17 @@ function initializeDragAndDrop(event) {
         );
     }
 
-    // Listeners
-    document.addEventListener("mousemove", onMouseMove, { passive: false });
-    document.addEventListener("mouseup", onMouseUp, { once: true });
+    // Listeners for both mouse + touch
+    document.addEventListener("mousemove", moveHandler, { passive: false });
+    document.addEventListener("mouseup", endHandler, { once: true });
+    document.addEventListener("touchmove", moveHandler, { passive: false });
+    document.addEventListener("touchend", endHandler, { once: true });
 
-    // Start loop
     requestAnimationFrame(updatePosition);
 
     element.dispatchEvent(
         new CustomEvent("drag-start", {
-            detail: { 
+            detail: {
                 x: element.offsetLeft,
                 y: element.offsetTop,
             },

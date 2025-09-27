@@ -8,6 +8,8 @@ const props = defineProps({
     searches: Object,
 });
 
+const priorityFee = ref(0);
+
 const page = usePage();
 
 function formatDate(date) {
@@ -51,6 +53,7 @@ function image_src(src) {
 }
 
 function formatCurrency(amount) {
+    amount = Number(amount);
     return amount.toLocaleString('en-PH', {
         style: 'currency',
         currency: 'PHP',
@@ -58,7 +61,7 @@ function formatCurrency(amount) {
 }
 
 function handleUpdateStatus(data) {
-    router.patch(route('manage.orders.update', { order: props.order.id, ...data }));
+    router.patch(route('manage.orders.update', { order: props.order.id, ...data, priorityFee: priorityFee.value }));
 }
 
 const styleClass = {
@@ -167,9 +170,16 @@ const image_url = computed(() => {
                                                     {{ (order.option || order.product)?.size }}
                                                 </p>
                                             </div>
-                                            <p class="font-medium text-gray-900 dark:text-white">
-                                                {{ formatCurrency((order.option || order.product)?.price) }}
-                                            </p>
+                                            <div class="flex flex-col items-end font-medium text-gray-900 dark:text-white">
+                                                <p>
+                                                    {{ formatCurrency((order.option || order.product)?.price) }}
+                                                </p>
+
+                                                <span class="flex items-center gap-2">
+                                                    <i class="fa fa-xmark text-xs"></i>
+                                                    {{ order.quantity }}
+                                                </span>
+                                            </div>
                                         </div>
                                         <div class="mt-3 flex justify-between text-sm">
                                             <span class="text-gray-500 dark:text-gray-400">
@@ -189,14 +199,14 @@ const image_url = computed(() => {
                         <div class="border-t border-gray-100 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-900">
                             <div class="flex justify-end">
                                 <div class="w-72 space-y-3 text-sm">
-                                    <div class="flex justify-between text-gray-600 dark:text-gray-300">
+                                    <!-- <div class="flex justify-between text-gray-600 dark:text-gray-300">
                                         <span>Subtotal</span>
-                                        <span>{{ formatCurrency(order.total_amount) }}</span>
-                                    </div>
-                                    <div class="flex justify-between text-gray-600 dark:text-gray-300">
+                                        <span>{{ order.total_amount }}</span>
+                                    </div> -->
+                                    <!-- <div class="flex justify-between text-gray-600 dark:text-gray-300">
                                         <span>Priority/ Rush fee</span>
-                                        <span>{{ formatCurrency(0) }}</span>
-                                    </div>
+                                        <input type="number" v-model="priorityFee" class="w-25 border-b text-right focus:outline-0" min="0" />
+                                    </div> -->
                                     <div
                                         class="flex justify-between border-t border-gray-200 pt-3 text-lg font-semibold text-gray-900 dark:border-gray-600 dark:text-white"
                                     >

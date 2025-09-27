@@ -1,12 +1,10 @@
 <script setup>
 import { computed, reactive, ref, watch } from 'vue';
-import Colors from '@/components/designer/Colors.vue';
 import Element from '@/components/designer/Element.vue';
 import Tools from '@/components/designer/Tools.vue';
 import initializeDragAndDrop from './dragDrop.js';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import html2canvas from 'html2canvas';
-import { transform } from 'lodash';
 
 const props = defineProps({
     product: Object,
@@ -24,6 +22,7 @@ const selectedElement = reactive({
     from: 'front',
     text: null,
     image: null,
+    design: null,
 });
 
 const elements = reactive({
@@ -31,11 +30,13 @@ const elements = reactive({
         texts: [],
         image: null,
         imagePreview: '',
+        design: null,
     },
     back: {
         texts: [],
         image: null,
         imagePreview: '',
+        design: null,
     },
 });
 
@@ -56,28 +57,32 @@ watch(
         try {
             processing.value = true;
             // 1. Define canvas configurations
+            const shouldCapture = {
+                front: newElements.front.image?.file || newElements.front.texts?.length > 0 || newElements.front.design?.image,
+                back: newElements.back.image?.file || newElements.back.texts?.length > 0 || newElements.back.design?.image,
+            };
             const canvasConfigs = [
                 {
                     selector: '#front-canvas',
-                    shouldCapture: newElements.front.image?.file || newElements.front.texts?.length > 0,
+                    shouldCapture: shouldCapture.front,
                     label: 'front uploaded design',
                     filename: 'front-design.png',
                 },
                 {
                     selector: '#front-preview',
-                    shouldCapture: newElements.front.image?.file || newElements.front.texts?.length > 0,
+                    shouldCapture: shouldCapture.front,
                     label: 'front preview',
                     filename: 'front-preview.png',
                 },
                 {
                     selector: '#back-canvas',
-                    shouldCapture: newElements.back.image?.file || newElements.back.texts?.length > 0,
+                    shouldCapture: shouldCapture.back,
                     label: 'back uploaded design',
                     filename: 'back-design.png',
                 },
                 {
                     selector: '#back-preview',
-                    shouldCapture: newElements.back.image?.file || newElements.back.texts?.length > 0,
+                    shouldCapture: shouldCapture.back,
                     label: 'back preview',
                     filename: 'back-preview.png',
                 },
@@ -117,7 +122,7 @@ watch(
             console.error('Canvas processing error:', error);
             toast.error('Failed to process design images');
         } finally {
-            // processing.value = false;
+            processing.value = false;
         }
     },
     { deep: true },
@@ -145,61 +150,38 @@ async function addToCart() {
         },
     );
 }
-async function orderNow() {
-    processing.value = true;
-
-    form.images = form.images
-        .reduceRight((acc, current) => {
-            if (!acc.some((item) => item.label === current.label)) {
-                acc.push(current);
-            }
-            return acc;
-        }, [])
-        .reverse();
-
-    processing.value = false;
-    page.props.custom_order_resource = form.images;
-    console.log(page.props.custom_order_resource);
-
-    router.get(
-        route('order.create', {
-            item: {
-                product_id: form.product_id,
-                option_id: form.option_id,
-                quantity: form.quantity,
-                total_amount: form.quantity * props.product.price,
-                type: form.type,
-                images: form.images,
-                from: form.from,
-            },
-        }),
-        {},
-    );
-}
 
 const activeView = ref('front'); // 'front' or 'back'
 
 function updateElement(type, value) {
     const to = activeView.value;
+    processing.value = true;
     if (type === 'text' && to === value.from) {
         elements[to].texts[value.index] = value;
     } else if (type === 'image' && to === value.from) {
         elements[to].image = value;
+    } else {
+        elements[to].design = value;
     }
+
+    setTimeout(() => (processing.value = false), 1000);
 }
 function deleteElement(type, value) {
     const to = activeView.value;
+    processing.value = true;
     if (type === 'text' && to === value.from) {
-        elements[to].texts.splice(value.index, 1);
-
-        selectedElement.text = null;
-    } else {
+        elements[to].texts[value.text.index] = null;
+    } else if (type === 'image' && to === value.from) {
         elements[to].image = null;
         elements[to].imagePreview = null;
-        selectedElement.image = null;
+    } else {
+        elements[to].design = null;
     }
+    selectedElement.text = null;
+    selectedElement.image = null;
+    selectedElement.design = null;
     selectedElement.type = null;
-    selectedElement.from = null;
+    setTimeout(() => (processing.value = false), 1000);
 }
 const switchView = (view) => {
     activeView.value = view;
@@ -207,6 +189,7 @@ const switchView = (view) => {
 
     selectedElement.text = null;
     selectedElement.image = null;
+    selectedElement.design = null;
 };
 
 function addText(text) {
@@ -223,11 +206,9 @@ function addText(text) {
 }
 function addImage(imageFile) {
     const to = activeView.value;
-    const canvas = document.querySelector(`#${to}-canvas`);
-    let imageElement = null;
     elements[to].imagePreview = URL.createObjectURL(imageFile);
     elements[to].image = {
-        from: activeView.value,
+        from: to,
         file: imageFile,
         rotate: 0,
     };
@@ -236,14 +217,26 @@ function addImage(imageFile) {
 function selectElement(type, value, event) {
     const from = activeView.value;
     selectedElement.type = type;
-    if (type === 'text') {
-        selectedElement.text = value;
-    } else {
-        elements[from].image.width = event.currentTarget.clientWidth;
-        elements[from].image.height = event.currentTarget.clientHeight;
 
-        selectedElement.text = null;
-        selectedElement.image = elements[from].image;
+    selectedElement.text = null;
+    selectedElement.image = null;
+    selectedElement.design = null;
+
+    switch (type) {
+        case 'text':
+            selectedElement.text = value;
+            break;
+
+        case 'image':
+            elements[from].image.width = event.currentTarget.clientWidth;
+            elements[from].image.height = event.currentTarget.clientHeight;
+            selectedElement.image = elements[from].image;
+            break;
+
+        default:
+            elements[from].design.width = event.currentTarget.clientWidth;
+            elements[from].design.height = event.currentTarget.clientHeight;
+            selectedElement.design = elements[from].design;
     }
 }
 
@@ -268,24 +261,6 @@ const styleClasses = {
     textInput:
         'mt-2 block w-full rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 placeholder-gray-400/70 focus:border-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:placeholder-gray-500 dark:focus:border-blue-300',
 };
-
-function initialSizer(size = 0, dimension, from) {
-    let temp = 0;
-    dimension = dimension.toLowerCase();
-    const canvas = document.querySelector(`#${from}-canvas`);
-    console.dir(size);
-    switch (`#${from}-canvas`) {
-        case 'w' || 'width':
-            temp = size;
-            break;
-
-        case 'h' || 'height':
-            temp = size;
-            break;
-    }
-
-    return 600 + 'px';
-}
 </script>
 
 <template>
@@ -322,32 +297,37 @@ function initialSizer(size = 0, dimension, from) {
                         </button>
                     </div>
                 </div>
-                <!-- Canvas -->
+                <!--------- Canvas ------------------------------------------------------------------------------------->
                 <div :class="styleClasses.canvasContainer">
+                    <!-------- FRONT ----------------------------------------------------------------------->
                     <div v-show="activeView === 'front'" :class="styleClasses.canvasImage" id="front-preview">
                         <img class="" :src="images.front" alt="front" />
 
                         <div :class="styleClasses.canvasOverlay" id="front-canvas">
-                            <span
-                                v-for="(text, i) in elements.front.texts"
-                                :key="`front-text-${i}`"
-                                @click="selectElement('text', { ...text, index: i })"
-                                :class="styleClasses.textElement"
-                                :style="{
-                                    fontSize: `${text.size}px`,
-                                    fontFamily: text.font,
-                                    color: text.color,
-                                    zIndex: i + 1,
-                                    position: 'absolute',
-                                    transform: `rotate(${text.rotate}deg)`,
-                                }"
-                                @mousedown="(e) => initializeDragAndDrop(e)"
-                                >{{ text.text }}</span
-                            >
+                            <template v-for="(text, i) in elements.front.texts" :key="`front-text-${i}`">
+                                <span
+                                    v-if="text"
+                                    @click="selectElement('text', { ...text, index: i })"
+                                    :class="styleClasses.textElement"
+                                    :style="{
+                                        fontSize: `${text.size}px`,
+                                        fontFamily: text.font,
+                                        color: text.color,
+                                        zIndex: i + 1,
+                                        position: 'absolute',
+                                        transform: `rotate(${text.rotate}deg)`,
+                                    }"
+                                    @mousedown="(e) => initializeDragAndDrop(e)"
+                                    @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                    >{{ text.text }}</span
+                                >
+                            </template>
+
                             <img
                                 id="front-image"
                                 v-if="elements.front.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="(e) => initializeDragAndDrop(e)"
                                 @click="(e) => selectElement('image', null, e)"
                                 :src="elements.front.imagePreview"
                                 alt="front-view-uploaded-image"
@@ -360,33 +340,55 @@ function initialSizer(size = 0, dimension, from) {
                                 }"
                                 :class="styleClasses.uploadedImage"
                             />
-                            {{}}
+                            <img
+                                v-if="elements.front.design?.image"
+                                @mousedown="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                @click="(e) => selectElement('design', null, e)"
+                                :src="`/storage/${elements.front.design.image}`"
+                                alt="front-view-design"
+                                :style="{
+                                    position: 'absolute',
+                                    zIndex: '0',
+                                    width: '35%',
+                                    height: 'auto',
+                                    scale: (elements.front.design?.scale ?? 100) / 100,
+                                    transform: `rotate(${elements.front.design?.rotate || 0}deg)`,
+                                }"
+                                :class="styleClasses.uploadedImage"
+                            />
                         </div>
                     </div>
+
+                    <!-------- BACK ----------------------------------------------------------------------->
                     <div v-show="activeView === 'back'" :class="styleClasses.canvasImage" id="back-preview">
                         <img class="" :src="images.back" alt="back" />
 
                         <div :class="styleClasses.canvasOverlay" id="back-canvas">
-                            <span
-                                v-for="(text, i) in elements.back.texts"
-                                :key="`back-text-${i}`"
-                                @click="selectElement('text', { ...text, index: i })"
-                                :class="styleClasses.textElement"
-                                :style="{
-                                    fontSize: `${text.size}px`,
-                                    fontFamily: text.font,
-                                    color: text.color,
-                                    zIndex: i + 1,
-                                    position: 'absolute',
-                                    transform: `rotate(${text.rotate}deg)`,
-                                }"
-                                @mousedown="(e) => initializeDragAndDrop(e)"
-                                >{{ text.text }}</span
-                            >
+                            <template v-for="(text, i) in elements.back.texts" :key="`back-text-${i}`">
+                                <span
+                                    v-if="text"
+                                    @click="selectElement('text', { ...text, index: i })"
+                                    :class="styleClasses.textElement"
+                                    :style="{
+                                        fontSize: `${text.size}px`,
+                                        fontFamily: text.font,
+                                        color: text.color,
+                                        zIndex: i + 1,
+                                        position: 'absolute',
+                                        transform: `rotate(${text.rotate}deg)`,
+                                    }"
+                                    @mousedown="(e) => initializeDragAndDrop(e)"
+                                    @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                    >{{ text.text }}</span
+                                >
+                            </template>
+
                             <img
                                 id="back-image"
                                 v-if="elements.back.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="(e) => initializeDragAndDrop(e)"
                                 @click="(e) => selectElement('image', null, e)"
                                 :src="elements.back.imagePreview"
                                 alt="back-view-uploaded-image"
@@ -399,21 +401,50 @@ function initialSizer(size = 0, dimension, from) {
                                 }"
                                 :class="styleClasses.uploadedImage"
                             />
+                            <img
+                                v-if="elements.back.design?.image"
+                                @mousedown="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                @click="(e) => selectElement('design', null, e)"
+                                :src="`/storage/${elements.back.design.image}`"
+                                alt="back-view-design"
+                                :style="{
+                                    position: 'absolute',
+                                    zIndex: '0',
+                                    width: '35%',
+                                    height: 'auto',
+                                    scale: (elements.back.design?.scale ?? 100) / 100,
+                                    transform: `rotate(${elements.back.design?.rotate || 0}deg)`,
+                                }"
+                                :class="styleClasses.uploadedImage"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Design Tools Panel -->
             <div :class="styleClasses.toolsPanel">
+                <!-------- SELECTED ELEMENT ----------------------------------------------------------------------->
                 <Element
-                    v-show="selectedElement.text || selectedElement.image"
+                    v-show="selectedElement.text || selectedElement.image || selectedElement.design"
                     :element="selectedElement"
                     @update:element="({ type, value }) => updateElement(type, value)"
                     @delete:element="({ type, value }) => deleteElement(type, value)"
                 />
-                <Tools v-show="activeView === 'front'" @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))" />
-                <Tools v-show="activeView === 'back'" @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))" />
+
+                <!-- Design Tools Panel -->
+                <Tools
+                    :designs="product.designs"
+                    v-show="activeView === 'front'"
+                    @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
+                    @add-element:design="({ value }) => (elements.front.design = value)"
+                />
+                <Tools
+                    :designs="product.designs"
+                    v-show="activeView === 'back'"
+                    @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
+                    @add-element:design="({ value }) => (elements.back.design = value)"
+                />
 
                 <form @submit.prevent="addToCart" class="container-secondary">
                     <h2 class="text-lg font-semibold">Confirm</h2>

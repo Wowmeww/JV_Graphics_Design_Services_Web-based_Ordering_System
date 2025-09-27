@@ -17,6 +17,7 @@ class DesignerController extends Controller
             'options.images',
             'options.ratings.user',
             'ratings' => fn($q) => $q->with('user')->latest(), // newest product ratings
+            'designs'
         ]);
         return Inertia::render('Designer', [
             'product' => $product

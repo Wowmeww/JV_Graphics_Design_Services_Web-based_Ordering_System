@@ -234,16 +234,30 @@ const styleClass = {
                             <label for="back-image" :class="[styleClass.controlButton, styleClass.editButton]">
                                 <i class="fas fa-pen text-sm"></i>
                             </label>
-                            <button
+                            <!-- <button
                                 v-if="allowDelete && tempImage[1]"
                                 @click.prevent="handleDelete(1)"
                                 :class="[styleClass.controlButton, styleClass.deleteButton]"
                                 type="button"
                             >
                                 <i class="fas fa-trash"></i>
-                            </button>
-                            <button v-else type="button" @click="clearImage(1)" :class="[styleClass.controlButton, styleClass.deleteButton]">
+                            </button> -->
+                            <button
+                                v-if="tempImage[1] && !images[1]?.id"
+                                type="button"
+                                @click="clearImage(1)"
+                                :class="[styleClass.controlButton, styleClass.deleteButton]"
+                            >
                                 <i class="fas fa-times"></i>
+                            </button>
+
+                            <button
+                                v-else-if="allowDelete && tempImage[1]"
+                                @click.prevent="handleDelete(1)"
+                                :class="[styleClass.controlButton, styleClass.deleteButton]"
+                                type="button"
+                            >
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </div>

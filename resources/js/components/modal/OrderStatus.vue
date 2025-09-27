@@ -42,7 +42,6 @@ watch(
 </script>
 
 <template>
-    {{ errors }}
     <!-- Order Status Update Modal -->
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 dark:bg-black/50">
         <div class="w-full max-w-md scale-95 transform rounded-xl bg-white shadow-xl transition-all duration-300 dark:bg-gray-800">

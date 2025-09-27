@@ -44,4 +44,7 @@ Route::middleware(['auth', 'verified', 'can:create,App\Models\Product'])->group(
         Route::delete('/{product}', [ProductController::class, 'destroy'])
             ->name('destroy');
     });
+
+    // DELETE PRODUCT DESIGN ELEMENT
+    Route::delete('/products-design/{design}', [CustomizeProductController::class, 'destroyDesign'])->name('product.design.destroy');
 });

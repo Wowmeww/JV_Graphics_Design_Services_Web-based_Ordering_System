@@ -21,7 +21,7 @@
 
 <template>
 
-    <div class="bg-primary/30 absolute inset-0 grid place-content-center">
+    <div class="bg-primary/30 absolute inset-0 grid place-content-center text-slate-800">
         <form @submit.prevent="submit"
             class="bg-white rounded-xl shadow-xl w-full min-w-xs p-6 space-y-4 -translate-y-20">
             <p class="text-xl font-bold text-gray-800 text-center">Rate the product</p>

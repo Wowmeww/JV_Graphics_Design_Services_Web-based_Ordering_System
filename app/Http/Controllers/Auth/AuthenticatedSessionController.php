@@ -36,6 +36,9 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            if (!$request->user()->is_admin) {
+                return redirect()->intended(route('shop.index'));
+            }
             return redirect()->intended(route('dashboard'));
         }
 
@@ -88,9 +91,9 @@ class AuthenticatedSessionController extends Controller
     {
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(route('dashboard', absolute: false))->with('status', [
-            'type' => 'info',
-            'message' => 'The email ' . $request->user()->email . ' already verified.',
-        ]);
+                'type' => 'info',
+                'message' => 'The email ' . $request->user()->email . ' already verified.',
+            ]);
         }
 
         $request->user()->sendEmailVerificationNotification();

@@ -83,8 +83,9 @@
                 <div class="flex gap-3 flex-col sm:flex-row justify-end">
                     <ButtonPrimary is="Link" :href="route('product.index')" class="md:max-w-fit" label="Cancel"
                         type="button" variant="outline-secondary" />
-                    <ButtonPrimary class="md:max-w-fit" label="Publish product" type="submit" :disable="false"
+                    <ButtonPrimary class="md:max-w-fit" label="Publish product" type="submit" :disable="form.processing"
                         :with-spinner="form.processing" variant="secondary" />
+
                 </div>
             </form>
 

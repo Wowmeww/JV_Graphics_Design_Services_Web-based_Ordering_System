@@ -48,6 +48,11 @@ class Product extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function designs()
+    {
+        return $this->hasMany(ProductSampleElement::class);
+    }
+
 
     // one to many - belongs to
     public function category()

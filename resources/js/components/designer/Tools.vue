@@ -1,9 +1,13 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 
-const tabs = ['text', 'image'];
+defineProps({
+    designs: Array,
+});
+
+const tabs = ['text', 'upload', 'designs'];
 const activeTab = ref(tabs[0]);
-const emit = defineEmits(['addElement']);
+const emit = defineEmits(['addElement', 'addElement:design']);
 
 const temps = reactive({
     text: null,
@@ -23,6 +27,12 @@ function addElement(type) {
         temps.text = null;
     }
 }
+function addDesign(design) {
+    emit('addElement:design', {
+        type: 'design',
+        value: design,
+    });
+}
 
 function handleImageChange(event) {
     const file = event.target.files[0];
@@ -40,7 +50,7 @@ function handleImageChange(event) {
 const styleClass = {
     container: 'container-secondary m-0 h-fit',
     title: 'text-lg font-semibold',
-    tabContainer: 'grid grid-cols-2 gap-1 rounded bg-gray-300 p-1 font-medium dark:bg-gray-600',
+    tabContainer: 'grid grid-cols-3 gap-1 rounded bg-gray-300 p-1 font-medium dark:bg-gray-600',
     tabButton: 'rounded px-4 py-1 hover:bg-white dark:hover:bg-slate-900',
     activeTab: 'bg-white dark:bg-slate-900',
     label: 'block text-sm text-gray-500 dark:text-gray-300',
@@ -92,13 +102,22 @@ onMounted(() => (temps.element_id = Math.ceil(Math.random() * 9000000000)));
                 <button :disabled="!temps.text" @click="addElement('text')" :class="styleClass.addButton">Add Text</button>
             </div>
         </div>
-
-        <div v-show="activeTab === 'image'" :key="activeTab" class="animate__animated animate__fadeIn">
+        <div v-show="activeTab === 'upload'" :key="activeTab" class="animate__animated animate__fadeIn">
             <div>
                 <label for="image" :class="styleClass.label">Image</label>
                 <input type="file" id="image" accept="image/*" @change="handleImageChange" :class="styleClass.fileInput" />
                 <small v-if="temps.error.image" :class="styleClass.errorText">{{ temps.error.image }}</small>
             </div>
+        </div>
+        <div v-show="activeTab === 'designs'" :key="activeTab" class="animate__animated animate__fadeIn flex flex-wrap gap-2">
+            <!-- make the style class look perfect -->
+            <img
+                v-for="design in designs"
+                :key="`design-${design.id}`"
+                :src="`/storage/${design.image}`"
+                class="size-16 cursor-pointer overflow-hidden rounded-2xl border border-slate-300 object-cover transition-all hover:border-slate-400 dark:border-slate-600 dark:hover:border-slate-400"
+                @click="addDesign(design)"
+            />
         </div>
     </div>
 </template>
