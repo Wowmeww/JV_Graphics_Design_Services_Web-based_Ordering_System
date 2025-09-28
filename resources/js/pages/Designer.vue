@@ -55,12 +55,14 @@ watch(
     () => elements,
     async (newElements) => {
         try {
-            processing.value = true;
             // 1. Define canvas configurations
             const shouldCapture = {
-                front: newElements.front.image?.file || newElements.front.texts?.length > 0 || newElements.front.design?.image,
-                back: newElements.back.image?.file || newElements.back.texts?.length > 0 || newElements.back.design?.image,
+                front: newElements.front.image?.file || newElements.front.texts?.filter((v) => v).length || newElements.front.design?.image,
+                back: newElements.back.image?.file || newElements.back.texts?.filter((v) => v).length || newElements.back.design?.image,
             };
+
+            processing.value = shouldCapture.front || shouldCapture.back;
+
             const canvasConfigs = [
                 {
                     selector: '#front-canvas',
@@ -109,10 +111,14 @@ watch(
 
                     const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.9));
 
-                    form.images.push(blob ? { label: config.label, file: new File([blob], config.filename, { type: 'image/png' }) } : null);
-
-                    form.images = form.images.filter(Boolean);
-                    processing.value = false;
+                    if (blob) {
+                        form.images.push({
+                            label: config.label,
+                            file: new File([blob], config.filename, { type: 'image/png' }),
+                        });
+                        form.images = form.images.filter(Boolean);
+                        processing.value = false;
+                    }
                 } catch (error) {
                     console.error(`Failed to capture ${config.label}:`, error);
                     return null;
@@ -318,7 +324,12 @@ const styleClasses = {
                                         transform: `rotate(${text.rotate}deg)`,
                                     }"
                                     @mousedown="(e) => initializeDragAndDrop(e)"
-                                    @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                    @touchstart.prevent="
+                                        (e) => {
+                                            initializeDragAndDrop(e);
+                                            selectElement('text', { ...text, index: i });
+                                        }
+                                    "
                                     >{{ text.text }}</span
                                 >
                             </template>
@@ -327,7 +338,12 @@ const styleClasses = {
                                 id="front-image"
                                 v-if="elements.front.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
-                                @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="
+                                    (e) => {
+                                        initializeDragAndDrop(e);
+                                        selectElement('image', null, e);
+                                    }
+                                "
                                 @click="(e) => selectElement('image', null, e)"
                                 :src="elements.front.imagePreview"
                                 alt="front-view-uploaded-image"
@@ -343,7 +359,12 @@ const styleClasses = {
                             <img
                                 v-if="elements.front.design?.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
-                                @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="
+                                    (e) => {
+                                        initializeDragAndDrop(e);
+                                        selectElement('design', null, e);
+                                    }
+                                "
                                 @click="(e) => selectElement('design', null, e)"
                                 :src="`/storage/${elements.front.design.image}`"
                                 alt="front-view-design"
@@ -379,7 +400,12 @@ const styleClasses = {
                                         transform: `rotate(${text.rotate}deg)`,
                                     }"
                                     @mousedown="(e) => initializeDragAndDrop(e)"
-                                    @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                    @touchstart.prevent="
+                                        (e) => {
+                                            initializeDragAndDrop(e);
+                                            selectElement('text', { ...text, index: i });
+                                        }
+                                    "
                                     >{{ text.text }}</span
                                 >
                             </template>
@@ -388,7 +414,12 @@ const styleClasses = {
                                 id="back-image"
                                 v-if="elements.back.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
-                                @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="
+                                    (e) => {
+                                        initializeDragAndDrop(e);
+                                        selectElement('image', null, e);
+                                    }
+                                "
                                 @click="(e) => selectElement('image', null, e)"
                                 :src="elements.back.imagePreview"
                                 alt="back-view-uploaded-image"
@@ -404,7 +435,12 @@ const styleClasses = {
                             <img
                                 v-if="elements.back.design?.image"
                                 @mousedown="(e) => initializeDragAndDrop(e)"
-                                @touchstart.prevent="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="
+                                    (e) => {
+                                        initializeDragAndDrop(e);
+                                        selectElement('design', null, e);
+                                    }
+                                "
                                 @click="(e) => selectElement('design', null, e)"
                                 :src="`/storage/${elements.back.design.image}`"
                                 alt="back-view-design"

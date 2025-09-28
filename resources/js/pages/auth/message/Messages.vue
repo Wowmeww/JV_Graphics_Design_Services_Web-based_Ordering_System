@@ -92,7 +92,7 @@
             </div>
 
             <!-- Message Input Area -->
-            <div class="border-t border-gray-200 dark:border-gray-700 p-4 mb-16">
+            <div class="border-t border-gray-200 dark:border-gray-700 p-4 mb-20">
                 <form @submit.prevent="send" class="flex items-center gap-2">
                     <!-- <button
                         class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
