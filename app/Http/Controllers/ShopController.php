@@ -63,6 +63,7 @@ class ShopController extends Controller
     {
         $perPage = $request->get('per_page', 12);
         $products = Product::with(['images', 'options.images', 'category'])
+        ->whereNot('type', 'unavailable')
             ->filter(request(['search', 'category', 'stock', 'sort', 'type']))
             ->paginate($perPage);
         return response()->json($products);

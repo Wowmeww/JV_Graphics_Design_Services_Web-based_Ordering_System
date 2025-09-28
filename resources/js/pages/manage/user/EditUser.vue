@@ -111,7 +111,6 @@ const styleClasses = {
                     Back to users page
                 </Link>
             </div>
-
             <form @submit.prevent="updateUser" :class="styleClasses.cardContainer">
                 <div :class="styleClasses.cardHeader">
                     <div class="inline-flex items-center gap-5">

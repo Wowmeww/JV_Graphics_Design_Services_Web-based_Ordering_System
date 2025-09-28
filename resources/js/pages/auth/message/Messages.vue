@@ -71,7 +71,7 @@
         <div class="h-full flex flex-col max-h-[85vh]" v-if="receiver">
             <!-- Messages Area -->
             <div ref="messagesContainer" id="messages-container"
-                class="flex-1 overflow-y-scroll p-4 space-y-3 scroll-smooth">
+                class="flex-1 overflow-y-scroll max-h-9/12 p-4 space-y-3 scroll-smooth">
                 <div class="text-center ">
                     <Link v-if="tempMessages?.length >= 20 && !params.all"
                         :href="route('message.store', { receiver: props.receiver.id, all: true })" as="button"
@@ -92,7 +92,7 @@
             </div>
 
             <!-- Message Input Area -->
-            <div class="border-t border-gray-200 dark:border-gray-700 p-4 mb-20">
+            <div class="border-t border-gray-200 dark:border-gray-700 p-4">
                 <form @submit.prevent="send" class="flex items-center gap-2">
                     <!-- <button
                         class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -104,7 +104,7 @@
                     </button> -->
 
                     <input required v-model="form.content" type="text" placeholder="Type a message..."
-                        class="flex-1 border border-gray-300 dark:border-gray-600 rounded-full py-2 px-4 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        class="flex-1  border border-gray-300 dark:border-gray-600 rounded-full py-2 px-4 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
 
                     <button v-show="form.content" :disabled="form.processing" type="submit"
                         class="p-2 rounded-full text-white bg-primary-500 hover:bg-primary ">

@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -45,7 +46,7 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:products,name'],
             'category' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'type' => ['required', 'string'],
+            'type' => ['required', 'string', Rule::in(['main product with variant', 'single product', 'custom'])],
             'stock' => ['required', 'integer', 'min:0'],
             'size' => ['nullable', 'string'],
             'unit' => ['nullable', 'string'],
@@ -152,7 +153,7 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'category' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'type' => ['required', 'string'],
+            'type' => ['required', 'string', Rule::in(['main product with variant', 'single product', 'custom', 'unavailable'])],
             'stock' => ['required', 'integer', 'min:0'],
             'size' => ['nullable', 'string'],
             'unit' => ['nullable', 'string'],

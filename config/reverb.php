@@ -29,15 +29,17 @@ return [
     'servers' => [
 
         'reverb' => [
-            'host' => env('REVERB_HOST', '127.0.0.1'),
+            'host' => env('REVERB_HOST', '0.0.0.0'),
             'port' => env('REVERB_PORT', 6001),
             'path' => env('REVERB_SERVER_PATH', ''),
-            'hostname' => env('REVERB_HOST'),
-            'scheme' => env('REVERB_SCHEME', 'http'),
+            'hostname' => env('REVERB_HOST', '0.0.0.0'),
+            'scheme' => env('REVERB_SCHEME', 'ws'),
             'options' => [
                 'tls' => [],
             ],
             'max_request_size' => env('REVERB_MAX_REQUEST_SIZE', 10_000),
+
+            // must always exist, even if disabled
             'scaling' => [
                 'enabled' => env('REVERB_SCALING_ENABLED', false),
                 'channel' => env('REVERB_SCALING_CHANNEL', 'reverb'),
@@ -51,11 +53,14 @@ return [
                     'timeout' => env('REDIS_TIMEOUT', 60),
                 ],
             ],
+
+            // ✅ required in latest Reverb
             'pulse_ingest_interval' => env('REVERB_PULSE_INGEST_INTERVAL', 15),
             'telescope_ingest_interval' => env('REVERB_TELESCOPE_INGEST_INTERVAL', 15),
         ],
 
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -88,6 +93,12 @@ return [
                 'activity_timeout' => env('REVERB_APP_ACTIVITY_TIMEOUT', 30),
                 'max_message_size' => env('REVERB_APP_MAX_MESSAGE_SIZE', 10_000),
             ],
+        ],
+
+        'default' => [
+            'host'   => '0.0.0.0',
+            'port'   => 6001,
+            'scheme' => 'ws',
         ],
 
     ],

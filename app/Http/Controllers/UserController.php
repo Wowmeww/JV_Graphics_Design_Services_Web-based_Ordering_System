@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -41,9 +42,10 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-
+        // dd('test');
+        // dd($request->all());
         $validated = $request->validate([
-            'role' => ['required', 'string'],
+            'role' => ['required', 'string', Rule::in(['customer', 'admin', 'suspended'])],
             'verified_at' => ['nullable', 'boolean']
         ]);
 
@@ -51,7 +53,6 @@ class UserController extends Controller
         $validated['verified_at'] = isset($validated['verified_at']) && $validated['verified_at']
             ? Carbon::now()
             : null;
-
 
         $user->update($validated);
 

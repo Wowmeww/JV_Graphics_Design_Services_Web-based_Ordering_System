@@ -144,12 +144,16 @@ function handleUnshift(i, contact) {
                             <!-- <span v-if="selectedContact?.is_online"
                                 class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800" /> -->
                         </div>
-
                         <!-- Contact Info -->
                         <div class="min-w-0 flex-1">
                             <h2 class="truncate font-medium text-gray-900 dark:text-white">
                                 {{ selectedContact?.name }}
                             </h2>
+
+                            <a :href="`mailto:${selectedContact.email}`" class="text-link text-xs">
+                                {{ selectedContact.email }}
+                            </a>
+
                             <!-- <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                                 <span :class="[
                                     'inline-block w-2 h-2 rounded-full mr-1.5',

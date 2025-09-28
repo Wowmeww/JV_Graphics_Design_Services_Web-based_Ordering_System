@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
 
         if (env('APP_ENV') === 'production') {
-            $this->call([SystemSettingSeeder::class, ProductionSeeder::class]);
+            $this->call(ProductionSeeder::class);
         } else {
             $this->call([
                 SystemSettingSeeder::class,

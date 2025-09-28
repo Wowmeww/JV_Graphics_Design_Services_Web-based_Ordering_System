@@ -308,6 +308,12 @@ function handleSort(sortOption) {
                                                 >
                                             </td>
                                             <td :class="styleClass.td">
+                                                <a
+                                                    :href="`mailto:${user.email}`"
+                                                    class="text-primary dark:text-primary-400 inline-block -translate-x-4"
+                                                >
+                                                    <i class="bi bi-envelope-at-fill text-lg"></i>
+                                                </a>
                                                 <Link as="button" :href="route('manage.users.edit', { user: user.id })">
                                                     <i class="fa-solid fa-arrow-up-right-from-square text-primary dark:text-primary-400"></i>
                                                 </Link>

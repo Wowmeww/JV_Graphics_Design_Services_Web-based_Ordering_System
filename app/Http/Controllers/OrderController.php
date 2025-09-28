@@ -79,6 +79,16 @@ class OrderController extends Controller
             }
             $items = [$item];
         }
+
+        foreach ($items as $value) {
+            if ($value->product->type === 'unavailable') {
+                return back()->with('status', [
+                    'type' => 'error',
+                    'message' => 'Sorry, but you are ordering unavailable product',
+                ]);
+            }
+        }
+
         return Inertia::render('shop/order/Create', [
             'items' => $items,
             'from' => $request->input('from'),

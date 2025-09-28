@@ -131,7 +131,7 @@
                         <Dropdown :value="form.type" :error="form.errors.type"
                             @select="(option) => (form.type = option)" label="Product Type" placeholder="Select type"
                             variant="secondary"
-                            :options="['Single product', 'Main product with variant', 'Unavailable']" />
+                            :options="['single product', 'main product with variant', 'unavailable']" />
 
                         <TextInputPrimary v-model="form.stock" :error="form.errors.stock" type="number" label="Stock"
                             placeholder="Enter product stocks" variant="secondary" />

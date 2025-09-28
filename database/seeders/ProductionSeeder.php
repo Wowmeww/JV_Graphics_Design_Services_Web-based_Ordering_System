@@ -20,5 +20,7 @@ class ProductionSeeder extends Seeder
             'password' => bcrypt(123),
             'avatar_url' => 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/47050/uploads/urunresimleri/buyuk/penguen-cocuklar-icin-sayilarla-boyama-3-ba2d.png'
         ]);
+
+        $this->call([SystemSettingSeeder::class,]);
     }
 }

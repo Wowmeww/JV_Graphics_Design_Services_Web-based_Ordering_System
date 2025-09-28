@@ -158,7 +158,6 @@ function goBack() {
                     <div class="space-y-3">
                         <AddImages :images="images" @changed="handleImagesChange" :default-images="form.images" allow-delete />
                         <ExampleDesigns :designs="product.designs" @change:new="({ file }) => (form.design = file)" />
-
                         <small class="form-control-error" v-if="form.errors.design">{{ form.errors.design }}</small>
                     </div>
                 </div>

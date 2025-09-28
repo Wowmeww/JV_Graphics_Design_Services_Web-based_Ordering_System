@@ -86,7 +86,7 @@ function handleOptionClick(option) {
             <p
                 v-for="(option, i) of options"
                 :key="i"
-                class="hover:bg-primary-100 dark:hover:bg-primary-400/10 cursor-pointer px-4 py-1 transition dark:text-white"
+                class="hover:bg-primary-100 dark:hover:bg-primary-400/10 cursor-pointer px-4 py-1 transition first-letter:uppercase dark:text-white"
                 :class="option === value ? 'font-semibold' : ''"
                 @click.prevent="handleOptionClick(option)"
             >

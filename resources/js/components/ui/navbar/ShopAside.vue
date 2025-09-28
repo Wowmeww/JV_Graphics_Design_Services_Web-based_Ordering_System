@@ -89,7 +89,6 @@ function deleteBulkItems() {
         class="bg-secondary/20 fixed inset-0 z-20 backdrop-blur-xs transition dark:bg-black/30 dark:backdrop-blur-xs"
         @click="close"
     ></div>
-
     <aside
         :class="[
             'fixed top-0 right-0 z-30 h-screen w-full border-r border-gray-200 bg-white pt-20 transition-transform sm:w-90 dark:border-gray-700 dark:bg-gray-800',
@@ -98,8 +97,8 @@ function deleteBulkItems() {
         aria-label="Sidebar"
         id="sidebar"
     >
-        <div class="relative h-full space-y-2 overflow-y-auto bg-white px-3 font-medium dark:bg-gray-800">
-            <div class="fixed inset-x-0 top-20 z-10 bg-white px-3 pb-2 dark:bg-gray-800">
+        <div class="flex h-full w-full flex-col justify-between space-y-2 bg-white px-3 font-medium dark:bg-gray-800">
+            <div class="top-20 z-10 bg-white px-3 pb-2 dark:bg-gray-800">
                 <div class="flex items-center justify-between border-b-2 border-slate-300 pb-2">
                     <button @click="close" type="button" class="hover:bg-secondary-100/20 h-8 w-8 rounded-full text-2xl">
                         <i class="bi bi-x"></i>
@@ -133,22 +132,29 @@ function deleteBulkItems() {
                     </div>
                 </div>
             </div>
-
-            <div v-if="open.cart" class="space-y-2 scroll-auto py-18 pt-22">
-                <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
+            <div class="flex-1 overflow-auto border-t border-slate-400">
+                <div v-if="open.cart" class="space-y-2 scroll-auto py-4">
+                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
+                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
+                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
+                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
+                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
+                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
+                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
+                </div>
+                <div v-if="open.wishlist" class="space-y-2 scroll-auto py-18">
+                    <CartItem
+                        v-model="selectedWishlistItems"
+                        @close="close"
+                        v-for="(item, i) in wishlistItems"
+                        :item="item"
+                        :key="`w-${i}`"
+                        from="wishlist"
+                    />
+                </div>
             </div>
-            <div v-if="open.wishlist" class="space-y-2 scroll-auto py-18 pt-22">
-                <CartItem
-                    v-model="selectedWishlistItems"
-                    @close="close"
-                    v-for="(item, i) in wishlistItems"
-                    :item="item"
-                    :key="`w-${i}`"
-                    from="wishlist"
-                />
-            </div>
 
-            <div class="fixed inset-x-0 bottom-0 z-10 border-t-2 border-slate-300 bg-white p-3 pb-10 dark:bg-gray-800">
+            <div class="w-full border-t-2 border-slate-300 bg-white p-3 pb-6 dark:bg-gray-800">
                 <ButtonPrimary
                     v-if="open.cart"
                     :withSpinner="false"
