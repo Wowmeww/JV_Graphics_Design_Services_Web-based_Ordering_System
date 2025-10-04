@@ -30,7 +30,10 @@ function addElement(type) {
 function addDesign(design) {
     emit('addElement:design', {
         type: 'design',
-        value: design,
+        value: {
+            ...design,
+            rotate: 0,
+        },
     });
 }
 

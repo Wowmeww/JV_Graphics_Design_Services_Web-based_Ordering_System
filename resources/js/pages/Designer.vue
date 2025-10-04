@@ -102,7 +102,7 @@ watch(
 
                 try {
                     const canvas = await html2canvas(el, {
-                        scale: 2,
+                        // scale: 2,
                         logging: false,
                         useCORS: true,
                         backgroundColor: null,
@@ -160,16 +160,16 @@ async function addToCart() {
 const activeView = ref('front'); // 'front' or 'back'
 
 function updateElement(type, value) {
+    console.log(type);
     const to = activeView.value;
     processing.value = true;
     if (type === 'text' && to === value.from) {
         elements[to].texts[value.index] = value;
     } else if (type === 'image' && to === value.from) {
         elements[to].image = value;
-    } else {
+    } else if (type === 'design') {
         elements[to].design = value;
     }
-
     setTimeout(() => (processing.value = false), 1000);
 }
 function deleteElement(type, value) {
@@ -239,7 +239,7 @@ function selectElement(type, value, event) {
             selectedElement.image = elements[from].image;
             break;
 
-        default:
+        case 'design':
             elements[from].design.width = event.currentTarget.clientWidth;
             elements[from].design.height = event.currentTarget.clientHeight;
             selectedElement.design = elements[from].design;
@@ -462,7 +462,7 @@ const styleClasses = {
             <div :class="styleClasses.toolsPanel">
                 <!-------- SELECTED ELEMENT ----------------------------------------------------------------------->
                 <Element
-                    v-show="selectedElement.text || selectedElement.image || selectedElement.design"
+                    v-if="selectedElement.text || selectedElement.image || selectedElement.design"
                     :element="selectedElement"
                     @update:element="({ type, value }) => updateElement(type, value)"
                     @delete:element="({ type, value }) => deleteElement(type, value)"

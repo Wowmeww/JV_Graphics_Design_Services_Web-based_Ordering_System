@@ -20,7 +20,6 @@ const originalDesign = reactive({
     width: 0,
     height: 0,
 });
-
 onMounted(() => {
     switch (props.element.type) {
         case 'text':
@@ -42,7 +41,8 @@ onMounted(() => {
             break;
 
         case 'design':
-           
+            console.log(design.value.rotate);
+            design.value.rotate = design.value.rotate || 0;
             break;
     }
 });

@@ -135,12 +135,6 @@ function deleteBulkItems() {
             <div class="flex-1 overflow-auto border-t border-slate-400">
                 <div v-if="open.cart" class="space-y-2 scroll-auto py-4">
                     <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
-                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
-                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
-                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
-                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
-                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
-                    <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
                 </div>
                 <div v-if="open.wishlist" class="space-y-2 scroll-auto py-18">
                     <CartItem
