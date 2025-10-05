@@ -60,7 +60,6 @@ watch(
                 front: newElements.front.image?.file || newElements.front.texts?.filter((v) => v).length || newElements.front.design?.image,
                 back: newElements.back.image?.file || newElements.back.texts?.filter((v) => v).length || newElements.back.design?.image,
             };
-
             processing.value = shouldCapture.front || shouldCapture.back;
 
             const canvasConfigs = [
@@ -93,32 +92,27 @@ watch(
             // 2. Process captures in parallel with error handling
             canvasConfigs.map(async (config) => {
                 if (!config.shouldCapture) return null;
-
-                const el = document.querySelector(config.selector);
-                if (!el) {
-                    console.warn(`Element not found: ${config.selector}`);
-                    return null;
-                }
-
                 try {
-                    const canvas = await html2canvas(el, {
-                        // scale: 2,
-                        logging: false,
-                        useCORS: true,
-                        backgroundColor: null,
-                        allowTaint: true,
-                    });
-
-                    const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.9));
-
-                    if (blob) {
-                        form.images.push({
-                            label: config.label,
-                            file: new File([blob], config.filename, { type: 'image/png' }),
+                    setTimeout(async () => {
+                        const el = document.querySelector(config.selector);
+                        const canvas = await html2canvas(el, {
+                            // scale: 2,
+                            logging: false,
+                            useCORS: true,
+                            backgroundColor: null,
+                            allowTaint: true,
                         });
-                        form.images = form.images.filter(Boolean);
-                        processing.value = false;
-                    }
+
+                        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.9));
+                        if (blob) {
+                            form.images.push({
+                                label: config.label,
+                                file: new File([blob], config.filename, { type: 'image/png' }),
+                            });
+                            form.images = form.images.filter(Boolean);
+                            processing.value = false;
+                        }
+                    }, 4000);
                 } catch (error) {
                     console.error(`Failed to capture ${config.label}:`, error);
                     return null;
@@ -127,8 +121,6 @@ watch(
         } catch (error) {
             console.error('Canvas processing error:', error);
             toast.error('Failed to process design images');
-        } finally {
-            processing.value = false;
         }
     },
     { deep: true },
@@ -160,9 +152,7 @@ async function addToCart() {
 const activeView = ref('front'); // 'front' or 'back'
 
 function updateElement(type, value) {
-    console.log(type);
     const to = activeView.value;
-    processing.value = true;
     if (type === 'text' && to === value.from) {
         elements[to].texts[value.index] = value;
     } else if (type === 'image' && to === value.from) {
@@ -170,11 +160,9 @@ function updateElement(type, value) {
     } else if (type === 'design') {
         elements[to].design = value;
     }
-    setTimeout(() => (processing.value = false), 1000);
 }
 function deleteElement(type, value) {
     const to = activeView.value;
-    processing.value = true;
     if (type === 'text' && to === value.from) {
         elements[to].texts[value.text.index] = null;
     } else if (type === 'image' && to === value.from) {
@@ -187,12 +175,10 @@ function deleteElement(type, value) {
     selectedElement.image = null;
     selectedElement.design = null;
     selectedElement.type = null;
-    setTimeout(() => (processing.value = false), 1000);
 }
 const switchView = (view) => {
     activeView.value = view;
     selectedElement.from = view;
-
     selectedElement.text = null;
     selectedElement.image = null;
     selectedElement.design = null;
@@ -519,7 +505,6 @@ const styleClasses = {
                             <span>Total amount: </span>
                             <span>{{ (product.price * form.quantity).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}</span>
                         </div>
-
                         <div class="flex flex-col gap-2">
                             <!-- <button class="btn btn-secondary" @click="orderNow" type="button" :disabled="processing">Place order</button> -->
                             <button class="btn btn-primary" type="submit" :disabled="processing">Add to cart</button>

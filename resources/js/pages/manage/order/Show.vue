@@ -238,7 +238,7 @@ const image_url = computed(() => {
                         </div>
                     </div>
 
-                    <div v-if="order.type === 'custom'" :class="styleClass.card.container">
+                    <div v-if="order.resource?.length" :class="styleClass.card.container">
                         <div :class="styleClass.card.head">
                             <h2 :class="styleClass.card.title">
                                 <i class="fa-solid fa-file-image text-amber-500"></i>

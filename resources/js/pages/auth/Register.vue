@@ -57,15 +57,19 @@ function submit() {
             </form>
 
             <div class="mt-8 text-center">
-                <small class="text-muted mb-4 inline-block text-xs">Or continue with social account</small>
+                <div v-if="false">
+                    <small class="text-muted mb-4 inline-block text-xs">Or continue with social account</small>
 
-                <div class="mb-7 flex flex-col justify-center gap-3.5 md:flex-row">
-                    <a :href="route('google.login')" class="btn btn-outline-primary" target="_blank"> <i class="fa-brands fa-google" /> Login with Google </a>
-                    <!-- <a :href="route('facebook.login')" class="btn btn-outline-primary"><i class="fa-brands fa-facebook" /> Login with Facebook</a> -->
-                    <!-- <button disabled class="btn btn-outline-primary">
+                    <div class="mb-7 flex flex-col justify-center gap-3.5 md:flex-row">
+                        <a :href="route('google.login')" class="btn btn-outline-primary" target="_blank">
+                            <i class="fa-brands fa-google" /> Login with Google
+                        </a>
+                        <!-- <a :href="route('facebook.login')" class="btn btn-outline-primary"><i class="fa-brands fa-facebook" /> Login with Facebook</a> -->
+                        <!-- <button disabled class="btn btn-outline-primary">
                         <i class="fa-brands fa-facebook" type="button" />
                         <span>Login with Facebook</span>
                     </button> -->
+                    </div>
                 </div>
 
                 <p class="text-sm leading-5 font-normal">

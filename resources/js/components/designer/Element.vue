@@ -41,7 +41,6 @@ onMounted(() => {
             break;
 
         case 'design':
-            console.log(design.value.rotate);
             design.value.rotate = design.value.rotate || 0;
             break;
     }

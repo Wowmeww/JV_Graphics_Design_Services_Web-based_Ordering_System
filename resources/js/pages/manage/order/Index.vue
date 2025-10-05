@@ -180,106 +180,104 @@ function handleSort(sortOption) {
             </div>
             <section class="container mx-auto mt-4" v-if="tempOrders.length">
                 <div class="flex flex-col">
-                    <div class="">
-                        <div class="w-full py-2">
-                            <div class="border border-gray-200 md:rounded-lg dark:border-gray-700">
-                                <table :class="styleClass.table">
-                                    <thead :class="styleClass.tableHead">
-                                        <tr>
-                                            <th scope="col" :class="styleClass.th">
-                                                <div class="flex items-center gap-x-3">
-                                                    <button class="flex items-center gap-x-2">
-                                                        <span>Order</span>
+                    <div class="w-full py-2">
+                        <div class="relative overflow-x-scroll border border-gray-200 md:overflow-x-auto md:rounded-lg dark:border-gray-700">
+                            <table :class="styleClass.table">
+                                <thead :class="styleClass.tableHead">
+                                    <tr>
+                                        <th scope="col" :class="styleClass.th">
+                                            <div class="flex items-center gap-x-3">
+                                                <button class="flex items-center gap-x-2">
+                                                    <span>Order</span>
 
-                                                        <!-- Sort Options Dropdown (Shared for both mobile and desktop) -->
-                                                        <div
-                                                            v-if="sortOptionOpen"
-                                                            class="dark:bg-[#1e293b]' fixed z-40 mt-2 min-w-[180px] overflow-hidden rounded-lg border border-gray-200 bg-white text-left shadow-lg md:absolute md:right-auto dark:border-gray-600"
-                                                        >
-                                                            <span
-                                                                v-for="option in sortOptions"
-                                                                class="block cursor-pointer px-4 py-2 font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
-                                                                @click="handleSort(option)"
-                                                            >
-                                                                {{ option }}
-                                                            </span>
-                                                        </div>
-                                                        <button type="button" @click="sortOptionOpen = true">
-                                                            <i class="fa-solid fa-arrow-down-9-1"></i>
-                                                        </button>
-                                                    </button>
-                                                </div>
-                                            </th>
-                                            <th scope="col" :class="styleClass.th">Date</th>
-
-                                            <th scope="col" :class="styleClass.th">Status</th>
-
-                                            <th scope="col" :class="styleClass.th">Customer</th>
-                                            <th scope="col" :class="styleClass.th">Type</th>
-
-                                            <th scope="col" :class="styleClass.th">Customer's note</th>
-
-                                            <th scope="col" class="relative px-4 py-3.5">
-                                                <span class="sr-only">Actions</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody :class="styleClass.tBody">
-                                        <tr v-for="order in tempOrders" :key="`order-${order.id}`">
-                                            <td :class="styleClass.td">
-                                                <span class="font-bold lowercase">{{ order.id }}</span>
-                                            </td>
-                                            <td :class="styleClass.td">
-                                                {{ formatDate(order.created_at) }}
-                                            </td>
-                                            <td :class="styleClass.td">
-                                                <Link
-                                                    :href="route('manage.orders.index', { ...form, status: order.status })"
-                                                    :class="styleClass.badges[order.status]"
-                                                >
-                                                    <i :class="badges[order.status].icon"></i>
-                                                    <span class="capitalize">{{ order.status }}</span>
-                                                </Link>
-                                            </td>
-
-                                            <td :class="styleClass.td">
-                                                <Link
-                                                    :href="route('manage.orders.index', { ...form, search: order.user.name })"
-                                                    class="flex items-center gap-x-2"
-                                                >
-                                                    <img :class="styleClass.user.avatar" :src="avatarSrc(order.user.avatar_url)" alt="" />
-                                                    <div>
-                                                        <h2 :class="styleClass.user.name">
-                                                            {{ order.user.name }}
-                                                        </h2>
-                                                        <p :class="styleClass.user.email">
-                                                            {{ order.user.email }}
-                                                        </p>
-                                                    </div>
-                                                </Link>
-                                            </td>
-                                            <td :class="styleClass.td">
-                                                {{ order.type }}
-                                            </td>
-                                            <td :class="[styleClass.td]">
-                                                <p v-if="order.note" class="max-w-xs text-wrap">
-                                                    {{ order.note.slice(0, 100) }}
-                                                </p>
-                                            </td>
-                                            <td class="px-4 py-4 text-sm whitespace-nowrap">
-                                                <div class="flex items-center gap-x-6">
-                                                    <Link
-                                                        :href="route('manage.orders.show', { order, searches: { ...form } })"
-                                                        class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none"
+                                                    <!-- Sort Options Dropdown (Shared for both mobile and desktop) -->
+                                                    <div
+                                                        v-if="sortOptionOpen"
+                                                        class="dark:bg-[#1e293b]' fixed z-40 mt-2 min-w-[180px] overflow-hidden rounded-lg border border-gray-200 bg-white text-left shadow-lg md:absolute md:right-auto dark:border-gray-600"
                                                     >
-                                                        Review
-                                                    </Link>
+                                                        <span
+                                                            v-for="option in sortOptions"
+                                                            class="block cursor-pointer px-4 py-2 font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                                                            @click="handleSort(option)"
+                                                        >
+                                                            {{ option }}
+                                                        </span>
+                                                    </div>
+                                                    <button type="button" @click="sortOptionOpen = true">
+                                                        <i class="fa-solid fa-arrow-down-9-1"></i>
+                                                    </button>
+                                                </button>
+                                            </div>
+                                        </th>
+                                        <th scope="col" :class="styleClass.th">Date</th>
+
+                                        <th scope="col" :class="styleClass.th">Status</th>
+
+                                        <th scope="col" :class="styleClass.th">Customer</th>
+                                        <th scope="col" :class="styleClass.th">Type</th>
+
+                                        <th scope="col" :class="styleClass.th">Customer's note</th>
+
+                                        <th scope="col" class="relative px-4 py-3.5">
+                                            <span class="sr-only">Actions</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody :class="styleClass.tBody">
+                                    <tr v-for="order in tempOrders" :key="`order-${order.id}`">
+                                        <td :class="styleClass.td">
+                                            <span class="font-bold lowercase">{{ order.id }}</span>
+                                        </td>
+                                        <td :class="styleClass.td">
+                                            {{ formatDate(order.created_at) }}
+                                        </td>
+                                        <td :class="styleClass.td">
+                                            <Link
+                                                :href="route('manage.orders.index', { ...form, status: order.status })"
+                                                :class="styleClass.badges[order.status]"
+                                            >
+                                                <i :class="badges[order.status].icon"></i>
+                                                <span class="capitalize">{{ order.status }}</span>
+                                            </Link>
+                                        </td>
+
+                                        <td :class="styleClass.td">
+                                            <Link
+                                                :href="route('manage.orders.index', { ...form, search: order.user.name })"
+                                                class="flex items-center gap-x-2"
+                                            >
+                                                <img :class="styleClass.user.avatar" :src="avatarSrc(order.user.avatar_url)" alt="" />
+                                                <div>
+                                                    <h2 :class="styleClass.user.name">
+                                                        {{ order.user.name }}
+                                                    </h2>
+                                                    <p :class="styleClass.user.email">
+                                                        {{ order.user.email }}
+                                                    </p>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                            </Link>
+                                        </td>
+                                        <td :class="styleClass.td">
+                                            {{ order.type }}
+                                        </td>
+                                        <td :class="[styleClass.td]">
+                                            <p v-if="order.note" class="max-w-xs text-wrap">
+                                                {{ order.note.slice(0, 100) }}
+                                            </p>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm whitespace-nowrap">
+                                            <div class="flex items-center gap-x-6">
+                                                <Link
+                                                    :href="route('manage.orders.show', { order, searches: { ...form } })"
+                                                    class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none"
+                                                >
+                                                    Review
+                                                </Link>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -75,7 +75,7 @@ function clearRole() {
 }
 
 const styleClass = computed(() => ({
-    table: 'min-w-full divide-y divide-gray-200 dark:divide-gray-700 border rounded overflow-hidden border-gray-200 md:rounded-lg dark:border-gray-700',
+    table: 'w-full divide-y divide-gray-200 dark:divide-gray-700 border rounded overflow-hidden border-gray-200 md:rounded-lg dark:border-gray-700',
     tableHead: 'bg-gray-50 dark:bg-gray-800',
     th: 'py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400',
     td: 'px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap capitalize',
@@ -160,170 +160,160 @@ function handleSort(sortOption) {
                     </small>
                 </div>
             </div>
-            <section class="container mx-auto mt-4" v-if="tempUsers.length">
-                <div class="flex flex-col">
-                    <div class="">
-                        <div class="w-full py-2">
-                            <div class="w-full">
-                                <table :class="styleClass.table">
-                                    <thead :class="styleClass.tableHead">
-                                        <tr>
-                                            <th scope="col" :class="styleClass.th">
-                                                <div class="flex items-center gap-x-3">
-                                                    <span>Name</span>
-                                                    <div>
-                                                        <!-- Sort Options Dropdown (Shared for both mobile and desktop) -->
-                                                        <div
-                                                            v-if="sortOptionOpen"
-                                                            class="dark:bg-[#1e293b]' fixed z-40 mt-2 min-w-[180px] overflow-hidden rounded-lg border border-gray-200 bg-white text-left shadow-lg md:absolute md:right-auto dark:border-gray-600"
-                                                        >
-                                                            <span
-                                                                v-for="option in sortOptions"
-                                                                :class="{ 'bg-gray-100 font-semibold dark:bg-gray-700': form.sort === option }"
-                                                                class="block cursor-pointer px-4 py-2 font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
-                                                                @click="handleSort(option)"
-                                                            >
-                                                                {{ option }}
-                                                            </span>
-                                                        </div>
-                                                        <button type="button" @click="sortOptionOpen = true">
-                                                            <i class="fa-solid fa-arrow-down-9-1"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </th>
-
-                                            <th scope="col" :class="styleClass.th">Verified</th>
-                                            <th scope="col" :class="styleClass.th">Email</th>
-                                            <th scope="col" :class="styleClass.th">Age</th>
-                                            <th scope="col" :class="styleClass.th">Role</th>
-
-                                            <th scope="col" class="styleClass.th">
-                                                <span class="sr-only">Actions</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody :class="styleClass.tBody">
-                                        <tr v-for="user in tempUsers">
-                                            <td :class="styleClass.td">
-                                                {{ user.name }}
-                                            </td>
-                                            <td :class="styleClass.td">
-                                                <div class="group relative inline-flex">
-                                                    <!-- Verification Status Button -->
-                                                    <button
-                                                        class="text-xl transition-transform hover:scale-110 focus:outline-none"
-                                                        aria-label="Verification status"
-                                                    >
-                                                        <i
-                                                            v-if="user.verified_at"
-                                                            class="bi bi-patch-check-fill text-green-500 transition-colors hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
-                                                            title="Verified user"
-                                                        ></i>
-                                                        <i
-                                                            v-else
-                                                            class="bi bi-patch-exclamation-fill text-amber-500 transition-colors hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300"
-                                                            title="Unverified user"
-                                                        ></i>
-                                                    </button>
-
-                                                    <!-- Tooltip -->
-                                                    <div
-                                                        class="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform group-hover:block group-focus:block"
-                                                        role="tooltip"
-                                                    >
-                                                        <div
-                                                            class="relative rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white shadow-lg dark:bg-gray-700"
-                                                        >
-                                                            <span class="whitespace-nowrap">
-                                                                {{ user.verified_at ? 'Verified user' : 'Unverified user' }}
-                                                            </span>
-                                                            <!-- Tooltip arrow -->
-                                                            <div class="absolute top-full left-1/2 -translate-x-1/2 transform">
-                                                                <svg class="h-2 w-4 text-gray-900 dark:text-gray-700" viewBox="0 0 255 255">
-                                                                    <polygon points="0,0 127.5,127.5 255,0" fill="currentColor" />
-                                                                </svg>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td :class="[styleClass.td, 'space-x-2']">
-                                                <div class="group relative inline-flex">
-                                                    <!-- Verification Status Button -->
-                                                    <button
-                                                        class="text-gray-600 transition-all duration-200 hover:scale-110 hover:text-blue-500 focus:outline-none dark:text-gray-200 dark:hover:text-blue-400"
-                                                        aria-label="Email verification status"
-                                                    >
-                                                        <i
-                                                            v-if="user.email_verified_at"
-                                                            class="fa-solid fa-circle-check text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
-                                                            title="Verified email"
-                                                        ></i>
-                                                        <i
-                                                            v-else
-                                                            class="fa-solid fa-circle-xmark text-amber-500 hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300"
-                                                            title="Unverified email"
-                                                        ></i>
-                                                    </button>
-
-                                                    <!-- Tooltip -->
-                                                    <div
-                                                        class="absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 transform group-hover:block group-focus:block"
-                                                        role="tooltip"
-                                                    >
-                                                        <div
-                                                            class="relative rounded-md bg-gray-800 px-3 py-2 text-xs font-medium text-white shadow-lg dark:bg-gray-700"
-                                                        >
-                                                            <span class="whitespace-nowrap">
-                                                                {{ user.email_verified_at ? 'Email verified' : 'Email not verified' }}
-                                                            </span>
-                                                            <!-- Tooltip arrow -->
-                                                            <div class="absolute top-full left-1/2 -translate-x-1/2 transform">
-                                                                <svg class="h-2 w-4 text-gray-800 dark:text-gray-700" viewBox="0 0 255 255">
-                                                                    <polygon points="0,0 127.5,127.5 255,0" fill="currentColor" />
-                                                                </svg>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <span class="lowercase">
-                                                    {{ user.email }}
-                                                </span>
-                                            </td>
-                                            <td :class="styleClass.td">
-                                                <span>{{ user.age }}</span>
-                                            </td>
-                                            <td :class="[styleClass.td, 'z-50']">
+            <section class="mx-auto mt-4" v-if="tempUsers.length">
+                <div class="relative py-2 overflow-x-scroll md:overflow-x-auto">
+                    <table :class="styleClass.table">
+                        <thead :class="styleClass.tableHead">
+                            <tr>
+                                <th scope="col" :class="styleClass.th">
+                                    <div class="flex items-center gap-x-3">
+                                        <span>Name</span>
+                                        <div>
+                                            <!-- Sort Options Dropdown (Shared for both mobile and desktop) -->
+                                            <div
+                                                v-if="sortOptionOpen"
+                                                class="dark:bg-[#1e293b]' fixed z-40 mt-2 min-w-[180px] overflow-hidden rounded-lg border border-gray-200 bg-white text-left shadow-lg md:absolute md:right-auto dark:border-gray-600"
+                                            >
                                                 <span
-                                                    class="inline-flex items-center gap-2 rounded px-2.5 py-1 text-xs font-medium text-white uppercase shadow transition-all duration-150 focus:outline-none"
-                                                    :class="{
-                                                        'bg-green-500': user.role === 'customer',
-                                                        'bg-blue-500': user.role === 'admin',
-                                                        'bg-red-500': user.role === 'suspended',
-                                                    }"
+                                                    v-for="option in sortOptions"
+                                                    :class="{ 'bg-gray-100 font-semibold dark:bg-gray-700': form.sort === option }"
+                                                    class="block cursor-pointer px-4 py-2 font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                                                    @click="handleSort(option)"
                                                 >
-                                                    {{ user.role }}</span
-                                                >
-                                            </td>
-                                            <td :class="styleClass.td">
-                                                <a
-                                                    :href="`mailto:${user.email}`"
-                                                    class="text-primary dark:text-primary-400 inline-block -translate-x-4"
-                                                >
-                                                    <i class="bi bi-envelope-at-fill text-lg"></i>
-                                                </a>
-                                                <Link as="button" :href="route('manage.users.edit', { user: user.id })">
-                                                    <i class="fa-solid fa-arrow-up-right-from-square text-primary dark:text-primary-400"></i>
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                                                    {{ option }}
+                                                </span>
+                                            </div>
+                                            <button type="button" @click="sortOptionOpen = true">
+                                                <i class="fa-solid fa-arrow-down-9-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col" :class="styleClass.th">Verified</th>
+                                <th scope="col" :class="styleClass.th">Email</th>
+                                <th scope="col" :class="styleClass.th">Age</th>
+                                <th scope="col" :class="styleClass.th">Role</th>
+
+                                <th scope="col" class="styleClass.th">
+                                    <span class="sr-only">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody :class="styleClass.tBody">
+                            <tr v-for="user in tempUsers">
+                                <td :class="styleClass.td">
+                                    {{ user.name }}
+                                </td>
+                                <td :class="styleClass.td">
+                                    <div class="group relative inline-flex">
+                                        <!-- Verification Status Button -->
+                                        <button
+                                            class="text-xl transition-transform hover:scale-110 focus:outline-none"
+                                            aria-label="Verification status"
+                                        >
+                                            <i
+                                                v-if="user.verified_at"
+                                                class="bi bi-patch-check-fill text-green-500 transition-colors hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
+                                                title="Verified user"
+                                            ></i>
+                                            <i
+                                                v-else
+                                                class="bi bi-patch-exclamation-fill text-amber-500 transition-colors hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300"
+                                                title="Unverified user"
+                                            ></i>
+                                        </button>
+
+                                        <!-- Tooltip -->
+                                        <div
+                                            class="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform group-hover:block group-focus:block"
+                                            role="tooltip"
+                                        >
+                                            <div
+                                                class="relative rounded-lg bg-gray-900 px-3 py-2 text-xs font-medium text-white shadow-lg dark:bg-gray-700"
+                                            >
+                                                <span class="whitespace-nowrap">
+                                                    {{ user.verified_at ? 'Verified user' : 'Unverified user' }}
+                                                </span>
+                                                <!-- Tooltip arrow -->
+                                                <div class="absolute top-full left-1/2 -translate-x-1/2 transform">
+                                                    <svg class="h-2 w-4 text-gray-900 dark:text-gray-700" viewBox="0 0 255 255">
+                                                        <polygon points="0,0 127.5,127.5 255,0" fill="currentColor" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td :class="[styleClass.td, 'space-x-2']">
+                                    <div class="group relative inline-flex">
+                                        <!-- Verification Status Button -->
+                                        <button
+                                            class="text-gray-600 transition-all duration-200 hover:scale-110 hover:text-blue-500 focus:outline-none dark:text-gray-200 dark:hover:text-blue-400"
+                                            aria-label="Email verification status"
+                                        >
+                                            <i
+                                                v-if="user.email_verified_at"
+                                                class="fa-solid fa-circle-check text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
+                                                title="Verified email"
+                                            ></i>
+                                            <i
+                                                v-else
+                                                class="fa-solid fa-circle-xmark text-amber-500 hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300"
+                                                title="Unverified email"
+                                            ></i>
+                                        </button>
+
+                                        <!-- Tooltip -->
+                                        <div
+                                            class="absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 transform group-hover:block group-focus:block"
+                                            role="tooltip"
+                                        >
+                                            <div
+                                                class="relative rounded-md bg-gray-800 px-3 py-2 text-xs font-medium text-white shadow-lg dark:bg-gray-700"
+                                            >
+                                                <span class="whitespace-nowrap">
+                                                    {{ user.email_verified_at ? 'Email verified' : 'Email not verified' }}
+                                                </span>
+                                                <!-- Tooltip arrow -->
+                                                <div class="absolute top-full left-1/2 -translate-x-1/2 transform">
+                                                    <svg class="h-2 w-4 text-gray-800 dark:text-gray-700" viewBox="0 0 255 255">
+                                                        <polygon points="0,0 127.5,127.5 255,0" fill="currentColor" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <span class="lowercase">
+                                        {{ user.email }}
+                                    </span>
+                                </td>
+                                <td :class="styleClass.td">
+                                    <span>{{ user.age || '-' }}</span>
+                                </td>
+                                <td :class="[styleClass.td, 'z-50']">
+                                    <span
+                                        class="inline-flex items-center gap-2 rounded px-2.5 py-1 text-xs font-medium text-white uppercase shadow transition-all duration-150 focus:outline-none"
+                                        :class="{
+                                            'bg-green-500': user.role === 'customer',
+                                            'bg-blue-500': user.role === 'admin',
+                                            'bg-red-500': user.role === 'suspended',
+                                        }"
+                                    >
+                                        {{ user.role }}</span
+                                    >
+                                </td>
+                                <td :class="styleClass.td">
+                                    <a :href="`mailto:${user.email}`" class="text-primary dark:text-primary-400 inline-block -translate-x-4">
+                                        <i class="bi bi-envelope-at-fill text-lg"></i>
+                                    </a>
+                                    <Link as="button" :href="route('manage.users.edit', { user: user.id })">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-primary dark:text-primary-400"></i>
+                                    </Link>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div>
