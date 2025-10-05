@@ -11,14 +11,11 @@ const isNavigationOpen = ref(false);
 const toggleNavigation = () => {
     isNavigationOpen.value = !isNavigationOpen.value;
 };
+const page = usePage();
+const component = computed(() => page.component);
+const settings = computed(() => page.props.settings);
 
-const component = computed(() => usePage().component);
-
-const user = computed(() => usePage().props.auth.user);
-
-const logoSrc = ref('');
-
-axios.get(route('page.settings', { what: 'app_logo' })).then((res) => (logoSrc.value = res.data));
+const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
@@ -26,7 +23,7 @@ axios.get(route('page.settings', { what: 'app_logo' })).then((res) => (logoSrc.v
         <div class="container mx-auto px-6 py-3 md:flex">
             <div class="flex items-center justify-between pr-6">
                 <Link :href="route('home')">
-                    <img class="h-6 w-auto sm:h-7" :src="logoSrc" alt="logo" />
+                    <img class="h-6 w-auto sm:h-7" :src="settings.app_logo" alt="logo" />
                 </Link>
                 <MobileMenuButton :isNavigationOpen="isNavigationOpen" @toggleNavigation="toggleNavigation" />
             </div>

@@ -40,15 +40,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $systemSettings = SystemSetting::whereIn('key', ['app_name', 'app_name_short', 'app_logo'])
-            ->get()
-            ->toArray();
-        $tempSettings = [];
+        $settings = SystemSetting::pluck('value', 'key')->toArray();
+        $settings['app_logo'] = $settings['app_logo'] ? '/storage/'.$settings['app_logo'] : '/favicon.jpg';
 
-        foreach ($systemSettings as $value) {
-            $tempSettings[$value['key']] = $value['value'];
-        }
-        // dd($tempSettings);
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -74,7 +68,7 @@ class HandleInertiaRequests extends Middleware
                 'action' => null
             ],
             'github' => env('GITHUB_REPO'),
-            'settings' => $tempSettings
+            'settings' => $settings
         ];
     }
 }

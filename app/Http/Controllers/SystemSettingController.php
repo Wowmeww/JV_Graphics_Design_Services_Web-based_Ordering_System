@@ -11,7 +11,16 @@ class SystemSettingController extends Controller
 {
     public function edit()
     {
-        $systemSettings = SystemSetting::whereIn('key', ['app_name', 'app_name_short', 'app_logo'])->get();
+        $systemSettings = SystemSetting::whereIn(
+            'key',
+            [
+                'app_name',
+                'app_name_short',
+                'app_logo',
+                'landing_page_title',
+                'landing_page_subtitle',
+            ]
+        )->pluck('value', 'key');
 
         return Inertia::render('profile/SystemSettings', [
             'systemSettings' => $systemSettings
@@ -24,6 +33,8 @@ class SystemSettingController extends Controller
             'app_name' => ['required', 'string', 'max:255'],
             'app_name_short' => ['required', 'string', 'max:255'],
             'app_logo' => ['required', $withLogo ? 'image' : 'string', 'max:1024'],
+            'landing_page_title' => ['required', 'string', 'max:255'],
+            'landing_page_subtitle' => ['nullable', 'string', 'max:255']
         ]);
 
 

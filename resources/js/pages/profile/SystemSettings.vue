@@ -3,7 +3,7 @@ import ContainerPrimary from '@/components/ContainerPrimary.vue';
 import Layout from './partials/layout.vue';
 import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
 import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary.vue';
-import { router, useForm } from '@inertiajs/vue3';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, reactive, ref } from 'vue';
 import axios from 'axios';
 
@@ -12,23 +12,18 @@ defineOptions({
 });
 
 const props = defineProps({
-    systemSettings: Array,
-});
-
-const tempSettings = computed(function () {
-    let temp = {};
-    props.systemSettings.forEach((element) => (temp[element.key] = element.value));
-
-    return temp;
+    systemSettings: Object,
 });
 
 const form = useForm({
-    app_name: tempSettings.value.app_name,
-    app_name_short: tempSettings.value.app_name_short,
-    app_logo: tempSettings.value.app_logo || 'none',
+    app_name: props.systemSettings.app_name,
+    app_name_short: props.systemSettings.app_name_short,
+    app_logo: props.systemSettings.app_logo || 'none',
+    landing_page_title: props.systemSettings.landing_page_title,
+    landing_page_subtitle: props.systemSettings.landing_page_subtitle,
     _method: 'PATCH',
 });
-
+const settings = computed(() => usePage().props.settings);
 const logoPreview = reactive({
     src: '',
     isDirty: false,
@@ -39,13 +34,10 @@ function submit() {
         onFinish: () => (logoPreview.isDirty = false),
     });
 }
-resetLogoPreview();
 function resetLogoPreview() {
-    axios(route('page.settings', { what: 'app_logo' })).then(function (res) {
-        form.errors.app_logo = '';
-        form.app_logo = tempSettings.value.app_logo || 'none';
-        logoPreview.src = res.data;
-    });
+    form.errors.app_logo = '';
+    form.app_logo = props.systemSettings.app_logo || 'none';
+    logoPreview.src = settings.app_logo;
     logoPreview.isDirty = false;
 }
 
@@ -63,7 +55,7 @@ function handleLogoChange(event, action) {
         logoPreview.src = URL.createObjectURL(file);
         form.app_logo = file;
     } else if (!file && action === 'delete') {
-        logoPreview.src = '/favicon.png';
+        logoPreview.src = '/favicon.jpg';
         form.app_logo = 'delete';
         logoPreview.isDirty = true;
     }
@@ -77,7 +69,7 @@ function handleLogoChange(event, action) {
             <h2 class="pl-6 text-2xl font-bold sm:text-xl">Advance System settings</h2>
             <p class="flex items-center gap-2 pl-6 text-base font-medium">Update the pages settings.</p>
 
-            <form @submit.prevent="submit" class="mt-4 space-y-3">
+            <form @submit="submit" class="mt-4 space-y-3">
                 <TextInputPrimary v-model="form.app_name" :error="form.errors.app_name" label="Website name" placeholder="Enter your desired name." />
                 <TextInputPrimary
                     v-model="form.app_name_short"
@@ -90,10 +82,10 @@ function handleLogoChange(event, action) {
                 <div class="mt-4 flex items-center gap-3">
                     <!-- Logo Preview with Reset Button -->
                     <div class="group relative">
-                        <div class="relative h-20 w-20 md:h-30 md:w-30">
+                        <div class="relative h-20 w-20 md:h-54 md:w-54">
                             <img
                                 class="h-full w-full rounded-full object-cover p-1 ring-4 ring-indigo-400/20 transition-all duration-300 group-hover:ring-indigo-500/30 dark:ring-indigo-500/30 dark:group-hover:ring-indigo-400/40"
-                                :src="logoPreview.src"
+                                :src="logoPreview.src || settings.app_logo"
                                 alt="page logo"
                             />
                             <button
@@ -126,16 +118,19 @@ function handleLogoChange(event, action) {
                         </div>
 
                         <button
-                            v-if="tempSettings.app_logo"
+                            v-if="systemSettings.app_logo"
                             type="button"
                             @click="handleLogoChange(null, 'delete')"
                             class="flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:text-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                         >
                             <i class="fa-solid fa-trash-can text-sm"></i>
-                            Delete
+                            Restore default
                         </button>
                     </div>
                 </div>
+
+                <TextInputPrimary v-model="form.landing_page_title" :error="form.errors.landing_page_title" label="Landing page header" placeholder="Enter your desired header." />
+                <TextInputPrimary v-model="form.landing_page_subtitle" :error="form.errors.landing_page_subtitle" label="Landing page subheader" placeholder="Enter your desired subheader." />
 
                 <div class="pt-6">
                     <ButtonPrimary type="submit" label="Save changes" :with-spinner="form.processing" :disable="!form.isDirty" />

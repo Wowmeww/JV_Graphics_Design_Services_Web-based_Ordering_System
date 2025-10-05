@@ -26,10 +26,12 @@
         })();
     </script>
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title inertia>{{ inertia()->getShared('settings')['app_name'] ||  config('app.name', 'Laravel') }}</title>
 
     {{-- favicon --}}
-    <link rel="shortcut icon" href="/favicon.jpg" type="image/x-icon" />
+    <link rel="shortcut icon"
+        href="{{ inertia()->getShared('settings')['app_logo']}}"
+        type="image/x-icon"/>
     @routes
     @vite(['resources/js/app.js'])
     @inertiaHead

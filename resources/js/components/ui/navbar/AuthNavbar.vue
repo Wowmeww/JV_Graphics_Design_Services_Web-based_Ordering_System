@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const isDropdownOpen = ref(false);
 const page = usePage();
-
+const settings = computed(() => page.props.settings);
 function toggleDropdown() {
     isDropdownOpen.value = !isDropdownOpen.value;
 }
@@ -21,9 +21,6 @@ function handleToggle() {
     emit('toggle');
 }
 
-const logoSrc = ref('');
-
-axios.get(route('page.settings', { what: 'app_logo' })).then((res) => (logoSrc.value = res.data));
 </script>
 
 <template>
@@ -48,14 +45,14 @@ axios.get(route('page.settings', { what: 'app_logo' })).then((res) => (logoSrc.v
                     </button>
                     <div class="ms-2 flex items-center gap-3 md:me-24">
                         <Link :href="route('dashboard')">
-                            <img class="h-6 w-auto sm:h-7" :src="logoSrc" alt="logo" />
+                            <img class="h-6 w-auto sm:h-7" :src="settings.app_logo" alt="logo" />
                         </Link>
                         <Link :href="route('home')" class="self-center text-lg font-semibold whitespace-nowrap sm:text-2xl dark:text-white">
                             <span class="hidden md:inline">
-                                {{ page.props.settings.app_name }}
+                                {{ settings.app_name }}
                             </span>
                             <span class="md:hidden">
-                                {{ page.props.settings.app_name_short }}
+                                {{ settings.app_name_short }}
                             </span>
                         </Link>
                     </div>

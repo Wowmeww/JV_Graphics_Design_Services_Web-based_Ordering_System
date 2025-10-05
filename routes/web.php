@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 
 require __DIR__ . '/shop.php';
 require __DIR__ . '/products.php';
@@ -31,20 +32,3 @@ require __DIR__ . '/designer.php';
 require __DIR__ . '/transaction.php';
 require __DIR__ . '/user.php';
 
-
-
-// GET THE WEB APP NAME
-
-Route::get('/page-settings/{what}', function (string $what) {
-    $res = '';
-    $value = SystemSetting::where('key', $what)->first()->value;
-    switch ($what) {
-        case 'app_name':
-            $res = $value;
-            break;
-        case 'app_logo':
-            $res = $value ? "/storage/$value" : '/favicon.jpg';
-            break;
-    }
-    return $res;
-})->name('page.settings');

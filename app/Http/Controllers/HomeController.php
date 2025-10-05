@@ -18,13 +18,13 @@ class HomeController extends Controller
 {
     public function index()
     {
+        
         $products = Category::with(['products.images', 'products.category'])
             ->get()
             ->map(function (Category $category) {
                 return $category->products->first();
             })
             ->filter(); // removes nulls automatically
-        // dd($products);
         return Inertia::render('Welcome', [
             'products' => $products,
         ]);
@@ -111,5 +111,9 @@ class HomeController extends Controller
     public function about() {
         
         return Inertia::render('About');
+    }
+    public function privacy() {
+        
+        return Inertia::render('Privacy');
     }
 }
