@@ -45,6 +45,12 @@ class WishlistController extends Controller
 
     public function store(Request $request, Product $product, ?ProductOption $option = null)
     {
+        if ($request->user()->is_admin) {
+            return back()->with('status', [
+                'type' => 'info',
+                'message' => 'Access denied: Admin accounts are restricted.',
+            ]);
+        }
         $validated = $request->validate([
             'quantity' => ['required', 'integer', 'min:12', 'max:24'],
         ]);

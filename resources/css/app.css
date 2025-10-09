@@ -6,11 +6,12 @@
 
 @theme {
 
-  --font-montserrat: 'Montserrat', sans-serif, 'Instrument Sans', ui-sans-serif, system-ui,
+  --font-montserrat: 'Montserrat', 'sans-serif', 'Instrument Sans', 'ui-sans-serif', 'system-ui',
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
 
-  --color-primary-100: #f3e9f5;
+  /* change the color for primary and secondary with redish color */
+  /* --color-primary-100: #f3e9f5;
   --color-primary-200: #e1c8e4;
   --color-primary-300: #cd9ed2;
   --color-primary-400: #b46bbc;
@@ -18,7 +19,7 @@
   --color-primary: #631D76;
   --color-primary-700: #631d76;
   --color-primary-800: #4d165d;
-  --color-primary-900: #3b1248;
+  --color-primary-900: #3b1248; */
 
   --color-secondary-50: #f1efff;
   --color-secondary-100: #d9d2ff;
@@ -30,6 +31,75 @@
   --color-secondary: #2f01a6;
   --color-secondary-800: #23007d;
   --color-secondary-900: #170055;
+
+  /* ------- deep seek --------------------------------------------------------------------------------------------------------------- */
+
+  --color-primary-100: #fde8e8;
+  --color-primary-200: #f9c6c6;
+  --color-primary-300: #f5a3a3;
+  --color-primary-400: #f18181;
+  --color-primary-500: #ed5e5e;
+  --color-primary: #dc2626;
+  --color-primary-700: #b91c1c;
+  --color-primary-800: #991b1b;
+  --color-primary-900: #7f1d1d;
+
+  /* --color-secondary-50: #fef2f2;
+  --color-secondary-100: #fee2e2;
+  --color-secondary-200: #fecaca;
+  --color-secondary-300: #fca5a5;
+  --color-secondary-400: #f87171;
+  --color-secondary-500: #ef4444;
+  --color-secondary-600: #dc2626;
+  --color-secondary: #b91c1c;
+  --color-secondary-800: #991b1b;
+  --color-secondary-900: #7f1d1d; */
+  /* ------- deep seek --------------------------------------------------------------------------------------------------------------- */
+
+
+  /* ------- chat-gpt --------------------------------------------------------------------------------------------------------------- */
+
+  /* main brand red */
+
+  /* --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-300: #fca5a5;
+  --color-primary-400: #f87171;
+  --color-primary-500: #ef4444;
+  --color-primary-600: #dc2626;
+  --color-primary-700: #b91c1c;
+  --color-primary-800: #991b1b;
+  --color-primary-900: #7f1d1d;
+  --color-primary: #b91c1c; */
+
+  /* main brand color */
+  --color-primary-50: #fff4f2;
+  --color-primary-100: #ffe6e0;
+  --color-primary-200: #ffcfc2;
+  --color-primary-300: #ffb09a;
+  --color-primary-400: #ff8b6b;
+  --color-primary-500: #ff6542;
+  --color-primary-600: #f54d2d;
+  --color-primary-700: #d4381c;
+  --color-primary-800: #b32e17;
+  --color-primary-900: #8f2412;
+  --color-primary: #ff6542;
+
+  /* main accent*/
+
+  /* --color-secondary-50: #fdf2f8;
+  --color-secondary-100: #fce7f3;
+  --color-secondary-200: #fbcfe8;
+  --color-secondary-300: #f9a8d4;
+  --color-secondary-400: #f472b6;
+  --color-secondary-500: #ec4899;
+  --color-secondary-600: #db2777;
+  --color-secondary-700: #be185d;
+  --color-secondary-800: #9d174d;
+  --color-secondary-900: #831843;
+  --color-secondary: #db2777; */
+  /* ------- chat-gpt --------------------------------------------------------------------------------------------------------------- */
 
   --color-tertiary: #9E4770;
   --color-neutral: #2E2532;

@@ -60,6 +60,7 @@ class OrderController extends Controller
                 ->get();
         } else {
             $attributes = $request->input('item');
+
             $product = Product::with(['images'])->find($attributes['product_id']);
             $item = [
                 'product' => $product,
@@ -77,17 +78,17 @@ class OrderController extends Controller
             if ($request->input('item') && isset($request->input('item')['images'])) {
                 $item['images'] = $request->input('item')['images'];
             }
-            $items = [$item];
+            $items->add($item);
         }
-
         foreach ($items as $value) {
-            if ($value->product->type === 'unavailable') {
+            if ($value['product']['type'] === 'unavailable') {
                 return back()->with('status', [
                     'type' => 'error',
                     'message' => 'Sorry, but you are ordering unavailable product',
                 ]);
             }
         }
+        // dd($items);
 
         return Inertia::render('shop/order/Create', [
             'items' => $items,
@@ -97,7 +98,12 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        if ($request->user()->is_admin) {
+            return back()->with('status', [
+                'type' => 'info',
+                'message' => 'Access denied: Admin accounts are restricted.',
+            ]);
+        }
         foreach ($request->input('items') as $item) {
             if (isset($item['images'])) {
                 // dd($item['images']);

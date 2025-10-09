@@ -39,7 +39,7 @@ function addAnnouncement() {
         <div class="container-secondary flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between">
             <h1 class="text-xl font-semibold md:text-2xl">Announcements</h1>
 
-            <div>
+            <div v-if="$page.props.auth?.user.is_admin">
                 <button @click="addAnnouncement" class="btn btn-secondary">
                     <i class="fa-solid fa-plus"></i>
                     <span> New Announcements</span>
@@ -55,8 +55,8 @@ function addAnnouncement() {
         </div>
 
         <div class="container-secondary h-screen">
-            <div class="grid h-full grid-rows-none items-start gap-3 overflow-y-scroll md:grid-cols-2">
-                <Announcement v-for="announcement in announcements" :announcement="announcement" with-controls class="" />
+            <div class="grid h-full grid-rows-none items-start gap-3 overflow-y-auto md:grid-cols-2">
+                <Announcement v-for="announcement in announcements" :announcement="announcement" class="" />
 
                 <div v-if="!announcements?.length" class="col-span-full flex h-full flex-col items-center justify-center py-12">
                     <div class="max-w-md rounded-xl p-6 text-center">

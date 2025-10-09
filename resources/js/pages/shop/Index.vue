@@ -75,7 +75,7 @@
     <div class="flex flex-col lg:flex-row h-full min-h-screen ">
         <ShopFilter :defaults="filter" :categories="categories" @filter="handleFilter" />
         <div ref="scrollArea"
-            class="scroll-container  h-full mx-auto grid max-h-screen max-w-7xl flex-1 grid-cols-2 gap-1.5 overflow-y-scroll px-2 pt-8 md:grid-cols-3 md:gap-4 xl:grid-cols-4"
+            class="scroll-container  h-full mx-auto grid max-h-screen max-w-7xl flex-1 grid-cols-2 gap-1.5 overflow-y-auto px-2 pt-8 md:grid-cols-3 md:gap-4 xl:grid-cols-4"
             @scroll.passive="onScroll">
             <ShopItem :filter="filter" v-for="product in products" :key="product.id" :product="product" />
 

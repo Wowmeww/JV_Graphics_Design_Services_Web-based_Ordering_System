@@ -80,7 +80,7 @@ cp .env.example .env
 php artisan key:generate
 php artisan storage:link
 npm run build
-composer run dev #this should run (npm run dev, php artisan serve, php artisan reverb:start)
+composer run dev #this should run (npm run dev, php artisan serve, php artisan queue:listen, php artisan reverb:start)
 ```
 
 ### With Docker (Recommended)

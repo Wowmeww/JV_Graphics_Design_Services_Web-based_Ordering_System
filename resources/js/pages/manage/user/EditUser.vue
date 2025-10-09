@@ -216,6 +216,12 @@ const styleClasses = {
                             </div>
                         </div>
                         <div :class="styleClasses.fieldWrapper">
+                            <span :class="styleClasses.fieldLabel">Phone</span>
+                            <div :class="styleClasses.fieldValue">
+                                {{ user.phone }}
+                            </div>
+                        </div>
+                        <div :class="styleClasses.fieldWrapper">
                             <span :class="styleClasses.fieldLabel"
                                 >Email
                                 <div class="group relative inline-block">

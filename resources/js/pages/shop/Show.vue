@@ -127,11 +127,20 @@ const styleClass = {
                         <img :src="image_url(focusedImage)" alt="" class="h-full w-full object-cover object-center" />
                     </div>
                 </div>
-                <div class="h-[32rem] flex-1 overflow-y-scroll">
+                <div class="h-[32rem] flex-1 overflow-y-auto">
                     <div class="border-b-2 border-slate-300 pb-5">
                         <div class="space-y-1.5">
-                            <div class="flex items-center justify-between px-2">
-                                <h4 :class="styleClass.name">{{ tempProduct.name }}</h4>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 :class="styleClass.name">{{ tempProduct.name }}</h4>
+                                    <small
+                                        :class="[
+                                            'text-xs font-semibold',
+                                            tempProduct.stock > 20 ? 'text-green-500 dark:text-green-400' : 'text-orange-500 dark:text-orange-400',
+                                        ]"
+                                        >Stocks - {{ tempProduct.stock }}</small
+                                    >
+                                </div>
                                 <span>{{ product.category.name }}</span>
                             </div>
                             <p :class="styleClass.text">{{ tempProduct.description }}</p>
@@ -145,7 +154,7 @@ const styleClass = {
                                 <div class="flex items-center gap-2">
                                     <p :class="styleClass.price">
                                         {{
-                                            tempProduct.price.toLocaleString('en-PH', {
+                                            Number(tempProduct.price).toLocaleString('en-PH', {
                                                 style: 'currency',
                                                 currency: 'PHP',
                                             })
@@ -158,7 +167,7 @@ const styleClass = {
                                     Total amount:
                                     <span class="text-xl font-semibold">
                                         {{
-                                            (tempProduct.price * form.quantity).toLocaleString('en-PH', {
+                                            (Number(tempProduct.price) * form.quantity).toLocaleString('en-PH', {
                                                 style: 'currency',
                                                 currency: 'PHP',
                                             })
@@ -178,7 +187,7 @@ const styleClass = {
                         </div>
                     </div>
                     <div class="space-y-5 border-b-2 border-slate-300 pt-6 pb-5">
-                        <div class="space-y-3">
+                        <div class="space-y-3" v-if="product.options.length">
                             <span class="inline-block text-lg font-bold">Options</span>
                             <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
                                 <p

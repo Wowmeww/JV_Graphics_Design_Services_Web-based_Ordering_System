@@ -43,14 +43,14 @@ class User extends Authenticatable  implements MustVerifyEmail
     }
 
     // APPENDED ATTRIBUTE
-    protected $appends = ['is_admin', 'messages', 'age'];
+    protected $appends = ['is_admin', 'not_seen_messages', 'age'];
     public function getIsAdminAttribute()
     {
         return $this->role === 'admin';
     }
-    public function getMessagesAttribute()
+    public function getNotSeenMessagesAttribute()
     {
-        return [];
+        return $this->receivedMessages()->get()->where(fn($q) => !$q->seen)->count();
     }
 
     public function getAgeAttribute()

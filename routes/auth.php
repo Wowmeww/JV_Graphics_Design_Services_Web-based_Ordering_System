@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // SYSTEM SETTINGS ROUTE
-Route::middleware(['auth', 'verified', 'can:create,App\Models\Product', 'can:accessAsAdmin', 'password.confirm'])->group(function () {
+Route::middleware(['auth', 'verified', 'can:create,App\Models\Product', 'can:accessAsAdmin'])->group(function () {
     Route::get('/system-settings', [SystemSettingController::class, 'edit'])->name('system.settings');
     Route::patch('/system-settings', [SystemSettingController::class, 'update']);
 });

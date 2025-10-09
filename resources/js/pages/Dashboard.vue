@@ -45,7 +45,7 @@ const styleClass = computed(() => ({
     fragmentsContainer: 'px-8 py-4 bg-white rounded-xl shadow-lg dark:bg-gray-800 grid md:grid-cols-2 gap-4 gap-y-7',
     fragment: 'h-fit overflow-y-hidden rounded-2xl bg-slate-100 pb-3 dark:bg-slate-700 px-1 pt-2',
     fragmentTitle: 'font-medium text-lg pb-3 text-center',
-    scrollContainer: 'h-[70vh] overflow-y-scroll px-1 space-y-6',
+    scrollContainer: 'h-[70vh] overflow-y-auto px-1 space-y-6',
     pageContainer: 'mx-auto max-w-7xl pb-7 px-1',
 }));
 

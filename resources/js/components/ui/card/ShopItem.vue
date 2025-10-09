@@ -35,12 +35,18 @@ function filterCategory() {
         class="animate__animated animate__fadeIn glass-card relative h-fit max-w-72 min-w-40 space-y-2 rounded-xl border border-white/40 bg-white/5 p-2 text-white transition hover:bg-white/10 md:w-full md:p-4 dark:bg-black/5 hover:dark:bg-black/10"
     >
         <!-- Category Button -->
-        <button
-            @click="filterCategory"
-            class="bg-primary-500/90 absolute top-2 right-4 z-20 rounded-full px-3 py-1 text-xs font-medium shadow-md transition hover:opacity-90 dark:bg-blue-400"
-        >
-            {{ product.category.name }}
-        </button>
+        <div class="absolute top-2 right-4 z-20 flex flex-col items-end gap-2">
+            <button
+                @click="filterCategory"
+                class="bg-primary-500/90 rounded-full px-3 py-1 text-xs font-medium shadow-md transition hover:opacity-90 dark:bg-blue-400"
+            >
+                {{ product.category.name }}
+            </button>
+            <!-- <small class="bg-secondary-500/90 rounded-full px-3 py-1 text-xs font-medium shadow-md transition hover:opacity-90 dark:bg-blue-400">
+                stocks:
+                {{ product.stock || '0' }}
+            </small> -->
+        </div>
 
         <!-- Product Image Carousel -->
         <div class="h-32 w-full overflow-hidden rounded-lg sm:h-36 md:h-44 lg:h-48">
@@ -49,25 +55,33 @@ function filterCategory() {
 
         <!-- Product Info -->
         <div class="space-y-1 md:space-y-2">
-            <!-- Product Title -->
-            <h3 class="text-lg leading-tight font-semibold md:text-xl">
-                {{ product.name }}
-            </h3>
+            <div>
+                <!-- Product Title -->
+                <h3 class="text-lg leading-tight font-semibold md:text-xl">
+                    {{ product.name }}
+                </h3>
+
+                <span v-if="product.size" class="font-medium">Size: {{ product.size }}</span>
+            </div>
 
             <!-- Description Snippet -->
             <p class="line-clamp-2 text-sm text-gray-200">
                 {{ product?.description?.substring(0, 65) }}
                 <span v-show="product?.description?.length >= 65">&hellip;</span>
             </p>
-            <!-- Rating Stars -->
-            <div class="flex items-center gap-1 text-xs md:text-sm">
-                <div class="flex text-yellow-400 dark:text-amber-300">
-                    <i v-for="i in starIcons.full" :key="'full-' + i" class="fa-solid fa-star"></i>
-                    <i v-if="starIcons.half" class="fa-regular fa-star-half-stroke"></i>
-                    <i v-for="i in starIcons.empty" :key="'empty-' + i" class="fa-regular fa-star"></i>
+            <div class="flex items-center justify-between">
+                <span class="block text-right text-xs font-semibold">Stocks - {{ product.stock }}</span>
+
+                <!-- Rating Stars -->
+                <div class="flex items-center gap-1 text-xs md:text-sm">
+                    <div class="flex text-yellow-400 dark:text-amber-300">
+                        <i v-for="i in starIcons.full" :key="'full-' + i" class="fa-solid fa-star"></i>
+                        <i v-if="starIcons.half" class="fa-regular fa-star-half-stroke"></i>
+                        <i v-for="i in starIcons.empty" :key="'empty-' + i" class="fa-regular fa-star"></i>
+                    </div>
+                    <span>{{ product.rating?.toFixed(1) ?? '0.0' }}</span>
+                    <span v-if="product.ratings?.length" class="text-gray-400">({{ product.ratings.length }})</span>
                 </div>
-                <span>{{ product.rating?.toFixed(1) ?? '0.0' }}</span>
-                <span v-if="product.ratings?.length" class="text-gray-400">({{ product.ratings.length }})</span>
             </div>
         </div>
 
@@ -75,13 +89,12 @@ function filterCategory() {
         <div class="flex items-center justify-between pt-1">
             <!-- Price -->
             <span class="text-lg font-bold md:text-xl">
-                {{ product.price.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}
+                {{ Number(product.price).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}
             </span>
 
             <!-- Add to Cart Button -->
             <Link
                 :href="route('shop.show', { product: product.id, filter: props.filter })"
-                v-if="!user?.is_admin"
                 class="bg-secondary grid place-content-center rounded-lg border border-white px-3 py-1 text-center text-xs font-medium text-white uppercase shadow-sm transition-all hover:opacity-90 hover:shadow active:opacity-80 md:px-4 md:text-sm"
             >
                 View

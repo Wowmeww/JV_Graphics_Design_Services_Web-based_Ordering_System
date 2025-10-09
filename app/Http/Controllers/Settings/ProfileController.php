@@ -38,17 +38,18 @@ class ProfileController extends Controller
     public function updateProfile(Request $request)
     {
         $user = $request->user();
-
+        // dd($request->all());
 
         $idCardRequired = count(array_filter($request->idCard, fn($prop) => $prop));
         $validated = $request->validate([
             'name'       => ['required', 'string', 'max:100'],
             'sex'        => ['required', 'string'],
             'email'      => ['required', 'email', 'lowercase', 'max:200', Rule::unique('users', 'email')->ignore($user->id)],
+            'phone'      => ['required', 'string', 'regex:/^(\+?63|0)?9\d{9}$/'],
             'birth_date' => ['nullable', 'string'],
             'address'    => ['nullable', 'string', 'max:255'],
             'avatar'     => ['nullable', 'image', 'max:1024'],
-            'idCard' => ['nullable', 'array'],
+            'idCard'     => ['nullable', 'array'],
             'idCard.type' => $idCardRequired ? 'required' : 'nullable|string',
             'idCard.selfie' => $idCardRequired ? 'required' : 'nullable|image|max:1024',
             'idCard.front' => $idCardRequired ? 'required' : 'nullable|image|max:1024',
@@ -61,6 +62,7 @@ class ProfileController extends Controller
             'sex'        => $validated['sex'],
             'birth_date' => $validated['birth_date'] ?? null,
             'address'    => $validated['address'] ?? null,
+            'phone'    => $validated['phone'] ?? null,
         ];
 
         // Check if email was changed

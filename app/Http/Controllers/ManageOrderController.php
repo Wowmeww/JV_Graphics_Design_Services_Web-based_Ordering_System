@@ -85,12 +85,28 @@ class ManageOrderController extends Controller
             'message' => ['nullable', 'string', 'max:255'],
         ]);
 
+        if ($order->status === 'completed') {
+            $newStock = $order->option ?
+                $order->option->stock + $order->quantity :
+                $order->product->stock + $order->quantity;
+
+            if ($order->option) {
+                $order->option()->update([
+                    'stock' => $newStock
+                ]);
+            } else {
+                $order->product()->update([
+                    'stock' => $newStock
+                ]);
+            }
+        }
+
         if ($validated['status'] === 'completed') {
             $newStock = $order->option ?
                 $order->option->stock - $order->quantity :
                 $order->product->stock - $order->quantity;
 
-            if ($newStock < 1) {
+            if ($newStock < 0) {
                 return back()->with('status', [
                     'type' => 'error',
                     'message' => 'No stocks for this product'

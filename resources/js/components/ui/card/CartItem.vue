@@ -55,7 +55,7 @@
         class="flex relative items-center gap-3 p-3 bg-white dark:bg-gray-50 rounded-lg border border-gray-200 dark:border-gray-300 shadow-xs hover:shadow-md transition-all duration-200 group">
         <!-- Action Buttons -->
         <div
-            class="absolute top-2 right-2 text-xs space-x-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+            class="absolute top-2 right-2 text-xs space-x-1.5 -mt-3">
             <button @click.stop="handleShow" type="button"
                 class="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-200 transition-colors">
                 <i class="fa-solid fa-eye text-secondary-500 text-sm"></i>

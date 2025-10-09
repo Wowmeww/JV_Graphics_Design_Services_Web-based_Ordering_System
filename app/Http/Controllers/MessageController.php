@@ -105,7 +105,7 @@ class MessageController extends Controller
     {
         $sender = $request->user();
         $request->validate([
-            'content' => ['string', 'required']
+            'content' => ['string', 'required', 'max:255']
         ]);
 
 

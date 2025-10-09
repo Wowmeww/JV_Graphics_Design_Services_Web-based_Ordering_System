@@ -73,10 +73,9 @@ function goBack() {
                             <p class="form-control form-control-secondary">{{ product.stock }}</p>
                         </div>
                     </div>
-
                     <div v-if="product.type === 'main product with variant'">
                         <label class="input-label mt-2 mb-2 inline-block"> Variant/s </label>
-                        <div class="h-fit max-h-90 space-y-2 overflow-y-scroll rounded-xl pr-3">
+                        <div class="h-fit max-h-90 space-y-2 overflow-y-auto rounded-xl pr-3">
                             <Product v-for="opt of product.options" :key="opt.id" :product="opt" />
                             <!---------- OPTION CREATE LINK ------------------------------------------------------->
                             <Link

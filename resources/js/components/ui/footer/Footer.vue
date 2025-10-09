@@ -15,20 +15,24 @@ const settings = computed(() => page.props.settings);
             <div class="-mx-4 mt-3 flex flex-wrap justify-center">
                 <FooterLink label="Home" :active="component === 'Welcome'" routeName="home" />
                 <FooterLink label="About" :active="component === 'About'" routeName="about" />
-                <FooterLink label="Privacy" :active="component === 'Privacy'" routeName="privacy" />
+                <FooterLink label="Privacy & Cookie policy" :active="component === 'Privacy'" routeName="privacy" />
                 <!-- <FooterLink label="Cookies" routeName="register" /> -->
             </div>
 
             <hr class="my-6 border-gray-200 md:my-10 dark:border-gray-700" />
 
             <div class="flex flex-col items-center gap-3 px-6 sm:flex-row sm:justify-between">
-                <p class="text-sm text-gray-500 dark:text-gray-300">© 2025 {{ settings.app_name }}. All rights reserved.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-300">
+                    © {{ new Date().getFullYear() }} {{ settings.app_name }}. All rights reserved.
+                </p>
 
                 <div class="-mx-2 flex items-center gap-3 text-xl">
-                    <!-- <i class="fa-brands fa-facebook" /> -->
-                    <a :href="page.props.github" target="_blank">
-                        <i class="fa-brands fa-github" />
+                    <a :href="settings.facebook_page" target="_blank">
+                        <i class="fa-brands fa-facebook" />
                     </a>
+                    <!-- <a :href="page.props.github" target="_blank">
+                        <i class="fa-brands fa-github" />
+                    </a> -->
                 </div>
             </div>
         </div>

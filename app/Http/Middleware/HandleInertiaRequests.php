@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
     {
         $settings = SystemSetting::pluck('value', 'key')->toArray();
         $settings['app_logo'] = $settings['app_logo'] ? '/storage/'.$settings['app_logo'] : '/favicon.jpg';
+        $settings['app_about'] = $settings['app_about'] ? json_decode($settings['app_about']) : [];
 
         return [
             ...parent::share($request),

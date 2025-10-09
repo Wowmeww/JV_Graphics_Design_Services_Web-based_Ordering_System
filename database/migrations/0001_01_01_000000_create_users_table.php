@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->enum('role', ['customer', 'admin', 'suspended'])->default('customer');
             $table->string('address')->nullable();
+            $table->string('phone')->nullable();
             $table->date('birth_date')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('verified_at')->nullable();

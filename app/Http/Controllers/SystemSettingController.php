@@ -19,6 +19,7 @@ class SystemSettingController extends Controller
                 'app_logo',
                 'landing_page_title',
                 'landing_page_subtitle',
+                'app_about'
             ]
         )->pluck('value', 'key');
 
@@ -28,14 +29,18 @@ class SystemSettingController extends Controller
     }
     public function update(Request $request)
     {
+        // dd($request->all());
         $withLogo = $request->hasFile('app_logo');
         $validated = $request->validate([
             'app_name' => ['required', 'string', 'max:255'],
             'app_name_short' => ['required', 'string', 'max:255'],
             'app_logo' => ['required', $withLogo ? 'image' : 'string', 'max:1024'],
             'landing_page_title' => ['required', 'string', 'max:255'],
-            'landing_page_subtitle' => ['nullable', 'string', 'max:255']
+            'landing_page_subtitle' => ['nullable', 'string', 'max:255'],
+            'app_about' => ['nullable', 'string'],
         ]);
+
+        // dd($validated['app_about']);
 
 
         if ($withLogo) {
@@ -53,9 +58,9 @@ class SystemSettingController extends Controller
             }
         }
 
-        return to_route('system.settings')->with('status', [
+        return back()->with('status', [
             'type' => 'success',
-            'message' => 'Updated'
+            'message' => 'System Settings Updated'
         ]);
     }
 }

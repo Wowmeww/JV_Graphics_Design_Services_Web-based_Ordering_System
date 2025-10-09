@@ -56,6 +56,7 @@ const styleClass = computed(() => ({
         </button>
     </div>
     <div>
+        <div v-if="sidebarOpen" @click="sidebarOpen = false" class="bg-secondary/20 fixed inset-0 z-30 backdrop-blur-xs transition dark:bg-black/30 dark:backdrop-blur-xs"></div>
         <!-- Toggle Button for Mobile -->
         <!-- Sidebar -->
         <aside :class="[styleClass.aside, sidebarOpen ? 'translate-x-0' : '-translate-x-full']" aria-label="Sidebar">

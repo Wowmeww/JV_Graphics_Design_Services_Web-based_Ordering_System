@@ -1,6 +1,6 @@
 <script setup>
 import { router, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import CartItem from '../card/CartItem.vue';
 import ButtonPrimary from '../buttons/ButtonPrimary.vue';
 
@@ -81,6 +81,38 @@ function deleteBulkItems() {
         });
     }
 }
+
+const totalAmount = reactive({
+    cart: 0,
+    wishlist: 0,
+});
+
+watch(
+    () => [...selectedCartItems.value, ...selectedWishlistItems.value],
+    (items) => {
+        const temps = {
+            cart: 0,
+            wishlist: 0,
+        };
+        items.forEach((item) => {
+            if (item.cart_id) {
+                temps.cart += item.total_amount;
+            } else {
+                temps.wishlist += item.total_amount;
+            }
+        });
+
+        totalAmount.cart = temps.cart;
+        totalAmount.wishlist = temps.wishlist;
+    },
+);
+
+function formatCurrency(num) {
+    return num.toLocaleString('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+    });
+}
 </script>
 
 <template>
@@ -132,11 +164,11 @@ function deleteBulkItems() {
                     </div>
                 </div>
             </div>
-            <div class="flex-1 overflow-auto border-t border-slate-400">
+            <div class="flex-1 overflow-auto">
                 <div v-if="open.cart" class="space-y-2 scroll-auto py-4">
                     <CartItem v-model="selectedCartItems" @close="close" v-for="(item, i) in cartItems" :item="item" :key="`c-${i}`" />
                 </div>
-                <div v-if="open.wishlist" class="space-y-2 scroll-auto py-18">
+                <div v-if="open.wishlist" class="space-y-2 scroll-auto py-4">
                     <CartItem
                         v-model="selectedWishlistItems"
                         @close="close"
@@ -148,23 +180,33 @@ function deleteBulkItems() {
                 </div>
             </div>
 
-            <div class="w-full border-t-2 border-slate-300 bg-white p-3 pb-6 dark:bg-gray-800">
-                <ButtonPrimary
-                    v-if="open.cart"
-                    :withSpinner="false"
-                    :disable="!selectedCartItems.length"
-                    label="Checkout"
-                    variant="secondary"
-                    @click="handleCheckout"
-                />
-                <ButtonPrimary
-                    v-if="open.wishlist"
-                    :withSpinner="false"
-                    :disable="!selectedWishlistItems.length"
-                    label="Checkout"
-                    variant="secondary"
-                    @click="handleCheckout"
-                />
+            <div class="w-full space-y-3 border-t-2 border-slate-300 bg-white p-3 pb-6 dark:bg-gray-800">
+                <div class="flex items-center justify-between" v-if="selectedCartItems.length && open.cart">
+                    <span>Total amount:</span>
+                    <span class="font-bold"> {{ formatCurrency(totalAmount.cart) }}</span>
+                </div>
+                <div class="flex items-center justify-between" v-if="selectedWishlistItems.length && open.wishlist">
+                    <span>Total amount:</span>
+                    <span class="font-bold" v-if="selectedWishlistItems.length && open.wishlist"> {{ formatCurrency(totalAmount.wishlist) }}</span>
+                </div>
+                <div>
+                    <ButtonPrimary
+                        v-if="open.cart"
+                        :withSpinner="false"
+                        :disable="!selectedCartItems.length"
+                        label="Checkout"
+                        variant="secondary"
+                        @click="handleCheckout"
+                    />
+                    <ButtonPrimary
+                        v-if="open.wishlist"
+                        :withSpinner="false"
+                        :disable="!selectedWishlistItems.length"
+                        label="Checkout"
+                        variant="secondary"
+                        @click="handleCheckout"
+                    />
+                </div>
             </div>
         </div>
     </aside>

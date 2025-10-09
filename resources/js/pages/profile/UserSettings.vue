@@ -20,6 +20,7 @@ const form = useForm({
     name: props.user.name,
     sex: props.user.sex,
     email: props.user.email,
+    phone: props.user.phone,
     birth_date: props.user.birth_date,
     address: props.user.address,
     avatarAction: 'none',
@@ -92,7 +93,7 @@ function submit() {
 }
 
 function resetForm() {
-    form.reset('name', 'email', 'sex', 'birth_date', 'address', 'idCard');
+    form.reset('name', 'email', 'sex', 'birth_date', 'address', 'idCard', 'phone');
 }
 
 const styleClass = {
@@ -216,6 +217,12 @@ const styleClass = {
                             <TextInputPrimary v-model="form.email" label="Your email" :error="form.errors.email" placeholder="your.email@mail.com" />
 
                             <TextInputPrimary
+                                v-model="form.phone"
+                                label="Phone number"
+                                :error="form.errors.phone"
+                                placeholder="Enter your phone number"
+                            />
+                            <TextInputPrimary
                                 v-model="form.birth_date"
                                 label="Birth date"
                                 type="date"
@@ -242,9 +249,6 @@ const styleClass = {
                                     Verify email address
                                     <i class="fas fa-arrow-right ml-2 text-xs transition-transform duration-200 group-hover:translate-x-1"></i>
                                 </Link>
-                             
-                               
-                                
                             </div>
 
                             <!-- Verification info---------------------------------------------------------- -->
@@ -291,8 +295,7 @@ const styleClass = {
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="flex flex-col gap-2">
+                            <div v-if="!user.verified_at" class="flex flex-col gap-2">
                                 <div>
                                     <label for="selfie" class="input-label">Selfie</label>
                                     <input
@@ -343,7 +346,6 @@ const styleClass = {
                                     </div>
                                 </div>
                             </div>
-
                             <div class="flex flex-col gap-3 pt-4 md:flex-row">
                                 <ButtonPrimary
                                     variant="outline-secondary"

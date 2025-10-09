@@ -4,26 +4,37 @@ import Layout from './partials/layout.vue';
 import TextInputPrimary from '@/components/ui/TextInputPrimary.vue';
 import ButtonPrimary from '@/components/ui/buttons/ButtonPrimary.vue';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import axios from 'axios';
 
 defineOptions({
     layout: Layout,
 });
 
-const props = defineProps({
-    systemSettings: Object,
-});
+// const props = defineProps({
+//     systemSettings: Object,
+// });
+
+const settings = computed(() => usePage().props.settings);
 
 const form = useForm({
-    app_name: props.systemSettings.app_name,
-    app_name_short: props.systemSettings.app_name_short,
-    app_logo: props.systemSettings.app_logo || 'none',
-    landing_page_title: props.systemSettings.landing_page_title,
-    landing_page_subtitle: props.systemSettings.landing_page_subtitle,
+    app_name: settings.value.app_name,
+    app_name_short: settings.value.app_name_short,
+    app_logo: settings.value.app_logo || 'none',
+    landing_page_title: settings.value.landing_page_title,
+    landing_page_subtitle: settings.value.landing_page_subtitle,
+    app_about: JSON.stringify(settings.value.app_about),
     _method: 'PATCH',
 });
-const settings = computed(() => usePage().props.settings);
+
+const appAbout = ref([
+    ...settings.value.app_about,
+    {
+        header: null,
+        content: null,
+    },
+]);
+
 const logoPreview = reactive({
     src: '',
     isDirty: false,
@@ -36,8 +47,8 @@ function submit() {
 }
 function resetLogoPreview() {
     form.errors.app_logo = '';
-    form.app_logo = props.systemSettings.app_logo || 'none';
-    logoPreview.src = settings.app_logo;
+    form.app_logo = settings.value.app_logo || 'none';
+    logoPreview.src = settings.value.app_logo;
     logoPreview.isDirty = false;
 }
 
@@ -60,6 +71,11 @@ function handleLogoChange(event, action) {
         logoPreview.isDirty = true;
     }
 }
+
+watch(appAbout.value, (about) => {
+    about = about.filter((abt) => abt.header || abt.content);
+    form.app_about = JSON.stringify(about);
+});
 </script>
 
 <template>
@@ -69,7 +85,7 @@ function handleLogoChange(event, action) {
             <h2 class="pl-6 text-2xl font-bold sm:text-xl">Advance System settings</h2>
             <p class="flex items-center gap-2 pl-6 text-base font-medium">Update the pages settings.</p>
 
-            <form @submit="submit" class="mt-4 space-y-3">
+            <form @submit.prevent="submit" class="mt-4 space-y-3">
                 <TextInputPrimary v-model="form.app_name" :error="form.errors.app_name" label="Website name" placeholder="Enter your desired name." />
                 <TextInputPrimary
                     v-model="form.app_name_short"
@@ -118,7 +134,7 @@ function handleLogoChange(event, action) {
                         </div>
 
                         <button
-                            v-if="systemSettings.app_logo"
+                            v-if="settings.app_logo !== form.app_logo"
                             type="button"
                             @click="handleLogoChange(null, 'delete')"
                             class="flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:text-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
@@ -129,8 +145,44 @@ function handleLogoChange(event, action) {
                     </div>
                 </div>
 
-                <TextInputPrimary v-model="form.landing_page_title" :error="form.errors.landing_page_title" label="Landing page header" placeholder="Enter your desired header." />
-                <TextInputPrimary v-model="form.landing_page_subtitle" :error="form.errors.landing_page_subtitle" label="Landing page subheader" placeholder="Enter your desired subheader." />
+                <TextInputPrimary
+                    v-model="form.landing_page_title"
+                    :error="form.errors.landing_page_title"
+                    label="Landing page header"
+                    placeholder="Enter your desired header."
+                />
+                <TextInputPrimary
+                    v-model="form.landing_page_subtitle"
+                    :required="false"
+                    :error="form.errors.landing_page_subtitle"
+                    label="Landing page subheader"
+                    placeholder="Enter your desired subheader."
+                />
+
+                <div class="flex flex-col">
+                    <label class="input-label">About</label>
+                    <small v-if="form.errors.app_about" class="form-control-error">
+                        {{ form.errors.app_about }}
+                    </small>
+                </div>
+                <div class="h-96 space-y-1.5 overflow-y-scroll pb-6 pl-4 lg:pl-6">
+                    <div class="space-y-2" v-for="(item, i) in appAbout" :key="`about-item-${i}`">
+                        <TextInputPrimary
+                            :required="false"
+                            v-model="item.header"
+                            :label="`Header ${i + 1}`"
+                            placeholder="Enter your desired header."
+                        />
+                        <TextInputPrimary
+                            :required="false"
+                            v-model="item.content"
+                            :label="`Content ${i + 1}`"
+                            type="textarea"
+                            placeholder="Enter your desired content."
+                            :row="2"
+                        />
+                    </div>
+                </div>
 
                 <div class="pt-6">
                     <ButtonPrimary type="submit" label="Save changes" :with-spinner="form.processing" :disable="!form.isDirty" />

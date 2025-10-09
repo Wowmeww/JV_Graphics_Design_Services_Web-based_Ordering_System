@@ -19,7 +19,7 @@ function toggleSeen() {
 
 function getInitials() {
     const fullName = props.notification.from.name;
-    console.log(fullName);
+
     if (!props) return '';
 
     const names = fullName.trim().split(' ');
@@ -43,6 +43,7 @@ const getRelativeTime = (date) => {
 };
 const avatarUrl = computed(() => {
     const url = props.notification.from.avatar_url;
+    // console.log(props.notification.from);
     if (!url) return null;
     return url.includes('https') ? url : `/storage/${url}`;
 });
@@ -76,7 +77,6 @@ const avatarUrl = computed(() => {
                     <img v-else :src="avatarUrl" alt="avatar" class="h-full w-full object-cover" />
                 </div>
             </div>
-
             <div class="flex-1">
                 <p class="text-sm text-gray-600 dark:text-gray-300">
                     {{ notification.from.name }}

@@ -3,7 +3,6 @@
 
     const props = defineProps({
         announcement: Object,
-        withControls: Boolean
     });
 
     const expanded = ref(false);
@@ -40,7 +39,7 @@
             <span class="text-sm font-light text-gray-600 dark:text-gray-400">
                 {{ formattedDate(announcement.created_at) }}
             </span>
-            <div v-if="withControls" class="space-x-2">
+            <div v-if="$page.props?.auth?.user?.is_admin" class="space-x-2">
                 <Link as="button" :href="route('announcement.edit', { announcement: announcement.id })"
                     class="hover:text-primary dark:hover:text-primary-300">
                 <i class="bi bi-pencil-square"></i>

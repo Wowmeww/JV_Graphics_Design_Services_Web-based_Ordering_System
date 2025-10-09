@@ -29,6 +29,7 @@ class ShopController extends Controller
 
     public function show(Request $request, Product $product, ?ProductOption $option = null)
     {
+        // dd('test');
         // if ($product->type === 'custom') {
         //     return redirect()->route('designer', $product)->with('status', session('status'));
         // }

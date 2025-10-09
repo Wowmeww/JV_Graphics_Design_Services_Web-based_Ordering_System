@@ -47,6 +47,12 @@ class CartController extends Controller
     }
     function store(Request $request, Product $product, ?ProductOption $option = null)
     {
+        if ($request->user()->is_admin) {
+            return back()->with('status', [
+                'type' => 'info',
+                'message' => 'Access denied: Admin accounts are restricted.',
+            ]);
+        }
         if (count($request->files)) {
             foreach ($request->images as $image) {
 
