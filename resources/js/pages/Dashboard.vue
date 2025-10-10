@@ -49,9 +49,6 @@ const styleClass = computed(() => ({
     pageContainer: 'mx-auto max-w-7xl pb-7 px-1',
 }));
 
-const unseenMessages = computed(() => {
-    return props.user.received_messages?.filter((message) => !message.seen)?.length;
-});
 </script>
 
 <template>
@@ -109,13 +106,13 @@ const unseenMessages = computed(() => {
                         label="message"
                         is="Link"
                         :href="route('message.index')"
-                        :count="unseenMessages"
+                        :count="user.not_seen_messages"
                         icon="fa-solid fa-comments"
                     />
                     <a href="#announcements">
                         <DashboardMenuItem type="button" label="announcements" :count="announcements.length" icon="fa-solid fa-bullhorn" />
                     </a>
-                    <DashboardMenuItem type="button" label="profile" is="Link" :href="route('profile.edit')" icon="fa-solid fa-user" />
+                    <!-- <DashboardMenuItem type="button" label="profile" is="Link" :href="route('profile.edit')" icon="fa-solid fa-user" /> -->
                 </div>
             </ContainerPrimary>
         </div>

@@ -23,7 +23,7 @@
 </script>
 <template>
     <div
-        class="animate__animated animate__fadeIn transition-all duration-300 text-white glass bg-white/5 hover:bg-white/10 dark:bg-black/5 hover:dark:bg-black/10 border border-white/20 dark:border-white/10 flex flex-col p-3 rounded-xl gap-3 max-h-fit hover:shadow-lg">
+        class="animate__animated animate__fadeIn glass  transition-all duration-300 dark:bg-black/5 hover:dark:bg-black/10 border border-slate-300 dark:border-white/10 flex flex-col p-3 rounded-xl gap-3 max-h-fit hover:shadow-lg">
         <div class="flex gap-3 items-start">
             <!-- Product Image -->
             <img :src="image_url" :alt="item.option?.name || item.product?.name"
@@ -54,7 +54,7 @@
                 <!-- Desktop Message Input -->
                 <div class="hidden md:block mt-auto">
                     <TextInputPrimary v-model="model"
-                        customStyle="placeholder:text-white/60 bg-white/5 hover:bg-white/10 focus:bg-white/15 transition-colors"
+                        customStyle="placeholder:text-white/60 bg-white/5 hover:bg-white/10 !placeholder-slate-500 focus:bg-white/15 transition-colors"
                         :row="2" placeholder="Optional message to seller for this order" :required="false"
                         label="Message/Note" variant="secondary" type="textarea" />
                 </div>

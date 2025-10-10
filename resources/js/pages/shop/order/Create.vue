@@ -39,7 +39,7 @@ console.log(page.props.custom_order_resource);
 </script>
 
 <template>
-    <BackgroundImage path="/images/background/blob.jpg" class="h-full overflow-y-auto" />
+
     <form @submit.prevent="handleSubmit" class="mx-auto max-w-6xl px-2 py-6">
         <div class="grid gap-2 py-4 md:grid-cols-2">
             <OrderCard v-for="(item, i) in form.items" v-model="form.items[i].note" :key="i" :item="item" />

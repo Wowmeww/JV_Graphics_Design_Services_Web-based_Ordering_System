@@ -17,8 +17,8 @@ class ProductionSeeder extends Seeder
         User::factory()->create([
             'role' => 'admin',
             'name' => "JV Graphics Design Services",
-            'email' => 'jaiveegds2024@gmail.com',
-            'password' => bcrypt('jaiveegds2024@gmail.com'),
+            'email' => 'jaiveegds2024@gmail.com.test',
+            'password' => bcrypt('jaiveegds2024@gmail.com.test'),
             'email_verified_at' => Carbon::now(),
             'birth_date' => Carbon::now(),
             'address' => 'Bulan, Sorsogon, Philippines',

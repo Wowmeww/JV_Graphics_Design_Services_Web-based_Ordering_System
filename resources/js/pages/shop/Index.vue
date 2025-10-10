@@ -71,7 +71,8 @@
 
     <Head title="Shop" />
 
-    <BackgroundImage path="/images/background/blob.jpg" class="h-full overflow-y-auto " />
+    <!-- <BackgroundImage path="/images/background/blob.jpg" class="h-full overflow-y-auto " /> -->
+     <div class="dark:bg-primary/20 bg-primary-800/70 absolute inset-0 -z-10"></div>
     <div class="flex flex-col lg:flex-row h-full min-h-screen ">
         <ShopFilter :defaults="filter" :categories="categories" @filter="handleFilter" />
         <div ref="scrollArea"
