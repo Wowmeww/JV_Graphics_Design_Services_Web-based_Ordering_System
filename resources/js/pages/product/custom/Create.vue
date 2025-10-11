@@ -67,7 +67,7 @@
                         <div class="grid grid-cols-12 gap-2 gap-y-3">
                             <div class="col-span-8">
                                 <TextInputPrimary v-model="form.size" :error="form.errors.size" :required="false"
-                                    label="Size L*W*H, W*H " placeholder="L*W*H" variant="secondary" />
+                                    label="Size L*W*H, W*H " placeholder="L*W*H or small, xl" variant="secondary" />
                             </div>
                             <div class="col-span-4">
                                 <Dropdown :required="false" label="Unit" :value="form.unit"
