@@ -42,7 +42,7 @@ function changeTempProduct(p) {
         ...props.product,
         ...p,
         index: p.index ?? 0,
-        images: p.images ?? props.product.images,
+        images: p.images?.length ? p?.images : props?.product?.images,
     };
     focusedImage.value = tempProduct.value.images?.[0]?.image_path || '';
 }
@@ -144,9 +144,9 @@ const styleClass = {
                                 <span>{{ product.category.name }}</span>
                             </div>
                             <p :class="styleClass.text">{{ tempProduct.description }}</p>
-                            <div class="flex gap-4 font-bold" v-if="tempProduct.size">
+                            <div class="flex gap-4 font-bold" v-if="tempProduct.show_size">
                                 <span>Size:</span>
-                                <p>{{ tempProduct.size.replace(',', ' ') }}</p>
+                                <p>{{ tempProduct.show_size }}</p>
                             </div>
                         </div>
                         <div>

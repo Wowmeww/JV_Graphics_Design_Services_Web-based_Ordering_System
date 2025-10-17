@@ -48,8 +48,8 @@ class ProductController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'type' => ['required', 'string', Rule::in(['main product with variant', 'single product', 'custom'])],
             'stock' => ['required', 'integer', 'min:0'],
-            'size' => ['nullable', 'string'],
-            'unit' => ['nullable', 'string'],
+            'size' => ['nullable', 'string', 'max:255'],
+            'unit' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'], // max:10MB
         ]);
@@ -59,10 +59,7 @@ class ProductController extends Controller
             'name' => $validated['category']
         ]);
 
-        $size = $validated['size'] ?
-            ($validated['unit'] ?? null ?
-                $validated['size'] . ',' . $validated['unit'] :
-                $validated['size']) : null;
+        $size = json_encode($request->only(['size', 'unit']));
 
         // Store product
         $product = Product::create([
@@ -103,6 +100,7 @@ class ProductController extends Controller
     {
         $product->load(['category', 'options', 'images', 'options.images', 'options.product.category']);
         [$product->size, $product->unit] = $this->splitSize($product->size);
+        // dd('test');
         return Inertia::render('product/Show', [
             'product' => $product,
         ]);
@@ -110,11 +108,8 @@ class ProductController extends Controller
 
     private function splitSize(?string $size): array
     {
-        if ($size && str_contains($size, ',')) {
-            return explode(',', $size, 2);
-        }
-
-        return [$size, null];
+        $assocSize = json_decode($size);
+        return [$assocSize->size, $assocSize->unit];
     }
 
 
@@ -141,7 +136,6 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         // sleep(1);
-        //   dd($request->all());
         $deleteImages = $request->images;
 
         $request['images'] = array_map(function ($image) {
@@ -155,17 +149,13 @@ class ProductController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'type' => ['required', 'string', Rule::in(['main product with variant', 'single product', 'custom', 'unavailable'])],
             'stock' => ['required', 'integer', 'min:0'],
-            'size' => ['nullable', 'string'],
-            'unit' => ['nullable', 'string'],
+            'size' => ['nullable', 'string', 'max:255'],
+            'unit' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:1024'],
             'design' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:1024']
         ]);
-
-        $size = $validated['size'] ?
-            ($validated['unit'] ?? null ?
-                $validated['size'] . ',' . $validated['unit'] :
-                $validated['size']) : null;
+        $size = json_encode([...$request->only(['size', 'unit'])]);
         // Update product
         $product->update([
             'name' => $validated['name'],

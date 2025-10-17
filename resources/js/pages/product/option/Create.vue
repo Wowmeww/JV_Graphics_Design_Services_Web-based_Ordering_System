@@ -71,6 +71,7 @@ function reset() {
                         <div class="col-span-4">
                             <Dropdown
                                 label="Unit"
+                                allowNull
                                 :value="form.unit"
                                 @select="(option) => (form.unit = option)"
                                 placeholder="Unit"

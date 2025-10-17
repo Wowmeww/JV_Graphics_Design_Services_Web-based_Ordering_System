@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Message;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductOption;
 use App\Models\Setting;
 use App\Models\SystemSetting;
 use App\Models\User;
@@ -18,7 +19,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        
+
         $products = Category::with(['products.images', 'products.category'])
             ->get()
             ->map(function (Category $category) {
@@ -85,7 +86,8 @@ class HomeController extends Controller
                 ->latest()
                 ->get();
             $shop['customers'] = User::where('role', 'customer')->count();
-            $shop['products'] = Product::with('images')->get();
+            $shop['products'] = Product::with('images')->get()
+                ->merge(ProductOption::with('images')->get());
             $shop['announcements'] = Announcement::with('user')->latest()->get();
             $shop['messages'] = Message::where(function ($q) use ($user) {
                 $q->where('seen', false)
@@ -108,12 +110,14 @@ class HomeController extends Controller
         ]);
     }
 
-    public function about() {
-        
+    public function about()
+    {
+
         return Inertia::render('About');
     }
-    public function privacy() {
-        
+    public function privacy()
+    {
+
         return Inertia::render('Privacy');
     }
 }

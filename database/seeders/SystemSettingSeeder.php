@@ -19,6 +19,7 @@ class SystemSettingSeeder extends Seeder
             ['key' => 'app_name', 'value' => 'JV Graphics Design Services'],
             ['key' => 'app_name_short', 'value' => 'JV Graphics'],
             ['key' => 'app_email', 'value' => User::first()->email],
+            ['key' => 'app_phone', 'value' => User::first()->phone],
             ['key' => 'app_logo', 'value' => ''],
             ['key' => 'daily_visitors', 'value' => ''],
             ['key' => 'landing_page_title', 'value' => 'Services. Offers. Products'],

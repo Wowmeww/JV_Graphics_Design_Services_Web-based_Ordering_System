@@ -14,6 +14,7 @@ const props = defineProps({
     placeholder: { type: String, default: 'Select' },
     disabled: { type: Boolean, default: false },
     allowCustomValue: { type: Boolean, default: false },
+    allowNull: { type: Boolean, default: false },
 });
 
 const customValue = ref('');
@@ -83,6 +84,14 @@ function handleOptionClick(option) {
                     <i class="fa-solid fa-check"></i>
                 </button>
             </div>
+            <p
+                v-if="allowNull"
+                class="hover:bg-primary-100 dark:hover:bg-primary-400/10 cursor-pointer px-4 py-1 transition first-letter:uppercase dark:text-white"
+                :class="!value ? 'font-semibold' : ''"
+                @click.prevent="handleOptionClick(null)"
+            >
+                none
+            </p>
             <p
                 v-for="(option, i) of options"
                 :key="i"

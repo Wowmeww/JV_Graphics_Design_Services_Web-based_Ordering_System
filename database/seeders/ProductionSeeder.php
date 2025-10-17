@@ -24,7 +24,8 @@ class ProductionSeeder extends Seeder
             'address' => 'Bulan, Sorsogon, Philippines',
             'verified_at' => Carbon::now(),
             'avatar_url' => null,
-            'phone' => '09129319355'
+            // 'phone' => '09129319355',
+            'phone' => '09000000000',
         ]);
 
         $this->call([SystemSettingSeeder::class]);

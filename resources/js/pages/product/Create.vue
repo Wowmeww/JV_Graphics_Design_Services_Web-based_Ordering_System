@@ -86,6 +86,7 @@ function reset() {
                                 placeholder="Unit"
                                 variant="secondary"
                                 :options="['inc', 'cm', 'foot', 'miter']"
+                                allowNull
                             />
                         </div>
                     </div>

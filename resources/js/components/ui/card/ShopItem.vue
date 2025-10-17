@@ -56,7 +56,7 @@ const styleClass = {
         size: 'rounded-full bg-gray-800/30 px-1.5 py-0.5 text-[10px] font-semibold text-gray-100 md:px-2 md:py-1 md:text-xs',
         description: {
             container:
-                'line-clamp-2 rounded-lg bg-white/5 px-2 py-1.5 text-xs leading-relaxed text-gray-100 backdrop-blur-sm md:rounded-xl md:px-3 md:py-2 md:text-sm',
+                'line-clamp-5 rounded-lg bg-white/5 px-2 py-1.5 text-xs leading-relaxed text-gray-100 backdrop-blur-sm md:rounded-xl md:px-3 md:py-2 md:text-sm leading-tight',
             ellipsis: 'text-primary-200 font-bold',
         },
     },
@@ -112,11 +112,11 @@ const styleClass = {
                     {{ product.name }}
                 </h3>
 
-                <span v-if="product.size" :class="styleClass.productInfo.size"> Size: {{ product.size }} </span>
+                <span v-if="product.show_size" :class="styleClass.productInfo.size"> Size: {{ product.show_size }} </span>
             </div>
 
             <!-- Description Snippet -->
-            <p :class="styleClass.productInfo.description.container">
+            <p v-if="product?.description" :class="styleClass.productInfo.description.container">
                 {{ product?.description?.substring(0, 65) }}
                 <span v-show="product?.description?.length >= 65" :class="styleClass.productInfo.description.ellipsis">&hellip;</span>
             </p>

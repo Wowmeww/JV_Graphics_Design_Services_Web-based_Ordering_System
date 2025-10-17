@@ -6,37 +6,41 @@ const settings = computed(() => usePage().props.settings);
 
 const styleClass = {
     // Layout
-    pageContainer: "min-h-screen bg-gradient-to-br from-primary-50 via-indigo-50 to-secondary-100 sm:px-6 lg:px-8 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900",
-    contentContainer: "mx-auto max-w-4xl min-h-screen px-4 py-16",
-    
+    pageContainer:
+        'min-h-screen bg-gradient-to-br from-primary-50 via-indigo-50 to-secondary-100 sm:px-6 lg:px-8 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900',
+    contentContainer: 'mx-auto max-w-4xl min-h-screen px-4 py-16',
+
     // Main Card
-    mainCard: "hover:shadow-3xl mx-auto rounded-3xl border border-gray-300/60 bg-white/80 p-10 text-gray-800 shadow-2xl backdrop-blur-xl transition-all duration-500 sm:p-12 dark:border-gray-600/40 dark:bg-gray-800/80 dark:text-gray-200",
-    
+    mainCard:
+        'hover:shadow-3xl mx-auto rounded-3xl border border-gray-300/60 bg-white/80 p-10 text-gray-800 shadow-2xl backdrop-blur-xl transition-all duration-500 sm:p-12 dark:border-gray-600/40 dark:bg-gray-800/80 dark:text-gray-200',
+
     // Header
-    header: "mb-12 text-center",
-    title: "mb-4 bg-gradient-to-r from-secondary-600 to-primary-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent dark:from-primary-400 dark:to-secondary-400",
-    
+    header: 'mb-12 text-center',
+    title: 'mb-4 bg-gradient-to-r from-secondary-600 to-primary-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent dark:from-primary-400 dark:to-secondary-400',
+
     // Sections
-    section: "group rounded-2xl p-6 transition-all duration-300 hover:bg-primary-50/50 dark:hover:bg-primary-900/20",
-    sectionTitle: "mb-4 flex items-center gap-3 text-2xl font-bold text-gray-900 dark:text-white",
-    sectionNumber: "flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-900/50 dark:text-primary-300",
-    
+    section: 'group rounded-2xl p-6 transition-all duration-300 hover:bg-primary-50/50 dark:hover:bg-primary-900/20',
+    sectionTitle: 'mb-4 flex items-center gap-3 text-2xl font-bold text-gray-900 dark:text-white',
+    sectionNumber:
+        'flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-900/50 dark:text-primary-300',
+
     // Text
-    paragraph: "text-gray-700 dark:text-gray-300",
-    appName: "bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text font-bold text-transparent dark:from-primary-400 dark:to-secondary-400",
-    strongText: "text-gray-900 dark:text-white",
-    
+    paragraph: 'text-gray-700 dark:text-gray-300',
+    appName: 'bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text font-bold text-transparent dark:from-primary-400 dark:to-secondary-400',
+    strongText: 'text-gray-900 dark:text-white',
+
     // Lists
-    list: "list-inside space-y-3 text-gray-700 dark:text-gray-300",
-    listItem: "flex items-start gap-3",
-    bullet: "mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary-500",
-    
+    list: 'list-inside space-y-3 text-gray-700 dark:text-gray-300',
+    listItem: 'flex items-start gap-3',
+    bullet: 'mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary-500',
+
     // Sub Headings
-    subHeading: "mb-3 text-lg font-semibold text-gray-800 dark:text-gray-200",
-    
+    subHeading: 'mb-3 text-lg font-semibold text-gray-800 dark:text-gray-200',
+
     // Contact Section
-    contactBox: "mt-4 flex items-center gap-3 rounded-xl bg-primary-50/50 p-4 dark:bg-primary-900/20",
-    contactLink: "font-semibold text-primary-600 transition-all duration-300 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+    contactBox: 'mt-4 flex items-center gap-3 rounded-xl bg-primary-50/50 p-4 dark:bg-primary-900/20',
+    contactLink:
+        'font-semibold break-words flex gap-2 break-all text-primary-600 transition-all duration-300 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300',
 };
 </script>
 
@@ -46,9 +50,7 @@ const styleClass = {
         <div :class="styleClass.contentContainer">
             <div :class="styleClass.mainCard">
                 <header :class="styleClass.header">
-                    <h1 :class="styleClass.title">
-                        Privacy & Cookie Policy
-                    </h1>
+                    <h1 :class="styleClass.title">Privacy & Cookie Policy</h1>
                 </header>
 
                 <div class="space-y-5 leading-relaxed">
@@ -60,8 +62,9 @@ const styleClass = {
                         </h2>
                         <p :class="styleClass.paragraph">
                             Welcome to
-                            <strong :class="styleClass.appName">{{ settings.app_name }}</strong>. We respect your privacy and are committed to protecting your personal data. This Privacy & Cookie Policy explains
-                            how we collect, use, and safeguard your information when you use our website or services.
+                            <strong :class="styleClass.appName">{{ settings.app_name }}</strong
+                            >. We respect your privacy and are committed to protecting your personal data. This Privacy & Cookie Policy explains how
+                            we collect, use, and safeguard your information when you use our website or services.
                         </p>
                     </section>
 
@@ -75,22 +78,22 @@ const styleClass = {
                             <li :class="styleClass.listItem">
                                 <span :class="styleClass.bullet"></span>
                                 <span>
-                                    <strong :class="styleClass.strongText">Personal Information:</strong> Such as your name, email, and
-                                    contact details when you create an account or contact us.
+                                    <strong :class="styleClass.strongText">Personal Information:</strong> Such as your name, email, and contact
+                                    details when you create an account or contact us.
                                 </span>
                             </li>
                             <li :class="styleClass.listItem">
                                 <span :class="styleClass.bullet"></span>
                                 <span>
-                                    <strong :class="styleClass.strongText">Usage Data:</strong> Information about how you use our site,
-                                    such as pages visited, actions taken, and device information.
+                                    <strong :class="styleClass.strongText">Usage Data:</strong> Information about how you use our site, such as pages
+                                    visited, actions taken, and device information.
                                 </span>
                             </li>
                             <li :class="styleClass.listItem">
                                 <span :class="styleClass.bullet"></span>
                                 <span>
-                                    <strong :class="styleClass.strongText">Cookies:</strong> Small text files stored on your device that
-                                    help us enhance your browsing experience.
+                                    <strong :class="styleClass.strongText">Cookies:</strong> Small text files stored on your device that help us
+                                    enhance your browsing experience.
                                 </span>
                             </li>
                         </ul>
@@ -159,8 +162,8 @@ const styleClass = {
                             Your Rights
                         </h2>
                         <p :class="styleClass.paragraph">
-                            Depending on the data, you may have rights to access, correct, or delete your personal data, and to object to or
-                            restrict certain processing.
+                            Depending on the data, you may have rights to access, correct, or delete your personal data, and to object to or restrict
+                            certain processing.
                         </p>
                     </section>
 
@@ -186,12 +189,23 @@ const styleClass = {
                             If you have questions or concerns about this Privacy & Cookie Policy, please contact us at:
                         </p>
                         <div :class="styleClass.contactBox">
-                            <span class="text-2xl">📧</span>
-                            <a
-                                :href="`mailto:${settings.app_email}`"
-                                :class="styleClass.contactLink"
-                            >
+                            <a :href="`mailto:${settings.app_email}`" :class="styleClass.contactLink">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M20 18h-2V9.25L12 13 6 9.25V18H4V6h1.2l6.8 4.25L18.8 6H20m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"
+                                    />
+                                </svg>
                                 {{ settings.app_email }}
+                            </a>
+                        </div>
+                        <div :class="styleClass.contactBox">
+                            <a :href="`tel:${settings.app_phone}`" :class="styleClass.contactLink">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+                                    />
+                                </svg>
+                                {{ settings.app_phone }}
                             </a>
                         </div>
                     </section>

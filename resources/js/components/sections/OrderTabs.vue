@@ -58,7 +58,7 @@
         </button>
     </div>
 
-    <div class="h-screen overflow-y-scroll">
+    <div class="h-screen overflow-y-auto">
         <transition name="tab-fade" mode="out-in">
             <div :key="activeTab">
                 <div v-if="activeTab === 'Under Review'">

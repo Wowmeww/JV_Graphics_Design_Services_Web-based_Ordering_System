@@ -162,7 +162,7 @@ const styleClass = {
 
             <div :class="styleClass.content.price.container">
                 <span :class="styleClass.content.price.amount">
-                    {{ amount.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}
+                    {{ Number(amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}
                 </span>
                 <span :class="styleClass.content.price.quantity">
                     <i class="fa-solid fa-xmark mr-1"></i>

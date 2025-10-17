@@ -35,10 +35,7 @@ class ProductOptionController extends Controller
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'], // max:10MB
         ]);
 
-        $size = $validated['size'] ?
-            ($validated['unit'] ?? null ?
-                $validated['size'] . ',' . $validated['unit'] :
-                $validated['size']) : null;
+        $size = json_encode([...$request->only(['size', 'unit'])]);
 
         // Store product
         $option = ProductOption::create([
@@ -75,8 +72,10 @@ class ProductOptionController extends Controller
      */
     public function show(?Product $product, ProductOption $option)
     {
+
         $option->load(['product', 'product.category', 'images', 'product.images']);
         [$option->size, $option->unit] = $this->splitSize($option->size);
+
         return Inertia::render('product/option/Show', [
             'option' => $option,
         ]);
@@ -84,11 +83,8 @@ class ProductOptionController extends Controller
 
     private function splitSize(?string $size): array
     {
-        if ($size && str_contains($size, ',')) {
-            return explode(',', $size, 2);
-        }
-
-        return [$size, null];
+        $assocSize = json_decode($size);
+        return [$assocSize->size, $assocSize->unit];
     }
 
 
@@ -97,8 +93,9 @@ class ProductOptionController extends Controller
      */
     public function edit(Product $product, ProductOption $option)
     {
+
         $option->load(['product.category', 'images', 'product']);
-        [$option->size, $option->unit] = $this->splitSize($product->size);
+        [$option->size, $option->unit] = $this->splitSize($option->size);
 
         return Inertia::render('product/option/Edit', [
             'option' => $option,
@@ -131,10 +128,8 @@ class ProductOptionController extends Controller
             'description' => ['nullable', 'string'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
         ]);
-        $size = $validated['size'] ?
-            ($validated['unit'] ?? null ?
-                $validated['size'] . ',' . $validated['unit'] :
-                $validated['size']) : null;
+
+        $size = json_encode([...$request->only(['size', 'unit'])]);
 
         // Update product
         $option->update([

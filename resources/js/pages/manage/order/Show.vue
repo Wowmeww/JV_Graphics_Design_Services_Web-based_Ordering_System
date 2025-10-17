@@ -87,7 +87,6 @@ const image_url = computed(() => {
 
 <template>
     <Head title="Manage Order" />
-
     <div class="px-2 py-3">
         <div class="mx-auto max-w-7xl px-4 py-8">
             <div class="container-secondary flex items-center justify-between">
@@ -165,9 +164,9 @@ const image_url = computed(() => {
                                                 >
                                                     {{ (order.option || order.product)?.name }}
                                                 </Link>
-                                                <p v-if="(order.option || order.product)?.size" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                <p v-if="(order.option || order.product)?.show_size" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                                     <i class="fas fa-tag mr-1 text-xs"></i>
-                                                    {{ (order.option || order.product)?.size }}
+                                                    {{ (order.option || order.product)?.show_size }}
                                                 </p>
                                             </div>
                                             <div class="flex flex-col items-end font-medium text-gray-900 dark:text-white">

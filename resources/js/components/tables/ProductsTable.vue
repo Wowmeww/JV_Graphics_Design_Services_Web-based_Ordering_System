@@ -214,8 +214,8 @@ const styleClass = {
                             }}
                         </td>
                         <td :class="styleClass.table.cell.size + ' col-span-1'">
-                            <span v-if="product.size">
-                                {{ product.size.replaceAll(',', ' ') }}
+                            <span v-if="product.show_size">
+                                {{ product.show_size }}
                             </span>
                             <span v-else :class="styleClass.table.cell.emptySize">none</span>
                         </td>
@@ -235,9 +235,9 @@ const styleClass = {
                             <Link :href="route('product.edit', { product })" :class="styleClass.table.cell.actionIcon">
                                 <i class="bi bi-pencil-square"></i>
                             </Link>
-                            <button :class="styleClass.table.cell.actionIcon">
+                            <!-- <button :class="styleClass.table.cell.actionIcon">
                                 <i class="bi bi-three-dots-vertical"></i>
-                            </button>
+                            </button> -->
                         </td>
                     </tr>
                 </tbody>

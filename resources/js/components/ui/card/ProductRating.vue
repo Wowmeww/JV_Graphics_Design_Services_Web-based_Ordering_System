@@ -1,28 +1,27 @@
 <script setup>
-    import { computed } from 'vue';
+import { computed } from 'vue';
 
-    const props = defineProps({
-        rating: Object
-    });
+const props = defineProps({
+    rating: Object,
+});
 
+const avatar_url = props.rating.user.avatar_url ? `/storage/${props.rating.user.avatar_url}` : '/images/avatar-placeholder.webp';
 
-    const avatar_url = props.rating.user.avatar_url ?? '/images/avatar-placeholder.webp';
+const starIcons = computed(() => {
+    const rating = props.rating.stars ?? 0;
+    const fullStars = rating;
+    const emptyStars = 5 - fullStars;
 
-    const starIcons = computed(() => {
-        const rating = props.rating.stars ?? 0;
-        const fullStars = rating;
-        const emptyStars = 5 - fullStars;
-
-        return {
-            full: fullStars,
-            empty: emptyStars,
-        };
-    });
+    return {
+        full: fullStars,
+        empty: emptyStars,
+    };
+});
 </script>
 
 <template>
     <div class="flex gap-3">
-        <img alt="" :src="avatar_url" class="w-12 h-12 object-cover rounded-full border border-opacity-10" />
+        <img alt="" :src="avatar_url" class="border-opacity-10 h-12 w-12 rounded-full border object-cover" />
 
         <div class="flex-1 space-y-3">
             <div>

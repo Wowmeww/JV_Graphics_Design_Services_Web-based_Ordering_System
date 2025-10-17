@@ -11,7 +11,7 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
 
-    protected $appends = ['rating'];
+    protected $appends = ['rating', 'show_size'];
     public function getRatingAttribute()
     {
         $ratings = $this->ratings->pluck('stars');
@@ -19,6 +19,13 @@ class Product extends Model
         $count = $ratings->count();
 
         return $count > 0 ? $total / $count : 0;
+    }
+    public function getShowSizeAttribute()
+    {
+        $size = json_decode($this->size);
+        return  $size?->size ?
+            ($size?->unit ? $size->size . " " . $size?->unit : $size->size) :
+            null;
     }
 
     // one to many - has many
