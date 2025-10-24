@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class, 'admin_id')->constrained()->cascadeOnDelete();
             $table->string('title');
+            $table->string('image_url')->nullable();
             $table->text('content');
             $table->timestamps();
         });

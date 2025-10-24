@@ -16,7 +16,7 @@ const form = useForm({
     quantity: props.wishlistItem.quantity,
 });
 
-const focusedImage = ref(product.images[0]?.image_path);
+const focusedImage = ref(image_url(product.images[0]?.image_path));
 
 function changeFocusedImage(path) {
     focusedImage.value = path;
@@ -60,6 +60,13 @@ const styleClass = {
         'border border-slate-400 hover:border-secondary dark:hover:border-secondary-300 flex items-center gap-1 p-2 rounded cursor-pointer font-medium',
     ratingBadge: 'bg-secondary rounded-full py-0.5 px-3 inline-flex items-center gap-1.5 text-white',
 };
+
+function image_url(src) {
+    if (src) {
+        return src.includes('https') ? src : `/storage/${src}`;
+    }
+    return '/images/avatar-placeholder.webp';
+}
 </script>
 
 <template>
@@ -76,10 +83,10 @@ const styleClass = {
                             class="h-20 w-20 cursor-pointer"
                             :class="{ 'border-secondary border-2 object-cover object-center dark:border-white': image.image_path === focusedImage }"
                             v-for="image of product.images"
-                            :src="image.image_path"
+                            :src="image_url(image.image_path)"
                             :key="image.id"
                             alt=""
-                            @click="changeFocusedImage(image.image_path)"
+                            @click="changeFocusedImage(image_url(image.image_path))"
                         />
                     </div>
                     <div class="h-60 flex-1 sm:h-70 md:h-[30rem]">
@@ -90,7 +97,7 @@ const styleClass = {
                         />
                     </div>
                 </div>
-                <div class="h-[32rem] flex-1 overflow-y-scroll">
+                <div class="h-[32rem] flex-1 overflow-y-auto">
                     <div class="border-b-2 border-slate-300 pb-5">
                         <div class="space-y-1.5">
                             <div class="flex items-center justify-between px-2">
@@ -98,9 +105,9 @@ const styleClass = {
                                 <span>{{ product.category.name }}</span>
                             </div>
                             <p :class="styleClass.text">{{ product.description }}</p>
-                            <div class="flex gap-4 font-bold" v-if="product.size">
+                            <div class="flex gap-4 font-bold" v-if="product.show_size">
                                 <span>Size:</span>
-                                <p>{{ product.size.replace(',', ' ') }}</p>
+                                <p>{{ product.show_size }}</p>
                             </div>
                         </div>
                         <div>

@@ -93,7 +93,7 @@ const image_url = (src) => {
                         <img :src="image_url(focusedImage)" alt="" class="h-full w-full object-cover object-center" />
                     </div>
                 </div>
-                <div class="h-[32rem] flex-1 overflow-y-scroll">
+                <div class="h-[32rem] flex-1 overflow-y-auto">
                     <div class="border-b-2 border-slate-300 pb-5">
                         <div class="space-y-1.5">
                             <div class="flex items-center justify-between px-2">
@@ -101,9 +101,9 @@ const image_url = (src) => {
                                 <span>{{ product.category.name }}</span>
                             </div>
                             <p :class="styleClass.text">{{ product.description }}</p>
-                            <div class="flex gap-4 font-bold" v-if="product.size">
+                            <div class="flex gap-4 font-bold" v-if="product.show_size">
                                 <span>Size:</span>
-                                <p>{{ product.size.replace(',', ' ') }}</p>
+                                <p>{{ show_size }}</p>
                             </div>
                         </div>
                         <div>

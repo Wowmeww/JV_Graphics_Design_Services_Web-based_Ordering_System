@@ -27,6 +27,17 @@ class ProductionSeeder extends Seeder
             // 'phone' => '09129319355',
             'phone' => '09000000000',
         ]);
+        User::factory()->create([
+            'role' => 'customer',
+            'name' => "Nico Bernard B. Firmanes",
+            'email' => 'nbfirmanes@sorsu.edu.ph',
+            'password' => bcrypt('123'),
+            'email_verified_at' => Carbon::now(),
+            'birth_date' => Carbon::now(),
+            'address' => 'Bulusan, Sorsogon, Philippines',
+            'verified_at' => Carbon::now(),
+            'avatar_url' => null,
+        ]);
 
         $this->call([SystemSettingSeeder::class]);
     }

@@ -28,18 +28,18 @@ function goBack() {
                     <ProductImagesInput disabled :images="product.images" />
 
                     <div class="grid grid-cols-12 gap-2 gap-y-3 pt-2">
-                        <div class="col-span-8">
+                        <div class="col-span-12">
                             <div class="form-group flex flex-col">
                                 <p class="input-label">Size</p>
-                                <p class="form-control form-control-secondary">{{ product.size }}</p>
+                                <p class="form-control form-control-secondary">{{ product.show_size }}</p>
                             </div>
                         </div>
-                        <div class="col-span-4">
+                        <!-- <div class="col-span-4">
                             <div class="form-group flex flex-col">
                                 <p class="input-label">Unit</p>
                                 <p class="form-control form-control-secondary">{{ product.unit }}</p>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="form-group flex flex-col">
                         <p class="input-label">Product Description</p>

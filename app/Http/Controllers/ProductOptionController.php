@@ -74,7 +74,7 @@ class ProductOptionController extends Controller
     {
 
         $option->load(['product', 'product.category', 'images', 'product.images']);
-        [$option->size, $option->unit] = $this->splitSize($option->size);
+        // [$option->size, $option->unit] = $this->splitSize($option->size);
 
         return Inertia::render('product/option/Show', [
             'option' => $option,

@@ -146,6 +146,7 @@ function goBack() {
                                 <Dropdown
                                     :required="false"
                                     label="Unit"
+                                    allowNull
                                     :value="form.unit"
                                     @select="(option) => (form.unit = option)"
                                     placeholder="Unit"

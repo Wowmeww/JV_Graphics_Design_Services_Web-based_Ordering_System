@@ -99,7 +99,6 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->load(['category', 'options', 'images', 'options.images', 'options.product.category']);
-        [$product->size, $product->unit] = $this->splitSize($product->size);
         // dd('test');
         return Inertia::render('product/Show', [
             'product' => $product,
@@ -168,6 +167,8 @@ class ProductController extends Controller
         ]);
 
 
+
+
         // Handle deleted images (from frontend 'delete' flags)
         foreach (($deleteImages ?? []) as $key => $val) {
             if ($val === 'delete') {
@@ -204,7 +205,6 @@ class ProductController extends Controller
                 $product->designs()->create(['image' => $path]);
             }
         }
-
         // dd($product->images);
         return redirect()->route('product.show', $product)->with(
             'status',

@@ -65,11 +65,14 @@ function addAnnouncement() {
                         </div>
                         <div v-if="!search">
                             <h3 class="mb-1 text-lg font-medium text-gray-900 dark:text-white">No announcements yet</h3>
-                            <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">When you create announcements, they'll appear here</p>
-                            <button @click="addAnnouncement" class="btn btn-secondary mx-auto">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Create announcement</span>
-                            </button>
+
+                            <template v-if="$page.props.auth?.user.is_admin">
+                                <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">When you create announcements, they'll appear here</p>
+                                <button @click="addAnnouncement" class="btn btn-secondary mx-auto">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Create announcement</span>
+                                </button>
+                            </template>
                         </div>
                         <p v-else class="mb-4 text-sm text-gray-500 dark:text-gray-400">No announcement found that match your search</p>
                     </div>

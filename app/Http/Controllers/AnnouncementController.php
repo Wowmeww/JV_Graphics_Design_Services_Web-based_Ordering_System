@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class AnnouncementController extends Controller
@@ -45,17 +46,29 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => ['required', 'max:255', 'string'],
-            'content' => ['required', 'string']
+            'title'   => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'image'   => ['nullable', 'image', 'max:2048'],
+        ]);
+        $announcement = $request->user()->announcements()->create([
+            'title'   => $validated['title'],
+            'content' => $validated['content'],
         ]);
 
-        $request->user()->announcements()->create($validated);
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images/announcement', 'public');
+            $announcement->update([
+                'image_url' => $path,
+            ]);
+        }
 
+        // ✅ Redirect with success message
         return to_route('announcement.index')->with('status', [
-            'type' => 'success',
-            'message' => 'Announcement published',
+            'type'    => 'success',
+            'message' => 'Announcement published successfully.',
         ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -73,27 +86,59 @@ class AnnouncementController extends Controller
     public function update(Request $request, Announcement $announcement)
     {
         $validated = $request->validate([
-            'title' => ['required', 'max:255', 'string'],
-            'content' => ['required', 'string']
+            'title'         => ['required', 'string', 'max:255'],
+            'content'       => ['required', 'string'],
+            'image'         => ['nullable', 'image', 'max:2048', 'sometimes'], // new image upload
+            'delete_image'  => ['nullable', 'boolean'], // default false if missing
         ]);
 
-        $announcement->update($validated);
+        // ✅ Update base fields
+        $announcement->update([
+            'title'   => $validated['title'],
+            'content' => $validated['content'],
+        ]);
+
+        // ✅ If user wants to delete the image
+        if (!empty($validated['delete_image']) && $announcement->image_url) {
+            if (Storage::disk('public')->exists($announcement->image_url)) {
+                Storage::disk('public')->delete($announcement->image_url);
+            }
+
+            $announcement->update(['image_url' => null]);
+        }
+
+        // ✅ If a new image is uploaded
+        if ($request->hasFile('image')) {
+            // Remove old file before replacing
+            if ($announcement->image_url && Storage::disk('public')->exists($announcement->image_url)) {
+                Storage::disk('public')->delete($announcement->image_url);
+            }
+
+            $path = $request->file('image')->store('images/announcement', 'public');
+            $announcement->update(['image_url' => $path]);
+        }
 
         return to_route('announcement.index')->with('status', [
-            'type' => 'success',
-            'message' => 'Announcement updated',
+            'type'    => 'success',
+            'message' => 'Announcement updated successfully.',
         ]);
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Announcement $announcement)
     {
+        if ($announcement->image_url && Storage::disk('public')->exists($announcement->image_url)) {
+            Storage::disk('public')->delete($announcement->image_url);
+        }
+
         $announcement->delete();
+
         return to_route('announcement.index')->with('status', [
             'type' => 'success',
-            'message' => 'Announcement deleted',
+            'message' => 'Announcement deleted successfully.',
         ]);
     }
 }

@@ -16,7 +16,6 @@ class CustomizeProductController extends Controller
     }
     public function edit(Product $product)
     {
-        // dd('test');
         $product->load(['images', 'category', 'designs']);
         [$product->size, $product->unit] = $this->splitSize($product->size);
         return Inertia::render('product/custom/Edit', [
@@ -40,10 +39,7 @@ class CustomizeProductController extends Controller
 
     private function splitSize(?string $size): array
     {
-        if ($size && str_contains($size, ',')) {
-            return explode(',', $size, 2);
-        }
-
-        return [$size, null];
+        $assocSize = json_decode($size);
+        return [$assocSize->size, $assocSize->unit];
     }
 }
