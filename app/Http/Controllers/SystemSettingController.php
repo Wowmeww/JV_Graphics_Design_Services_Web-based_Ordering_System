@@ -11,20 +11,12 @@ class SystemSettingController extends Controller
 {
     public function edit()
     {
-        $systemSettings = SystemSetting::whereIn(
-            'key',
-            [
-                'app_name',
-                'app_name_short',
-                'app_logo',
-                'landing_page_title',
-                'landing_page_subtitle',
-                'app_about'
-            ]
-        )->pluck('value', 'key');
+        $settings = SystemSetting::pluck('value', 'key')->toArray();
+        $settings['app_logo'] = $settings['app_logo'] ? '/storage/' . $settings['app_logo'] : '/favicon.jpg';
+        $settings['app_about'] = $settings['app_about'] ? json_decode($settings['app_about']) : [];
 
         return Inertia::render('profile/SystemSettings', [
-            'systemSettings' => $systemSettings
+            'settings' => $settings
         ]);
     }
     public function update(Request $request)

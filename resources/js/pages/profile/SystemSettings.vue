@@ -11,16 +11,18 @@ defineOptions({
     layout: Layout,
 });
 
-// const props = defineProps({
-//     systemSettings: Object,
-// });
+const props = defineProps({
+    settings: Object,
+});
 
-const settings = computed(() => usePage().props.settings);
+const settings = computed(() => props.settings);
 
 const form = useForm({
     app_name: settings.value.app_name,
     app_name_short: settings.value.app_name_short,
     app_logo: settings.value.app_logo || 'none',
+    app_email: settings.value.app_email,
+    app_phone: settings.value.app_phone,
     landing_page_title: settings.value.landing_page_title,
     landing_page_subtitle: settings.value.landing_page_subtitle,
     app_about: JSON.stringify(settings.value.app_about),
@@ -74,6 +76,15 @@ function handleLogoChange(event, action) {
 
 watch(appAbout.value, (about) => {
     about = about.filter((abt) => abt.header || abt.content);
+    const tail = appAbout.value.at(-1);
+
+    if (tail.header || tail.content) {
+        appAbout.value.push({
+            header: null,
+            content: null,
+        });
+    }
+
     form.app_about = JSON.stringify(about);
 });
 </script>
@@ -157,6 +168,21 @@ watch(appAbout.value, (about) => {
                     :error="form.errors.landing_page_subtitle"
                     label="Landing page subheader"
                     placeholder="Enter your desired subheader."
+                />
+                <TextInputPrimary
+                    v-model="form.app_email"
+                    :required="false"
+                    :error="form.errors.app_email"
+                    label="Email address"
+                    type="email"
+                    placeholder="Enter your desired email."
+                />
+                <TextInputPrimary
+                    v-model="form.app_phone"
+                    :required="false"
+                    :error="form.errors.app_phone"
+                    label="Phone number"
+                    placeholder="Enter your desired number."
                 />
 
                 <div class="flex flex-col">

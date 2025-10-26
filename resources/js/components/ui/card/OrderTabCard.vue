@@ -175,7 +175,6 @@ const styleClass = {
                 <span v-if="description.length >= 610" :class="styleClass.content.description.ellipsis">...</span>
             </p>
         </div>
-
         <!-- Rating Section -->
         <div v-if="props.order.status == 'rated'" :class="styleClass.rating.container">
             <div :class="styleClass.rating.stars.container">
@@ -199,7 +198,7 @@ const styleClass = {
             <div :class="styleClass.footer.actions">
                 <PillPrimary v-if="showCancel" @click="handleCancel" variant="outlineDanger" label="Cancel" />
                 <PillPrimary v-if="showReceived" @click="handleReceived" label="Received" />
-                <PillPrimary v-if="showRate" @click="handleRate" :label="props.order.status == 'received' ? 'Rate' : 'Update Rating'" />
+                <PillPrimary v-if="showRate" @click="handleRate" :label="props.order.status == 'received' ? 'Add rating' : 'View Rating'" />
             </div>
         </div>
     </div>

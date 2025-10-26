@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Rating;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
@@ -28,6 +29,20 @@ class RatingController extends Controller
             'message' => $fields['message'],
             'order_id' => $order->id
         ];
+
+        if (
+            $order?->rating &&
+            Carbon::parse($order->rating->created_at)
+            ->addDay()
+            ->isPast()
+        ) {
+            return to_route('order.index', [
+                'tab' => 'Rate'
+            ])->with('status', [
+                'type' => 'warning',
+                'message' => 'You can no longer update this rating — the 24-hour update period has expired.',
+            ]);
+        }
 
         $rating = Rating::updateOrCreate($match, $data);
         $order->update([

@@ -42,11 +42,10 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        // dd('test');
-        // dd($request->all());
+
         $validated = $request->validate([
             'role' => ['required', 'string', Rule::in(['customer', 'admin', 'suspended'])],
-            'verified_at' => ['nullable', 'boolean']
+            'verified_at' => ['nullable']
         ]);
 
         // Option 2: Explicit check
