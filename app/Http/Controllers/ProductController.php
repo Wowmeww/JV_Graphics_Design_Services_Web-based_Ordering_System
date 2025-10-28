@@ -41,6 +41,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         // Validate form input
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:products,name'],
@@ -135,12 +136,13 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         // sleep(1);
+
         $deleteImages = $request->images;
 
         $request['images'] = array_map(function ($image) {
-            return $image === 'delete' ? null : $image;
-        }, $request->images);
-
+            return $image === 'delete' ?
+                null : (is_array($image) ? null : $image);
+        }, $request->images ?? []);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -225,9 +227,13 @@ class ProductController extends Controller
         foreach ($product->images as $image) {
             Storage::disk('public')->delete($image->image_path);
         }
+        foreach ($product->designs as $design) {
+            Storage::disk('public')->delete($design->image);
+        }
 
         // Delete image records
         $product->images()->delete();
+        $product->designs()->delete();
 
         // Delete the product
         $product->delete();

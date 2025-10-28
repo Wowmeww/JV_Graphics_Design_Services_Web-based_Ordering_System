@@ -16,6 +16,8 @@ const processing = ref(false);
 const images = computed(() => ({
     front: props.product.images[0] ? `/storage/${props.product.images[0].image_path}` : null,
     back: props.product.images[1] ? `/storage/${props.product.images[1].image_path}` : null,
+    right: props.product.images[0] ? `/storage/${props.product.images[2].image_path}` : null,
+    left: props.product.images[1] ? `/storage/${props.product.images[3].image_path}` : null,
 }));
 
 const selectedElement = reactive({
@@ -33,6 +35,18 @@ const elements = reactive({
         design: null,
     },
     back: {
+        texts: [],
+        image: null,
+        imagePreview: '',
+        design: null,
+    },
+    right: {
+        texts: [],
+        image: null,
+        imagePreview: '',
+        design: null,
+    },
+    left: {
         texts: [],
         image: null,
         imagePreview: '',
@@ -287,6 +301,24 @@ const styleClasses = {
                         >
                             Back
                         </button>
+                        <button
+                            @click="switchView('right')"
+                            :class="[
+                                styleClasses.viewToggleButton,
+                                activeView === 'right' ? styleClasses.viewToggleActive : styleClasses.viewToggleInactive,
+                            ]"
+                        >
+                            Right
+                        </button>
+                        <button
+                            @click="switchView('left')"
+                            :class="[
+                                styleClasses.viewToggleButton,
+                                activeView === 'left' ? styleClasses.viewToggleActive : styleClasses.viewToggleInactive,
+                            ]"
+                        >
+                            Left
+                        </button>
                     </div>
                 </div>
                 <!--------- Canvas ------------------------------------------------------------------------------------->
@@ -442,6 +474,158 @@ const styleClasses = {
                             />
                         </div>
                     </div>
+
+                    <!-------- RIGHT SIDE ----------------------------------------------------------------------->
+                    <div v-show="activeView === 'right'" :class="styleClasses.canvasImage" id="right-preview">
+                        <img class="" :src="images.right" alt="right side" />
+
+                        <div :class="styleClasses.canvasOverlay" id="right-canvas">
+                            <template v-for="(text, i) in elements.right.texts" :key="`right-text-${i}`">
+                                <span
+                                    v-if="text"
+                                    @click="selectElement('text', { ...text, index: i })"
+                                    :class="styleClasses.textElement"
+                                    :style="{
+                                        fontSize: `${text.size}px`,
+                                        fontFamily: text.font,
+                                        color: text.color,
+                                        zIndex: i + 1,
+                                        position: 'absolute',
+                                        transform: `rotate(${text.rotate}deg)`,
+                                    }"
+                                    @mousedown="(e) => initializeDragAndDrop(e)"
+                                    @touchstart.prevent="
+                                        (e) => {
+                                            initializeDragAndDrop(e);
+                                            selectElement('text', { ...text, index: i });
+                                        }
+                                    "
+                                    >{{ text.text }}</span
+                                >
+                            </template>
+
+                            <img
+                                id="right-image"
+                                v-if="elements.right.image"
+                                @mousedown="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="
+                                    (e) => {
+                                        initializeDragAndDrop(e);
+                                        selectElement('image', null, e);
+                                    }
+                                "
+                                @click="(e) => selectElement('image', null, e)"
+                                :src="elements.right.imagePreview"
+                                alt="right-view-uploaded-image"
+                                :style="{
+                                    position: 'absolute',
+                                    width: elements.right?.image?.width ? elements.right?.image?.width + 'px' : '25%',
+                                    height: elements.right?.image?.height ? elements.right?.image?.height + 'px' : 'auto',
+                                    zIndex: '0',
+                                    transform: `rotate(${elements.right.image.rotate}deg)`,
+                                }"
+                                :class="styleClasses.uploadedImage"
+                            />
+                            <img
+                                v-if="elements.right.design?.image"
+                                @mousedown="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="
+                                    (e) => {
+                                        initializeDragAndDrop(e);
+                                        selectElement('design', null, e);
+                                    }
+                                "
+                                @click="(e) => selectElement('design', null, e)"
+                                :src="`/storage/${elements.right.design.image}`"
+                                alt="right-view-design"
+                                :style="{
+                                    position: 'absolute',
+                                    zIndex: '0',
+                                    width: '25%',
+                                    height: 'auto',
+                                    scale: (elements.right.design?.scale ?? 100) / 100,
+                                    transform: `rotate(${elements.right.design?.rotate || 0}deg)`,
+                                }"
+                                :class="styleClasses.uploadedImage"
+                            />
+                        </div>
+                    </div>
+
+                    <!-------- LEFT SIDE ----------------------------------------------------------------------->
+                    <div v-show="activeView === 'left'" :class="styleClasses.canvasImage" id="left-preview">
+                        <img class="" :src="images.left" alt="left side" />
+
+                        <div :class="styleClasses.canvasOverlay" id="left-canvas">
+                            <template v-for="(text, i) in elements.left.texts" :key="`left-text-${i}`">
+                                <span
+                                    v-if="text"
+                                    @click="selectElement('text', { ...text, index: i })"
+                                    :class="styleClasses.textElement"
+                                    :style="{
+                                        fontSize: `${text.size}px`,
+                                        fontFamily: text.font,
+                                        color: text.color,
+                                        zIndex: i + 1,
+                                        position: 'absolute',
+                                        transform: `rotate(${text.rotate}deg)`,
+                                    }"
+                                    @mousedown="(e) => initializeDragAndDrop(e)"
+                                    @touchstart.prevent="
+                                        (e) => {
+                                            initializeDragAndDrop(e);
+                                            selectElement('text', { ...text, index: i });
+                                        }
+                                    "
+                                    >{{ text.text }}</span
+                                >
+                            </template>
+
+                            <img
+                                id="left-image"
+                                v-if="elements.left.image"
+                                @mousedown="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="
+                                    (e) => {
+                                        initializeDragAndDrop(e);
+                                        selectElement('image', null, e);
+                                    }
+                                "
+                                @click="(e) => selectElement('image', null, e)"
+                                :src="elements.left.imagePreview"
+                                alt="left-view-uploaded-image"
+                                :style="{
+                                    position: 'absolute',
+                                    width: elements.left?.image?.width ? elements.left?.image?.width + 'px' : '25%',
+                                    height: elements.left?.image?.height ? elements.left?.image?.height + 'px' : 'auto',
+                                    zIndex: '0',
+                                    transform: `rotate(${elements.left.image.rotate}deg)`,
+                                }"
+                                :class="styleClasses.uploadedImage"
+                            />
+                            <img
+                                v-if="elements.left.design?.image"
+                                @mousedown="(e) => initializeDragAndDrop(e)"
+                                @touchstart.prevent="
+                                    (e) => {
+                                        initializeDragAndDrop(e);
+                                        selectElement('design', null, e);
+                                    }
+                                "
+                                @click="(e) => selectElement('design', null, e)"
+                                :src="`/storage/${elements.left.design.image}`"
+                                alt="left-view-design"
+                                :style="{
+                                    position: 'absolute',
+                                    zIndex: '0',
+                                    width: '25%',
+                                    height: 'auto',
+                                    scale: (elements.left.design?.scale ?? 100) / 100,
+                                    transform: `rotate(${elements.left.design?.rotate || 0}deg)`,
+                                }"
+                                :class="styleClasses.uploadedImage"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -467,38 +651,52 @@ const styleClasses = {
                     @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
                     @add-element:design="({ value }) => (elements.back.design = value)"
                 />
+                <Tools
+                    :designs="product.designs"
+                    v-show="activeView === 'right'"
+                    @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
+                    @add-element:design="({ value }) => (elements.right.design = value)"
+                />
+                <Tools
+                    :designs="product.designs"
+                    v-show="activeView === 'left'"
+                    @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
+                    @add-element:design="({ value }) => (elements.left.design = value)"
+                />
 
                 <form @submit.prevent="addToCart" class="container-secondary">
                     <h2 class="text-lg font-semibold">Confirm</h2>
 
                     <div class="space-y-4 pt-3">
-                        <div>
-                            <label for="price" :class="styleClasses.label">Product price</label>
-                            <input
-                                id="price"
-                                type="text"
-                                disabled
-                                placeholder="Text Content"
-                                :class="styleClasses.textInput"
-                                :value="
-                                    product.price.toLocaleString('en-PH', {
-                                        style: 'currency',
-                                        currency: 'PHP',
-                                    })
-                                "
-                            />
-                        </div>
-                        <div>
-                            <label for="quantity" :class="styleClasses.label">Quantity</label>
-                            <input
-                                v-model="form.quantity"
-                                id="quantity"
-                                min="12"
-                                max="24"
-                                type="number"
-                                placeholder="Text Content"
-                                :class="styleClasses.textInput"
-                            />
+                        <div class="flex gap-3">
+                            <div>
+                                <label for="price" :class="styleClasses.label">Product price</label>
+                                <input
+                                    id="price"
+                                    type="text"
+                                    disabled
+                                    placeholder="Text Content"
+                                    :class="styleClasses.textInput"
+                                    :value="
+                                        product.price.toLocaleString('en-PH', {
+                                            style: 'currency',
+                                            currency: 'PHP',
+                                        })
+                                    "
+                                />
+                            </div>
+                            <div>
+                                <label for="quantity" :class="styleClasses.label">Quantity</label>
+                                <input
+                                    v-model="form.quantity"
+                                    id="quantity"
+                                    min="12"
+                                    max="24"
+                                    type="number"
+                                    placeholder="Text Content"
+                                    :class="styleClasses.textInput"
+                                />
+                            </div>
                         </div>
 
                         <div class="flex justify-end gap-2 text-xs font-semibold">
@@ -506,7 +704,6 @@ const styleClasses = {
                             <span>{{ (product.price * form.quantity).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}</span>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <!-- <button class="btn btn-secondary" @click="orderNow" type="button" :disabled="processing">Place order</button> -->
                             <button class="btn btn-primary" type="submit" :disabled="processing">Add to cart</button>
                         </div>
                     </div>

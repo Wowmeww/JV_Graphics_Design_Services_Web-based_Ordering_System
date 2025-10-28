@@ -279,7 +279,7 @@ const styleClass = {
         <div v-if="element.type === 'design'" :class="styleClass.container">
             <h1 :class="styleClass.heading">Edit Element</h1>
             <div :class="styleClass.formGroup">
-                <div>
+                <div >
                     <label :for="`design-scale-${element.from}`" :class="styleClass.sizeLabel">
                         <span>Size</span>
                         <span>{{ design.scale }}</span>
@@ -306,7 +306,7 @@ const styleClass = {
                     />
                 </div>
 
-                <div>
+                <div >
                     <label :for="`design-rotate-${element.from}`" :class="styleClass.sizeLabel">
                         <span>Angle</span>
                         <span>{{ design.rotate }}</span>

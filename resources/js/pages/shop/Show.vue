@@ -211,25 +211,28 @@ const styleClass = {
                             </div>
                         </div>
 
-                        <div class="space-y-2" v-if="product.type !== 'custom'">
-                            <div class="flex items-center justify-between px-2">
-                                <span> Quantity </span>
-                                <Quantity v-model="form.quantity" />
+                        <template v-if="product.type !== 'unavailable'">
+                            <div class="space-y-2" v-if="product.type !== 'custom'">
+                                <div class="flex items-center justify-between px-2">
+                                    <span> Quantity </span>
+                                    <Quantity v-model="form.quantity" />
+                                </div>
+                                <div class="flex flex-col gap-x-3 gap-y-2 sm:flex-row">
+                                    <ButtonPrimary
+                                        :disabled="form.processing"
+                                        @click="addToWishlist"
+                                        variant="outline-secondary"
+                                        label="Add to Wishlist"
+                                    />
+                                    <ButtonPrimary :disabled="form.processing" @click="addToCart" variant="secondary" label="Add to Cart" />
+                                    <ButtonPrimary :disabled="form.processing" @click="orderNow" variant="outline-secondary" label="Order now" />
+                                </div>
                             </div>
-                            <div class="flex flex-col gap-x-3 gap-y-2 sm:flex-row">
-                                <ButtonPrimary
-                                    :disabled="form.processing"
-                                    @click="addToWishlist"
-                                    variant="outline-secondary"
-                                    label="Add to Wishlist"
-                                />
-                                <ButtonPrimary :disabled="form.processing" @click="addToCart" variant="secondary" label="Add to Cart" />
-                                <ButtonPrimary :disabled="form.processing" @click="orderNow" variant="outline-secondary" label="Order now" />
+                            <div class="flex flex-col gap-x-3 gap-y-2 sm:flex-row" v-else-if="product.type === 'custom'">
+                                <ButtonPrimary :href="route('designer', { product: product.id })" is="Link" variant="secondary" label="Customize" />
                             </div>
-                        </div>
-                        <div class="flex flex-col gap-x-3 gap-y-2 sm:flex-row" v-else-if="product.type === 'custom'">
-                            <ButtonPrimary :href="route('designer', { product: product.id })" is="Link" variant="secondary" label="Customize" />
-                        </div>
+                        </template>
+                        <template v-if="product.type == 'unavailable'"> This product is unavailable at the moment </template>
                     </div>
 
                     <div v-if="tempProduct.ratings?.length" class="space-y-5 pt-6 pb-5">

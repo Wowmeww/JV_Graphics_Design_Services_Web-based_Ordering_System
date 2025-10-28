@@ -176,7 +176,6 @@ function goBack() {
                             variant="secondary"
                             :options="['single product', 'main product with variant', 'unavailable']"
                         />
-
                         <TextInputPrimary
                             v-model="form.stock"
                             :error="form.errors.stock"
