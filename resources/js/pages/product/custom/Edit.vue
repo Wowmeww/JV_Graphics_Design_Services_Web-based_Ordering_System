@@ -182,44 +182,79 @@ function validateStock(value) {
     const stock = parseInt(value);
     return stock >= 0 ? stock : 0;
 }
+
+const styleClasses = {
+    // Layout
+    container: 'mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8',
+    formContainer: 'rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800',
+
+    // Header
+    backButton:
+        'text-link mb-2 flex items-center gap-3',
+    title: 'text-2xl font-bold text-gray-900 md:text-3xl dark:text-white',
+    subtitle: 'mt-1 text-sm text-gray-600 dark:text-gray-400',
+
+    // Alerts
+    unsavedChangesAlert: 'mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20',
+    unsavedChangesText: 'flex items-center gap-2 text-amber-800 dark:text-amber-200',
+    errorAlert: 'rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20',
+    errorHeader: 'mb-2 flex items-center gap-2 text-red-800 dark:text-red-200',
+    errorList: 'list-inside list-disc space-y-1 text-sm text-red-700 dark:text-red-300',
+
+    // Sections
+    sectionGrid: 'grid gap-8 lg:grid-cols-2',
+    sectionColumn: 'space-y-6',
+    sectionCard: 'rounded-lg bg-gray-50 p-6 dark:bg-gray-700/50',
+    sectionTitle: 'mb-4 text-lg font-semibold text-gray-900 dark:text-white',
+
+    // Form Elements
+    formContent: 'space-y-8',
+    formGrid: 'space-y-4',
+    formGridCols: 'grid grid-cols-1 gap-4 sm:grid-cols-2',
+
+    // Buttons
+    actionButtonsContainer: 'flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-end',
+    deleteButton: 'btn btn-danger flex-1 lg:flex-none dark:bg-red-600 dark:hover:bg-red-700 dark:border-red-600',
+    cancelSubmitContainer: 'inline-flex flex-1 items-center gap-3 lg:flex-none',
+
+    // Error States
+    errorText: 'mt-2 text-sm text-red-600 dark:text-red-400',
+};
 </script>
 
 <template>
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div :class="styleClasses.container">
+        <div :class="styleClasses.formContainer">
             <!-- Header -->
             <div class="mb-6">
-                <button
-                    @click="handleCancel"
-                    class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors duration-200 hover:text-gray-900"
-                >
+                <button @click="handleCancel" :class="styleClasses.backButton">
                     <i class="fas fa-arrow-left-long text-sm"></i>
                     Back to Products
                 </button>
 
                 <div class="mt-4">
-                    <h1 class="text-2xl font-bold text-gray-900 md:text-3xl">Edit Product</h1>
-                    <p class="mt-1 text-sm text-gray-600">Update your product details and images</p>
+                    <h1 :class="styleClasses.title">Edit Product</h1>
+                    <p :class="styleClasses.subtitle">Update your product details and images</p>
                 </div>
 
                 <!-- Unsaved Changes Alert -->
-                <div v-if="hasUnsavedChanges" class="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3">
-                    <div class="flex items-center gap-2 text-amber-800">
+                <div v-if="hasUnsavedChanges" :class="styleClasses.unsavedChangesAlert">
+                    <div :class="styleClasses.unsavedChangesText">
                         <i class="fas fa-exclamation-circle text-sm"></i>
                         <span class="text-sm font-medium">You have unsaved changes</span>
                     </div>
                 </div>
             </div>
 
-            <form @submit.prevent="handleSubmit" class="space-y-8">
+            <form @submit.prevent="handleSubmit" :class="styleClasses.formContent">
                 <!-- Main Form Grid -->
-                <div class="grid gap-8 lg:grid-cols-2">
+                <div :class="styleClasses.sectionGrid">
                     <!-- Left Column - Basic Information -->
-                    <div class="space-y-6">
-                        <div class="rounded-lg bg-gray-50 p-6">
-                            <h3 class="mb-4 text-lg font-semibold text-gray-900">Basic Information</h3>
+                    <div :class="styleClasses.sectionColumn">
+                        <div :class="styleClasses.sectionCard">
+                            <h3 :class="styleClasses.sectionTitle">Basic Information</h3>
 
-                            <div class="space-y-4">
+                            <div :class="styleClasses.formGrid">
                                 <TextInputPrimary
                                     v-model="form.name"
                                     :error="form.errors.name"
@@ -231,6 +266,7 @@ function validateStock(value) {
                                 />
 
                                 <TextInputPrimary
+                                    :required="false"
                                     v-model="form.description"
                                     :error="form.errors.description"
                                     label="Description"
@@ -255,10 +291,10 @@ function validateStock(value) {
                         </div>
 
                         <!-- Pricing & Inventory -->
-                        <div class="rounded-lg bg-gray-50 p-6">
-                            <h3 class="mb-4 text-lg font-semibold text-gray-900">Pricing & Inventory</h3>
+                        <div :class="styleClasses.sectionCard">
+                            <h3 :class="styleClasses.sectionTitle">Pricing & Inventory</h3>
 
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div :class="styleClasses.formGridCols">
                                 <TextInputPrimary
                                     v-model="form.price"
                                     :error="form.errors.price"
@@ -272,7 +308,7 @@ function validateStock(value) {
                                     @update:modelValue="form.price = formatPrice($event)"
                                 >
                                     <template #prefix>
-                                        <span class="text-gray-500">$</span>
+                                        <span class="text-gray-500 dark:text-gray-400">$</span>
                                     </template>
                                 </TextInputPrimary>
 
@@ -291,10 +327,10 @@ function validateStock(value) {
                         </div>
 
                         <!-- Dimensions -->
-                        <div class="rounded-lg bg-gray-50 p-6">
-                            <h3 class="mb-4 text-lg font-semibold text-gray-900">Dimensions</h3>
+                        <div :class="styleClasses.sectionCard">
+                            <h3 :class="styleClasses.sectionTitle">Dimensions</h3>
 
-                            <div class="grid grid-cols-1 gap-4">
+                            <div :class="styleClasses.formGrid">
                                 <TextInputPrimary
                                     :required="false"
                                     v-model="form.size"
@@ -321,21 +357,21 @@ function validateStock(value) {
                     </div>
 
                     <!-- Right Column - Media & Design -->
-                    <div class="space-y-6">
+                    <div :class="styleClasses.sectionColumn">
                         <!-- Product Images -->
-                        <div class="rounded-lg bg-gray-50 p-6">
-                            <h3 class="mb-4 text-lg font-semibold text-gray-900">Product Images</h3>
+                        <div :class="styleClasses.sectionCard">
+                            <h3 :class="styleClasses.sectionTitle">Product Images</h3>
                             <AddImages :images="images" @changed="handleImagesChange" :default-images="form.images" allow-delete />
-                            <p v-if="form.errors.images" class="mt-2 text-sm text-red-600">
+                            <p v-if="form.errors.images" :class="styleClasses.errorText">
                                 {{ form.errors.images }}
                             </p>
                         </div>
 
                         <!-- Design Templates -->
-                        <div class="rounded-lg bg-gray-50 p-6">
-                            <h3 class="mb-4 text-lg font-semibold text-gray-900">Design Templates</h3>
+                        <div :class="styleClasses.sectionCard">
+                            <h3 :class="styleClasses.sectionTitle">Design Templates</h3>
                             <ExampleDesigns :designs="product.designs" @change:new="({ file }) => (form.design = file)" />
-                            <p v-if="form.errors.design" class="mt-2 text-sm text-red-600">
+                            <p v-if="form.errors.design" :class="styleClasses.errorText">
                                 {{ form.errors.design }}
                             </p>
                         </div>
@@ -343,12 +379,12 @@ function validateStock(value) {
                 </div>
 
                 <!-- Form Errors -->
-                <div v-if="form.hasErrors" class="rounded-lg border border-red-200 bg-red-50 p-4">
-                    <div class="mb-2 flex items-center gap-2 text-red-800">
+                <div v-if="form.hasErrors" :class="styleClasses.errorAlert">
+                    <div :class="styleClasses.errorHeader">
                         <i class="fas fa-exclamation-triangle text-sm"></i>
                         <span class="font-medium">Please fix the following errors:</span>
                     </div>
-                    <ul class="list-inside list-disc space-y-1 text-sm text-red-700">
+                    <ul :class="styleClasses.errorList">
                         <li v-for="error in Object.values(form.errors).filter((e) => e)" :key="error">
                             {{ error }}
                         </li>
@@ -356,13 +392,13 @@ function validateStock(value) {
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-end">
-                    <button type="button" class="btn btn-danger flex-1 lg:flex-none" @click="handleDelete" :disabled="isSubmitting">
+                <div :class="styleClasses.actionButtonsContainer">
+                    <button type="button" :class="styleClasses.deleteButton" @click="handleDelete" :disabled="isSubmitting">
                         <i class="fas fa-trash mr-2"></i>
                         Delete Product
                     </button>
 
-                    <div class="inline-flex flex-1 items-center gap-3 lg:flex-none">
+                    <div :class="styleClasses.cancelSubmitContainer">
                         <ButtonPrimary @click="handleCancel" label="Cancel" type="button" variant="outline-secondary" :disabled="isSubmitting" />
 
                         <ButtonPrimary label="Update" type="submit" :disabled="!canSubmit" :with-spinner="isSubmitting" variant="secondary" />

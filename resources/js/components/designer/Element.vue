@@ -10,7 +10,7 @@ const emit = defineEmits(['update:element', 'delete:element']);
 
 const text = ref({ ...props.element.text });
 const image = ref({ ...props.element.image, scale: 100 });
-const design = ref({ ...props.element.design, scale: 100 });
+const design = ref({ ...props.element.design, scale: 100, rotate: 0 });
 
 const originalImage = reactive({
     width: 0,
@@ -279,7 +279,7 @@ const styleClass = {
         <div v-if="element.type === 'design'" :class="styleClass.container">
             <h1 :class="styleClass.heading">Edit Element</h1>
             <div :class="styleClass.formGroup">
-                <div >
+                <div>
                     <label :for="`design-scale-${element.from}`" :class="styleClass.sizeLabel">
                         <span>Size</span>
                         <span>{{ design.scale }}</span>
@@ -306,7 +306,7 @@ const styleClass = {
                     />
                 </div>
 
-                <div >
+                <div>
                     <label :for="`design-rotate-${element.from}`" :class="styleClass.sizeLabel">
                         <span>Angle</span>
                         <span>{{ design.rotate }}</span>

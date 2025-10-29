@@ -174,7 +174,7 @@ function goBack() {
                             label="Product Type"
                             placeholder="Select type"
                             variant="secondary"
-                            :options="['single product', 'main product with variant', 'unavailable']"
+                            :options="['single product', 'main product with variant', 'unavailable', 'custom']"
                         />
                         <TextInputPrimary
                             v-model="form.stock"

@@ -17,27 +17,26 @@ class ProductionSeeder extends Seeder
         User::factory()->create([
             'role' => 'admin',
             'name' => "JV Graphics Design Services",
-            'email' => 'jaiveegds2024@gmail.com.test',
-            'password' => bcrypt('jaiveegds2024@gmail.com.test'),
+            'email' => env("EMAIL_ADDRESS"),
+            'password' => bcrypt(env('EMAIL_ADDRESS')),
             'email_verified_at' => Carbon::now(),
             'birth_date' => Carbon::now(),
             'address' => 'Bulan, Sorsogon, Philippines',
             'verified_at' => Carbon::now(),
             'avatar_url' => null,
-            // 'phone' => '09129319355',
-            'phone' => '09000000000',
+            'phone' => env("PHONE_NUMBER"),
         ]);
-        User::factory()->create([
-            'role' => 'customer',
-            'name' => "Nico Bernard B. Firmanes",
-            'email' => 'nbfirmanes@sorsu.edu.ph',
-            'password' => bcrypt('123'),
-            'email_verified_at' => Carbon::now(),
-            'birth_date' => Carbon::now(),
-            'address' => 'Bulusan, Sorsogon, Philippines',
-            'verified_at' => Carbon::now(),
-            'avatar_url' => null,
-        ]);
+        // User::factory()->create([
+        //     'role' => 'customer',
+        //     'name' => "Nico Bernard B. Firmanes",
+        //     'email' => 'nbfirmanes@sorsu.edu.ph',
+        //     'password' => bcrypt('123'),
+        //     'email_verified_at' => Carbon::now(),
+        //     'birth_date' => Carbon::now(),
+        //     'address' => 'Bulusan, Sorsogon, Philippines',
+        //     'verified_at' => Carbon::now(),
+        //     'avatar_url' => null,
+        // ]);
 
         $this->call([SystemSettingSeeder::class]);
     }

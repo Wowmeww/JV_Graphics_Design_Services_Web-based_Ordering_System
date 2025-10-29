@@ -110,7 +110,8 @@ watch(
                     form.images[config.index] = null;
                     continue;
                 }
-
+                // small delay to ensure DOM updates are done
+                await new Promise((resolve) => setTimeout(resolve, 400));
                 const el = document.querySelector(config.selector);
                 if (!el) {
                     console.warn(`Element not found: ${config.selector}`);
@@ -118,9 +119,6 @@ watch(
                 }
 
                 try {
-                    // small delay to ensure DOM updates are done
-                    await new Promise((resolve) => setTimeout(resolve, 400));
-
                     const canvas = await html2canvas(el, {
                         scale: 1,
                         logging: false,
@@ -184,11 +182,13 @@ const activeView = ref('front');
 
 function updateElement(type, value) {
     const to = activeView.value;
+    console.log(value.from);
     if (type === 'text' && to === value.from) {
         elements[to].texts[value.index] = value;
     } else if (type === 'image' && to === value.from) {
         elements[to].image = value;
-    } else if (type === 'design' && to === value.from) {
+    } else if (type === 'design') {
+        console.log(value);
         elements[to].design = value;
     }
 }
@@ -286,29 +286,39 @@ const totalAmount = computed(() => {
 });
 
 const styleClasses = {
-    container: 'mx-auto max-w-7xl px-4 py-6',
-    layout: 'flex flex-col lg:gap-6 lg:flex-row',
-    previewSection: 'container-secondary h-fit flex-1 space-y-4 p-4',
-    headerContainer: 'flex flex-wrap items-center justify-between',
-    title: 'text-xl font-bold text-gray-900 dark:text-white',
+    container: 'mx-auto max-w-7xl px-4 py-8',
+    layout: 'flex flex-col lg:gap-8 lg:flex-row',
+    previewSection: 'container-secondary h-fit flex-1 space-y-6 p-6 rounded-2xl shadow-lg bg-white dark:bg-gray-800',
+    headerContainer: 'flex flex-col gap-4 pb-4 border-b border-gray-200 dark:border-gray-700',
+    title: 'text-2xl font-bold text-gray-900 dark:text-white',
+    subtitle: 'text-sm text-gray-500 dark:text-gray-400 mt-1',
     viewToggleContainer:
-        'flex divide-x divide-gray-300 overflow-hidden rounded-lg border border-gray-200 bg-white rtl:flex-row-reverse dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800',
-    viewToggleButton: 'px-4 py-2 text-sm font-medium transition-colors duration-200 sm:px-6',
-    viewToggleActive: 'bg-blue-500 text-white',
-    viewToggleInactive: 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+        'mx-auto flex w-max divide-x divide-gray-300 overflow-hidden rounded-xl border border-gray-200 bg-white rtl:flex-row-reverse dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800 shadow-sm',
+    viewToggleButton: 'lg:px-5 px-3 py-2 text-sm font-medium transition-all duration-300 sm:px-6 flex items-center',
+    viewToggleActive: 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md',
+    viewToggleInactive: 'text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700',
     viewToggleDisabled: 'cursor-not-allowed opacity-50',
-    canvasContainer: 'grid place-content-center',
-    canvasImage: 'relative rounded-xl overflow-hidden',
+    canvasContainer: 'grid place-content-center p-2 bg-gray-50 dark:bg-gray-900 rounded-xl mt-4',
+    canvasImage: 'relative rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl',
     canvasOverlay: 'absolute inset-0',
-    textElement: 'cursor-pointer rounded border border-transparent px-3 py-0.5 hover:border-indigo-600',
-    toolsPanel: 'flex flex-col gap-5 lg:w-sm',
-    uploadedImage: 'hover:drop-shadow-primary-700 dark:hover:drop-shadow-primary hover:drop-shadow-xl p-0',
-    label: 'block text-sm text-gray-500 dark:text-gray-300',
+    textElement:
+        'cursor-pointer rounded-lg border-2 border-dashed border-transparent px-3 py-1.5 hover:border-indigo-500 hover:shadow-md transition-all duration-200 active:bg-white/80 backdrop-blur-sm',
+    toolsPanel: 'flex flex-col gap-6 lg:w-96',
+    uploadedImage: 'hover:drop-shadow-2xl p-0 transition-all duration-300 hover:scale-105 cursor-move',
+    label: 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1',
     textInput:
-        'mt-2 block w-full rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 placeholder-gray-400/70 focus:border-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:placeholder-gray-500 dark:focus:border-blue-300',
+        'mt-1 block w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-700 placeholder-gray-400/70 focus:border-blue-400 focus:ring-2 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none transition-all duration-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-500 dark:focus:border-blue-300',
+    buttonPrimary:
+        'w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center',
+    buttonDisabled: 'cursor-not-allowed opacity-50',
+    processingIndicator: 'text-center text-sm text-blue-600 py-2 flex items-center justify-center',
+    totalAmount: 'text-lg font-bold text-indigo-600 dark:text-indigo-400',
+    sectionCard: 'container-secondary rounded-2xl p-6 shadow-md bg-white dark:bg-gray-800',
+    sectionTitle: 'text-lg font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700',
 };
 </script>
 
+<!-- enhance the style but dot touch the logics -->
 <template>
     <Head title="Designer" />
     <div :class="styleClasses.container">
@@ -317,8 +327,11 @@ const styleClasses = {
             <div :class="styleClasses.previewSection">
                 <div :class="styleClasses.headerContainer">
                     <div>
+                        <Link :href="route('shop.show', { product: product.id })" class="text-link mb-2 flex items-center gap-3">
+                            <i class="bi bi-arrow-left text-2xl"></i> <span>Back</span></Link
+                        >
                         <h1 :class="styleClasses.title">T-Shirt Designer</h1>
-                        <small>For best results, we recommend uploading only image.</small>
+                        <small :class="styleClasses.subtitle">For best results, we recommend uploading only high-quality images.</small>
                     </div>
 
                     <div :class="styleClasses.viewToggleContainer">
@@ -726,13 +739,13 @@ const styleClasses = {
                     @add-element:design="({ value }) => (elements.left.design = value)"
                 />
 
-                <form @submit.prevent="addToCart" class="container-secondary">
-                    <h2 class="text-lg font-semibold">Confirm</h2>
+                <form @submit.prevent="addToCart" :class="styleClasses.sectionCard">
+                    <h2 :class="styleClasses.sectionTitle">Confirm Order</h2>
 
-                    <div class="space-y-4 pt-3">
-                        <div class="flex gap-3">
+                    <div class="space-y-5">
+                        <div class="flex gap-4">
                             <div class="flex-1">
-                                <label for="price" :class="styleClasses.label">Product price</label>
+                                <label for="price" :class="styleClasses.label">Product Price</label>
                                 <input
                                     id="price"
                                     type="text"
@@ -752,29 +765,31 @@ const styleClasses = {
                             </div>
                         </div>
 
-                        <div class="flex justify-end gap-2 text-sm font-semibold">
-                            <span>Total amount: </span>
-                            <span>{{ totalAmount }}</span>
+                        <div class="flex items-center justify-between border-t border-gray-200 py-3 dark:border-gray-700">
+                            <span class="font-semibold text-gray-700 dark:text-gray-300">Total Amount:</span>
+                            <span :class="styleClasses.totalAmount">{{ totalAmount }}</span>
                         </div>
 
                         <!-- Processing Indicator -->
-                        <div v-if="processing" class="text-center text-sm text-blue-600">
+                        <div v-if="processing" :class="styleClasses.processingIndicator">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                             Processing design...
                         </div>
 
                         <div class="flex flex-col gap-2">
                             <button
-                                class="btn btn-primary"
+                                :class="[styleClasses.buttonPrimary, processing ? styleClasses.buttonDisabled : '']"
                                 type="submit"
                                 :disabled="processing"
-                                :class="{ 'cursor-not-allowed opacity-50': processing }"
                             >
                                 <span v-if="processing">
                                     <i class="fas fa-spinner fa-spin mr-2"></i>
                                     Processing...
                                 </span>
-                                <span v-else> Add to cart </span>
+                                <span v-else>
+                                    <i class="fas fa-shopping-cart mr-2"></i>
+                                    Add to Cart
+                                </span>
                             </button>
                         </div>
                     </div>
