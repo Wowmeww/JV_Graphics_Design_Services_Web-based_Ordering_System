@@ -5,6 +5,7 @@ import Tools from '@/components/designer/Tools.vue';
 import initializeDragAndDrop from './dragDrop.js';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import html2canvas from 'html2canvas';
+import { debounce } from 'lodash';
 
 const props = defineProps({
     product: Object,
@@ -13,11 +14,12 @@ const page = usePage();
 
 const processing = ref(false);
 
+// Fixed images computed property - check if images exist before accessing
 const images = computed(() => ({
     front: props.product.images[0] ? `/storage/${props.product.images[0].image_path}` : null,
     back: props.product.images[1] ? `/storage/${props.product.images[1].image_path}` : null,
-    right: props.product.images[0] ? `/storage/${props.product.images[2].image_path}` : null,
-    left: props.product.images[1] ? `/storage/${props.product.images[3].image_path}` : null,
+    right: props.product.images[2] ? `/storage/${props.product.images[2].image_path}` : null,
+    left: props.product.images[3] ? `/storage/${props.product.images[3].image_path}` : null,
 }));
 
 const selectedElement = reactive({
@@ -31,25 +33,25 @@ const elements = reactive({
     front: {
         texts: [],
         image: null,
-        imagePreview: '',
+        imagePreview: null,
         design: null,
     },
     back: {
         texts: [],
         image: null,
-        imagePreview: '',
+        imagePreview: null,
         design: null,
     },
     right: {
         texts: [],
         image: null,
-        imagePreview: '',
+        imagePreview: null,
         design: null,
     },
     left: {
         texts: [],
         image: null,
-        imagePreview: '',
+        imagePreview: null,
         design: null,
     },
 });
@@ -67,103 +69,118 @@ const form = useForm({
 
 watch(
     () => elements,
-    async (newElements) => {
+    debounce(async (newElements) => {
+        if (processing.value) return; // prevent overlaps
+        processing.value = true;
+
         try {
-            // 1. Define canvas configurations
-            const shouldCapture = {
-                front: newElements.front.image?.file || newElements.front.texts?.filter((v) => v).length || newElements.front.design?.image,
-                back: newElements.back.image?.file || newElements.back.texts?.filter((v) => v).length || newElements.back.design?.image,
-            };
-            processing.value = shouldCapture.front || shouldCapture.back;
+            const sides = ['front', 'back', 'right', 'left'];
 
-            const canvasConfigs = [
-                {
-                    selector: '#front-canvas',
-                    shouldCapture: shouldCapture.front,
-                    label: 'front uploaded design',
-                    filename: 'front-design.png',
-                },
-                {
-                    selector: '#front-preview',
-                    shouldCapture: shouldCapture.front,
-                    label: 'front preview',
-                    filename: 'front-preview.png',
-                },
-                {
-                    selector: '#back-canvas',
-                    shouldCapture: shouldCapture.back,
-                    label: 'back uploaded design',
-                    filename: 'back-design.png',
-                },
-                {
-                    selector: '#back-preview',
-                    shouldCapture: shouldCapture.back,
-                    label: 'back preview',
-                    filename: 'back-preview.png',
-                },
-            ];
+            const canvasConfigs = sides.flatMap((side, i) => {
+                const hasContent =
+                    newElements[side].image?.file || (newElements[side].texts?.filter(Boolean).length ?? 0) || newElements[side].design;
 
-            // 2. Process captures in parallel with error handling
-            canvasConfigs.map(async (config) => {
-                if (!config.shouldCapture) return null;
+                return [
+                    {
+                        selector: `#${side}-canvas`,
+                        shouldCapture: hasContent,
+                        shouldRemove: !hasContent,
+                        label: `${side} uploaded design`,
+                        filename: `${side}-design.png`,
+                        index: i * 2,
+                    },
+                    {
+                        selector: `#${side}-preview`,
+                        shouldCapture: hasContent,
+                        shouldRemove: !hasContent,
+                        label: `${side} preview`,
+                        filename: `${side}-preview.png`,
+                        index: i * 2 + 1,
+                    },
+                ];
+            });
+
+            // ensure array has 8 slots
+            if (!Array.isArray(form.images)) form.images = Array(8).fill(null);
+            else if (form.images.length < 8) form.images.length = 8;
+
+            // process one by one
+            for (const config of canvasConfigs) {
+                if (config.shouldRemove) {
+                    form.images[config.index] = null;
+                    continue;
+                }
+
+                const el = document.querySelector(config.selector);
+                if (!el) {
+                    console.warn(`Element not found: ${config.selector}`);
+                    continue;
+                }
+
                 try {
-                    setTimeout(async () => {
-                        const el = document.querySelector(config.selector);
-                        const canvas = await html2canvas(el, {
-                            // scale: 2,
-                            logging: false,
-                            useCORS: true,
-                            backgroundColor: null,
-                            allowTaint: true,
-                        });
+                    // small delay to ensure DOM updates are done
+                    await new Promise((resolve) => setTimeout(resolve, 400));
 
-                        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.9));
-                        if (blob) {
-                            form.images.push({
-                                label: config.label,
-                                file: new File([blob], config.filename, { type: 'image/png' }),
-                            });
-                            form.images = form.images.filter(Boolean);
-                            processing.value = false;
-                        }
-                    }, 4000);
+                    const canvas = await html2canvas(el, {
+                        scale: 1,
+                        logging: false,
+                        useCORS: true,
+                        backgroundColor: null,
+                    });
+
+                    const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.9));
+
+                    if (blob) {
+                        form.images[config.index] = {
+                            label: config.label,
+                            file: new File([blob], config.filename, { type: 'image/png' }),
+                        };
+                    }
                 } catch (error) {
                     console.error(`Failed to capture ${config.label}:`, error);
-                    return null;
                 }
-            });
+            }
+
+            // cleanup any nulls at the end (optional)
+            form.images = form.images.filter(Boolean);
         } catch (error) {
             console.error('Canvas processing error:', error);
-            toast.error('Failed to process design images');
+        } finally {
+            processing.value = false;
         }
-    },
+    }, 800),
     { deep: true },
 );
 
 async function addToCart() {
+    if (processing.value) return;
+
     processing.value = true;
 
-    form.images = form.images
-        .reduceRight((acc, current) => {
-            if (!acc.some((item) => item.label === current.label)) {
-                acc.push(current);
-            }
-            return acc;
-        }, [])
-        .reverse();
-    form.post(
-        route('cart.store', {
-            product: props.product.id,
-        }),
-        {
-            onFinish: () => {
-                processing.value = false;
+    try {
+        // Remove duplicates more efficiently
+        form.images = form.images.filter((image, index, self) => index === self.findIndex((img) => img.label === image.label));
+
+        await form.post(
+            route('cart.store', {
+                product: props.product.id,
+            }),
+            {
+                onFinish: () => {
+                    processing.value = false;
+                },
+                onError: () => {
+                    processing.value = false;
+                },
             },
-        },
-    );
+        );
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        processing.value = false;
+    }
 }
 
-const activeView = ref('front'); // 'front' or 'back'
+const activeView = ref('front');
 
 function updateElement(type, value) {
     const to = activeView.value;
@@ -171,25 +188,29 @@ function updateElement(type, value) {
         elements[to].texts[value.index] = value;
     } else if (type === 'image' && to === value.from) {
         elements[to].image = value;
-    } else if (type === 'design') {
+    } else if (type === 'design' && to === value.from) {
         elements[to].design = value;
     }
 }
+
 function deleteElement(type, value) {
     const to = activeView.value;
+    console.log(value);
     if (type === 'text' && to === value.from) {
         elements[to].texts[value.text.index] = null;
     } else if (type === 'image' && to === value.from) {
         elements[to].image = null;
         elements[to].imagePreview = null;
-    } else {
+    } else if (type === 'design' && to === value.from) {
         elements[to].design = null;
+        console.log('update');
     }
     selectedElement.text = null;
     selectedElement.image = null;
     selectedElement.design = null;
     selectedElement.type = null;
 }
+
 const switchView = (view) => {
     activeView.value = view;
     selectedElement.from = view;
@@ -200,16 +221,19 @@ const switchView = (view) => {
 
 function addText(text) {
     const to = activeView.value;
-    elements[to].texts.push({
+    const newText = {
         text,
         font: 'Roboto',
         size: 24,
         color: '#000000',
-        index: 0,
+        index: elements[to].texts.length,
         from: activeView.value,
         rotate: 0,
-    });
+    };
+    elements[to].texts.push(newText);
+    selectElement('text', newText);
 }
+
 function addImage(imageFile) {
     const to = activeView.value;
     elements[to].imagePreview = URL.createObjectURL(imageFile);
@@ -218,11 +242,13 @@ function addImage(imageFile) {
         file: imageFile,
         rotate: 0,
     };
+    selectElement('image', elements[to].image);
 }
 
-function selectElement(type, value, event) {
+function selectElement(type, value, event = null) {
     const from = activeView.value;
     selectedElement.type = type;
+    selectedElement.from = from;
 
     selectedElement.text = null;
     selectedElement.image = null;
@@ -234,17 +260,30 @@ function selectElement(type, value, event) {
             break;
 
         case 'image':
-            elements[from].image.width = event.currentTarget.clientWidth;
-            elements[from].image.height = event.currentTarget.clientHeight;
+            if (event && event.currentTarget) {
+                elements[from].image.width = event.currentTarget.clientWidth;
+                elements[from].image.height = event.currentTarget.clientHeight;
+            }
             selectedElement.image = elements[from].image;
             break;
 
         case 'design':
-            elements[from].design.width = event.currentTarget.clientWidth;
-            elements[from].design.height = event.currentTarget.clientHeight;
+            if (event && event.currentTarget) {
+                elements[from].design.width = event.currentTarget.clientWidth;
+                elements[from].design.height = event.currentTarget.clientHeight;
+            }
             selectedElement.design = elements[from].design;
+            break;
     }
 }
+
+// Computed property for total amount
+const totalAmount = computed(() => {
+    return (props.product.price * form.quantity).toLocaleString('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+    });
+});
 
 const styleClasses = {
     container: 'mx-auto max-w-7xl px-4 py-6',
@@ -257,6 +296,7 @@ const styleClasses = {
     viewToggleButton: 'px-4 py-2 text-sm font-medium transition-colors duration-200 sm:px-6',
     viewToggleActive: 'bg-blue-500 text-white',
     viewToggleInactive: 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+    viewToggleDisabled: 'cursor-not-allowed opacity-50',
     canvasContainer: 'grid place-content-center',
     canvasImage: 'relative rounded-xl overflow-hidden',
     canvasOverlay: 'absolute inset-0',
@@ -283,41 +323,63 @@ const styleClasses = {
 
                     <div :class="styleClasses.viewToggleContainer">
                         <button
-                            @click="switchView('front')"
+                            @click="!processing && switchView('front')"
+                            :disabled="processing"
                             :class="[
                                 styleClasses.viewToggleButton,
                                 activeView === 'front' ? styleClasses.viewToggleActive : styleClasses.viewToggleInactive,
+                                processing ? styleClasses.viewToggleDisabled : '',
                             ]"
                         >
                             Front
+                            <span v-if="processing && activeView === 'front'" class="ml-2">
+                                <i class="fas fa-spinner fa-spin text-xs"></i>
+                            </span>
                         </button>
                         <button
                             v-if="images.back"
-                            @click="switchView('back')"
+                            @click="!processing && switchView('back')"
+                            :disabled="processing"
                             :class="[
                                 styleClasses.viewToggleButton,
                                 activeView === 'back' ? styleClasses.viewToggleActive : styleClasses.viewToggleInactive,
+                                processing ? styleClasses.viewToggleDisabled : '',
                             ]"
                         >
                             Back
+                            <span v-if="processing && activeView === 'back'" class="ml-2">
+                                <i class="fas fa-spinner fa-spin text-xs"></i>
+                            </span>
                         </button>
                         <button
-                            @click="switchView('right')"
+                            v-if="images.right"
+                            @click="!processing && switchView('right')"
+                            :disabled="processing"
                             :class="[
                                 styleClasses.viewToggleButton,
                                 activeView === 'right' ? styleClasses.viewToggleActive : styleClasses.viewToggleInactive,
+                                processing ? styleClasses.viewToggleDisabled : '',
                             ]"
                         >
                             Right
+                            <span v-if="processing && activeView === 'right'" class="ml-2">
+                                <i class="fas fa-spinner fa-spin text-xs"></i>
+                            </span>
                         </button>
                         <button
-                            @click="switchView('left')"
+                            v-if="images.left"
+                            @click="!processing && switchView('left')"
+                            :disabled="processing"
                             :class="[
                                 styleClasses.viewToggleButton,
                                 activeView === 'left' ? styleClasses.viewToggleActive : styleClasses.viewToggleInactive,
+                                processing ? styleClasses.viewToggleDisabled : '',
                             ]"
                         >
                             Left
+                            <span v-if="processing && activeView === 'left'" class="ml-2">
+                                <i class="fas fa-spinner fa-spin text-xs"></i>
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -325,7 +387,7 @@ const styleClasses = {
                 <div :class="styleClasses.canvasContainer">
                     <!-------- FRONT ----------------------------------------------------------------------->
                     <div v-show="activeView === 'front'" :class="styleClasses.canvasImage" id="front-preview">
-                        <img class="" :src="images.front" alt="front" />
+                        <img class="h-auto w-full" :src="images.front" alt="front" />
 
                         <div :class="styleClasses.canvasOverlay" id="front-canvas">
                             <template v-for="(text, i) in elements.front.texts" :key="`front-text-${i}`">
@@ -401,7 +463,7 @@ const styleClasses = {
 
                     <!-------- BACK ----------------------------------------------------------------------->
                     <div v-show="activeView === 'back'" :class="styleClasses.canvasImage" id="back-preview">
-                        <img class="" :src="images.back" alt="back" />
+                        <img class="h-auto w-full" :src="images.back" alt="back" />
 
                         <div :class="styleClasses.canvasOverlay" id="back-canvas">
                             <template v-for="(text, i) in elements.back.texts" :key="`back-text-${i}`">
@@ -477,7 +539,7 @@ const styleClasses = {
 
                     <!-------- RIGHT SIDE ----------------------------------------------------------------------->
                     <div v-show="activeView === 'right'" :class="styleClasses.canvasImage" id="right-preview">
-                        <img class="" :src="images.right" alt="right side" />
+                        <img class="h-auto w-full" :src="images.right || images.front" alt="right side" />
 
                         <div :class="styleClasses.canvasOverlay" id="right-canvas">
                             <template v-for="(text, i) in elements.right.texts" :key="`right-text-${i}`">
@@ -553,7 +615,7 @@ const styleClasses = {
 
                     <!-------- LEFT SIDE ----------------------------------------------------------------------->
                     <div v-show="activeView === 'left'" :class="styleClasses.canvasImage" id="left-preview">
-                        <img class="" :src="images.left" alt="left side" />
+                        <img class="h-auto w-full" :src="images.left || images.front" alt="left side" />
 
                         <div :class="styleClasses.canvasOverlay" id="left-canvas">
                             <template v-for="(text, i) in elements.left.texts" :key="`left-text-${i}`">
@@ -669,13 +731,12 @@ const styleClasses = {
 
                     <div class="space-y-4 pt-3">
                         <div class="flex gap-3">
-                            <div>
+                            <div class="flex-1">
                                 <label for="price" :class="styleClasses.label">Product price</label>
                                 <input
                                     id="price"
                                     type="text"
                                     disabled
-                                    placeholder="Text Content"
                                     :class="styleClasses.textInput"
                                     :value="
                                         product.price.toLocaleString('en-PH', {
@@ -685,26 +746,36 @@ const styleClasses = {
                                     "
                                 />
                             </div>
-                            <div>
+                            <div class="flex-1">
                                 <label for="quantity" :class="styleClasses.label">Quantity</label>
-                                <input
-                                    v-model="form.quantity"
-                                    id="quantity"
-                                    min="12"
-                                    max="24"
-                                    type="number"
-                                    placeholder="Text Content"
-                                    :class="styleClasses.textInput"
-                                />
+                                <input v-model="form.quantity" id="quantity" min="12" max="24" type="number" :class="styleClasses.textInput" />
                             </div>
                         </div>
 
-                        <div class="flex justify-end gap-2 text-xs font-semibold">
+                        <div class="flex justify-end gap-2 text-sm font-semibold">
                             <span>Total amount: </span>
-                            <span>{{ (product.price * form.quantity).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}</span>
+                            <span>{{ totalAmount }}</span>
                         </div>
+
+                        <!-- Processing Indicator -->
+                        <div v-if="processing" class="text-center text-sm text-blue-600">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            Processing design...
+                        </div>
+
                         <div class="flex flex-col gap-2">
-                            <button class="btn btn-primary" type="submit" :disabled="processing">Add to cart</button>
+                            <button
+                                class="btn btn-primary"
+                                type="submit"
+                                :disabled="processing"
+                                :class="{ 'cursor-not-allowed opacity-50': processing }"
+                            >
+                                <span v-if="processing">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                                    Processing...
+                                </span>
+                                <span v-else> Add to cart </span>
+                            </button>
                         </div>
                     </div>
                 </form>
