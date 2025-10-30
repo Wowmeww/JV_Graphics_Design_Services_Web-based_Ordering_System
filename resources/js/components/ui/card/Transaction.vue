@@ -12,7 +12,7 @@ const auth = computed(() => page.props.auth?.user);
 
 function totalAmount() {
     const amount = props.transaction.order.total_amount;
-    return amount.toLocaleString('en-PH', {
+    return Number(amount).toLocaleString('en-PH', {
         style: 'currency',
         currency: 'PHP',
     });
@@ -71,7 +71,6 @@ function formatDate() {
                     :href="route('transactions', { search: transaction.order.total_amount })"
                     class="font-bold text-gray-900 dark:text-white"
                 >
-                    <i class="fas fa-dollar-sign mr-1 text-gray-400"></i>
                     {{ totalAmount() }}
                 </Link>
             </div>

@@ -18,7 +18,7 @@
     });
 
     function submit() {
-        form.post(route('password.update'), {
+        form.post(route('password.reset.update'), {
             onFinish: () => form.reset('password', 'password_confirmation'),
         });
     }
@@ -26,12 +26,12 @@
 </script>
 
 <template>
-
     <Head title="Reset password" />
     <div class="h-screen mx-auto flex justify-center items-center">
         <ContainerPrimary class="md:min-w-2xl mb-40 animate__animated animate__slideInUp " title="Reset your password"
             lead="Create a new password, then login to your account.">
             <form class="pt-6 space-y-6" @submit.prevent="submit">
+
                 <TextInputPrimary label="Password" :error="form.errors.password" v-model="form.password" type="password" />
                 <TextInputPrimary label="Confirm Password" v-model="form.password_confirmation" type="password" />
 

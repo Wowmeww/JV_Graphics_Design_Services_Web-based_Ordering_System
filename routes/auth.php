@@ -16,33 +16,35 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
     // REGISTER ROUTES
-    Route::get('register', [RegisteredUserController::class, 'create'])
+    Route::get('/register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('/register', [RegisteredUserController::class, 'store']);
 
     // LOGIN ROUTES
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
+    Route::get('/login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+});
 
-    // Password Reset
-    Route::get('/forgot-password', [PasswordResetController::class, 'passRequest'])->name('password.request');
+// Password Reset
+Route::middleware('guest')->group(function () {
 
-    Route::post('/forgot-password', [PasswordResetController::class, 'passEmail'])->name('password.email');
+    Route::get('/forgot-password/request', [PasswordResetController::class, 'passRequest'])->name('password.request');
+
+    Route::post('/forgot-password/email', [PasswordResetController::class, 'passEmail'])->name('password.email');
 
     Route::get('/reset-password/{token}', [PasswordResetController::class, 'passReset'])->name('password.reset');
 
-    Route::post('/reset-password', [PasswordResetController::class, 'passUpdate'])->name('password.update');
+    Route::post('/reset-password', [PasswordResetController::class, 'passUpdate'])->name('password.reset.update');
 });
 
 
 // EMAIL VERIFICATION ROUTES
 
-
 Route::middleware(['auth'])->group(function () {
-    Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
+    Route::delete('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
     Route::get('/email/verify', [AuthenticatedSessionController::class, 'verificationNotice'])
         ->name('verification.notice');
@@ -65,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::get('/password/edit', [ProfileController::class, 'editPassword'])->name('password.edit');
-    Route::patch('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::patch('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::get('/appearance/edit', [ProfileController::class, 'editAppearance'])->name('appearance.edit');
 });
 
