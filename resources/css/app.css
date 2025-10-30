@@ -1,3 +1,4 @@
+/* enhance the ui */
 @import 'tailwindcss';
 
 @import "tw-animate-css";
@@ -9,7 +10,6 @@
   --font-montserrat: 'Montserrat', 'sans-serif', 'Instrument Sans', 'ui-sans-serif', 'system-ui',
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
-
   /* change the color for primary and secondary with redish color */
   /* --color-primary-100: #f3e9f5;
   --color-primary-200: #e1c8e4;
@@ -31,7 +31,6 @@
   --color-secondary: #2f01a6;
   --color-secondary-800: #23007d;
   --color-secondary-900: #170055; */
-
 
   --color-primary-50: #fdf4f6;
   --color-primary-100: #fae6eb;
@@ -58,7 +57,7 @@
   --color-secondary-900: #5c1b03;
   --color-secondary: #8f2a05;
 
---color-secondary-50:  #fff4f0;
+  --color-secondary-50: #fff4f0;
   --color-secondary-100: #ffe4d9;
   --color-secondary-200: #ffc2ac;
   --color-secondary-300: #ff9b7d;
@@ -68,7 +67,7 @@
   --color-secondary-700: #b82f0f;
   --color-secondary-800: #8a230b;
   --color-secondary-900: #5c1607;
-  --color-secondary:      #ff4c1f;
+  --color-secondary: #ff4c1f;
 
 
 
@@ -98,88 +97,91 @@
   }
 
   .input-label {
-    @apply text-sm leading-5 font-bold mb-1.5 md:mb-2.5;
+    @apply text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200 tracking-wide;
   }
 
+  /* --- Form Controls --- */
   .form-control {
-    @apply px-2.5 w-full h-fit min-h-10 md:min-h-12 py-1.5 md:py-3.5 md:px-[1.375rem] rounded-md md:rounded-xl leading-5 border focus:outline-none focus:ring transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 bg-transparent;
+    @apply w-full px-3 py-2 md:py-3 md:px-5 rounded-lg border bg-white/70 dark:bg-gray-800/40 backdrop-blur-sm border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60;
   }
 
+  /* Primary Input */
   .form-control-primary {
-    @apply placeholder:text-primary/40 dark:placeholder:text-[#4a5d79] border-primary dark:border-[#324055] focus:border-primary dark:focus:border-primary/80 focus:ring-primary disabled:text-primary/60 disabled:border-primary/30 dark:disabled:text-[#adc5e9] dark:disabled:border-[#2f3c4f];
+    @apply border-primary/60 focus:border-primary focus:ring-primary/40 placeholder:text-primary/50 dark:placeholder:text-primary/30;
   }
 
+  /* Secondary Input */
   .form-control-secondary {
-    @apply placeholder:text-secondary/40 dark:placeholder:text-[#b4cff7] border-secondary dark:border-[#324055] focus:border-secondary dark:focus:border-secondary-300/30 focus:ring-secondary-400 disabled:opacity-70 disabled:text-secondary disabled:border-secondary/30 dark:disabled:text-[#f2f5fb] dark:disabled:border-[#425270];
+    @apply border-secondary/60 focus:border-secondary focus:ring-secondary/40 placeholder:text-secondary/50 dark:placeholder:text-secondary/30;
   }
 
+  /* Error State */
   .form-control-error {
-    @apply text-red-500 font-semibold;
+    @apply text-red-600 font-medium;
   }
 
+  /* --- Buttons --- */
   .btn {
-    @apply py-2.5 px-4 md:py-3.5 md:px-[1.375rem] text-sm leading-4 flex justify-center gap-2 items-center border border-transparent font-bold rounded-xl transition-all duration-200 ease-in-out disabled:bg-muted disabled:hover:bg-muted;
+    @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl text-sm py-3 px-5 border transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
   }
 
+  /* Primary Button */
   .btn-primary {
-    @apply bg-primary disabled:cursor-wait text-white dark:hover:bg-primary/80 hover:border hover:border-primary hover:bg-white hover:text-primary dark:hover:text-white dark:active:bg-primary/80 active:border active:border-primary active:bg-white active:text-primary dark:active:text-white;
+    @apply bg-primary text-white border-transparent hover:bg-primary/90 active:bg-primary/80 focus:ring-primary/40 disabled:bg-primary/50 disabled:cursor-not-allowed;
   }
 
+  /* Outline Primary */
   .btn-outline-primary {
-    @apply border-primary/40 dark:border-white dark:text-white disabled:cursor-wait hover:bg-primary hover:text-white hover:border-transparent active:bg-primary hover:dark:border-white active:text-white active:border-white dark:bg-primary/20;
+    @apply border-primary text-primary hover:bg-primary hover:text-white dark:border-primary-300 dark:text-primary-100 dark:hover:bg-primary/20;
   }
 
+  /* Secondary Button */
   .btn-secondary {
-    @apply bg-secondary text-white font-bold border border-secondary hover:bg-white hover:text-secondary hover:border-secondary dark:hover:bg-secondary/80 dark:hover:text-white active:bg-white active:text-secondary active:border-secondary dark:active:bg-secondary/80 dark:active:text-white disabled:cursor-wait transition-all duration-200 ease-in-out;
+    @apply bg-secondary text-white border-transparent hover:bg-secondary/90 active:bg-secondary/80 focus:ring-secondary/40 disabled:bg-secondary/50 disabled:cursor-not-allowed;
   }
 
+  /* Outline Secondary */
   .btn-outline-secondary {
-    @apply border-secondary/40 text-secondary font-bold hover:bg-secondary hover:text-white active:bg-secondary active:text-white active:border-secondary dark:border-white dark:text-white dark:hover:bg-secondary/20 dark:active:bg-secondary/30 disabled:cursor-wait transition-all duration-200 ease-in-out;
+    @apply border-secondary text-secondary hover:bg-secondary hover:text-white dark:border-secondary-300 dark:text-secondary-100 dark:hover:bg-secondary/20;
   }
 
+  /* Danger */
   .btn-danger {
-    @apply bg-red-600 text-white font-bold border border-red-600 hover:bg-white hover:text-red-600 hover:border-red-600 dark:hover:bg-red-500/80 dark:hover:text-white active:bg-white active:text-red-600 active:border-red-600 dark:active:bg-red-500/80 dark:active:text-white disabled:cursor-wait transition-all duration-200 ease-in-out;
+    @apply bg-red-600 text-white border-transparent hover:bg-red-700 active:bg-red-800 focus:ring-red-500/40;
   }
 
+  /* Outline Danger */
   .btn-outline-danger {
-    @apply border-red-600/40 text-red-600 font-bold hover:bg-red-600 hover:text-white active:bg-red-600 active:text-white active:border-red-600 dark:border-white dark:text-white dark:hover:bg-red-600/20 dark:active:bg-red-600/30 disabled:cursor-wait transition-all duration-200 ease-in-out;
+    @apply border-red-600 text-red-600 hover:bg-red-600 hover:text-white dark:border-red-400 dark:text-red-300 dark:hover:bg-red-500/30;
   }
 
-
-  .transition {
-    @apply duration-150 ease-in-out;
-  }
-
-  h3 {
-    @apply text-4xl leading-8 font-semibold;
-  }
-
+  /* Badge */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full justify-between gap-2 border border-primary dark:border-primary-100;
+    @apply inline-flex items-center justify-center gap-2 px-2.5 py-1 text-xs font-medium rounded-full border;
   }
 
   .badge-primary {
-    @apply bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-100 border-primary dark:border-primary-100;
+    @apply bg-primary/10 text-primary border-primary dark:bg-primary/20 dark:text-primary-100;
   }
 
   .badge-secondary {
-    @apply bg-secondary/10 text-secondary dark:bg-secondary/20 dark:text-primary-100 border-secondary dark:border-secondary-100;
+    @apply bg-secondary/10 text-secondary border-secondary dark:bg-secondary/20 dark:text-secondary-100;
   }
 
-  .text-link {
-    @apply text-blue-600 cursor-pointer hover:underline transition-all duration-200 ease-in-out;
-  }
-
-  button,
-  [type=button],
-  [type=submit],
-  [type=checkbox],
-  [type=radio] {
-    @apply cursor-pointer;
-  }
-
-
+  /* Container Cards */
   .container-secondary {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 transition-all hover:shadow-md dark:bg-[#1e293b] dark:border-gray-100/30 dark:shadow-white/30;
+    @apply bg-white/80 dark:bg-gray-900/40 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm hover:shadow-md p-6 mb-6 transition-all duration-300;
+  }
+
+  /* Subtle Global Transitions */
+  button,
+  .btn,
+  .form-control {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  /* Optional: H3 enhancement */
+  h3 {
+    @apply text-3xl font-semibold tracking-tight text-gray-800 dark:text-gray-100;
   }
 }

@@ -391,7 +391,7 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
                 </div>
             </div>
             <!-- Sales by Category -->
-            <div class="rounded-xl bg-white p-5 shadow lg:col-span-4 dark:bg-gray-800">
+            <div class="rounded-xl bg-white p-5 shadow lg:col-span-5 dark:bg-gray-800">
                 <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Sales by Category</h3>
                 <VueApexCharts
                     :options="charts.categorySales.options"
@@ -403,7 +403,7 @@ const topProducts = computed(() => props.shop.products.sort((a, b) => b.rating -
             </div>
 
             <!-- Messages -->
-            <div class="rounded-xl bg-white p-5 shadow lg:col-span-4 dark:bg-gray-800" v-if="topProducts.length">
+            <div class="rounded-xl bg-white p-5 shadow lg:col-span-3 dark:bg-gray-800" v-if="topProducts.length">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Messages</h3>
                 </div>

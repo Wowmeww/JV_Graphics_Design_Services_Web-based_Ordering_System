@@ -19,6 +19,7 @@ function imageUrl(path) {
     return path;
 }
 
+// enhance the ui
 const styleClass = {
     card: 'group bg-gradient-to-br from-secondary-400/20 to-secondary-500/10 transition-all duration-500 hover:from-secondary-400/30 hover:to-secondary-500/20 flex flex-col-reverse items-center gap-6 p-6 rounded-2xl shadow-lg hover:shadow-xl text-white dark:from-dark/80 dark:to-dark/60 dark:hover:from-dark/70 dark:hover:to-dark/50 dark:shadow-2xl dark:hover:shadow-3xl max-w-4xl border border-white/10 hover:border-white/20 backdrop-blur-sm',
     cardLayout: {

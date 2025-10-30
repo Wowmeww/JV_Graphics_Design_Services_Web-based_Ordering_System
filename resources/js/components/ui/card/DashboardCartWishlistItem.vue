@@ -32,48 +32,48 @@ function handleShow() {
     );
 }
 
+// Enhanced UI with improved design and removed scale transforms
 const styleClass = {
     // Main container
     container:
-        'group animate__animated animate__fadeInUp max-w-xs max-h-fit cursor-pointer overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.03] active:scale-[0.97] border border-gray-100 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 backdrop-blur-sm',
+        'group animate__animated animate__fadeInUp max-w-xs max-h-fit cursor-pointer overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600 hover:border-primary-300 dark:hover:border-primary-500 backdrop-blur-sm',
 
     // Content section
     content: {
-        container: 'px-5 py-4',
-        title: 'text-lg font-black text-gray-800 dark:text-white flex justify-between items-center hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300',
-        quantity:
-            'text-xs font-bold bg-gradient-to-r from-primary-500 to-primary-600 text-white px-3 py-1.5 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300',
+        container: 'px-4 py-3',
+        title: 'text-base font-bold text-gray-800 dark:text-white flex justify-between items-center hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200',
+        quantity: 'text-xs font-semibold bg-primary-500 text-white px-2 py-1 rounded-full shadow-sm',
         description:
-            'mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2 border border-gray-100 dark:border-gray-600',
-        ellipsis: 'font-black text-primary-500 dark:text-primary-400',
+            'mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg px-3 py-2 border border-gray-100 dark:border-gray-600',
+        ellipsis: 'font-bold text-primary-500 dark:text-primary-400',
     },
 
     // Image section
-    image: 'object-cover w-full h-48 group-hover:scale-110 transition-transform duration-700 ease-out',
+    image: 'object-cover w-full h-40 transition-all duration-500 ease-out group-hover:brightness-105',
+    imageContainer: 'relative overflow-hidden',
 
     // Image overlay
     imageOverlay:
-        'absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500',
+        'absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300',
 
     // Footer section
     footer: {
         container:
-            'flex items-center justify-between px-5 py-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-900 dark:to-gray-800 border-t border-gray-700',
-        price: 'text-lg font-black text-white drop-shadow-lg',
-        button: 'group/btn px-4 py-2 text-xs font-black text-white uppercase transition-all duration-300 transform bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl border border-green-400/30 hover:border-green-300/50',
-        buttonShimmer:
-            'absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/10 transform -skew-x-12 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700',
+            'flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary-800 to-primary-900 dark:from-secondary-800 dark:to-primary-900 border-t border-secondary-600',
+        price: 'text-base font-bold text-white',
+        button: 'group/btn px-3 py-2 text-xs font-semibold text-white uppercase transition-all duration-200 bg-green-500 hover:bg-green-600 rounded-lg shadow-sm hover:shadow-md border border-green-400/30 hover:border-green-300/50 flex items-center gap-1.5',
     },
 };
 </script>
 
 <template>
     <div @click="handleShow" :class="styleClass.container">
+        <!-- Content Section -->
         <div :class="styleClass.content.container">
             <h1 :class="styleClass.content.title">
                 <span class="max-w-[70%] truncate">{{ item.option?.name || item.product.name }}</span>
                 <span :class="styleClass.content.quantity">
-                    <i class="fa-solid fa-xmark mr-1"></i>
+                    <i class="fa-solid fa-xmark mr-0.5 text-xs"></i>
                     {{ item.quantity }}
                 </span>
             </h1>
@@ -83,11 +83,13 @@ const styleClass = {
             </p>
         </div>
 
-        <div class="relative overflow-hidden">
+        <!-- Image Section -->
+        <div :class="styleClass.imageContainer">
             <img :class="styleClass.image" :src="image_src" :alt="`${item.option?.name || item.product.name} image`" />
             <div :class="styleClass.imageOverlay"></div>
         </div>
 
+        <!-- Footer Section -->
         <div :class="styleClass.footer.container">
             <h4 :class="styleClass.footer.price">
                 {{
@@ -98,12 +100,90 @@ const styleClass = {
                 }}
             </h4>
             <button @click.stop.prevent="handleOrder" :class="styleClass.footer.button">
-                <div :class="styleClass.footer.buttonShimmer"></div>
-                <span class="relative z-10 flex items-center gap-2">
+                <span class="flex items-center gap-1.5">
                     Order
-                    <i class="fa-solid fa-bag-shopping text-xs transition-transform duration-300 group-hover/btn:translate-x-0.5"></i>
+                    <i class="fa-solid fa-bag-shopping text-xs transition-transform duration-200 group-hover/btn:translate-x-0.5"></i>
                 </span>
             </button>
         </div>
     </div>
 </template>
+
+<style scoped>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Enhanced focus states for accessibility */
+button:focus-visible,
+div:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+/* Smooth transitions for all interactive elements */
+.container,
+.image,
+.button {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .container,
+    .image,
+    .button,
+    .image-overlay {
+        transition: none;
+    }
+
+    .button i {
+        transition: none;
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .content .title {
+        font-size: 15px;
+    }
+
+    .footer .price {
+        font-size: 14px;
+    }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+
+    .footer {
+        background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+    }
+}
+
+/* Print styles */
+@media print {
+    .container {
+        background: white !important;
+        border: 1px solid #e5e7eb !important;
+        box-shadow: none !important;
+    }
+
+    .footer {
+        background: #f3f4f6 !important;
+        border-color: #d1d5db !important;
+    }
+}
+</style>

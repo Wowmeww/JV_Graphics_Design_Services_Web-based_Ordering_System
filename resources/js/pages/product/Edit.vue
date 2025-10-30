@@ -82,39 +82,65 @@ watch(
 function goBack() {
     window.history.back();
 }
+
+const styleClass = {
+    // Main form container
+    formContainer: 'mx-auto max-w-7xl space-y-6 py-8 md:space-y-8 px-4',
+
+    // Product settings container
+    productSettings: {
+        grid: 'grid gap-6 pt-4 md:grid-cols-2 md:gap-8',
+        column: 'space-y-4',
+        imagesSection: 'space-y-4',
+    },
+
+    // Size and unit grid
+    sizeUnitGrid: 'grid grid-cols-12 gap-3 pt-4',
+    sizeInput: 'col-span-8',
+    unitInput: 'col-span-4',
+
+    // Right column grid
+    rightColumnGrid: 'grid gap-3 sm:grid-cols-2',
+
+    // Form actions
+    formActions: {
+        container: 'mx-auto grid max-w-3xl gap-4 py-6 pt-8 sm:grid-cols-2 md:grid-cols-4',
+        updateButton: 'w-full',
+        deleteButton: 'w-full dark:bg-red-600/70 bg-red-600/90 hover:opacity-80 text-white transition-opacity duration-300',
+        resetButton: 'w-full',
+        cancelButton: 'w-full',
+    },
+};
 </script>
 
 <template>
     <Head title="Edit Product" />
 
-    <form class="mx-auto max-w-7xl space-y-3 py-10 md:space-y-8" @submit.prevent="submit">
+    <form :class="styleClass.formContainer" @submit.prevent="submit">
         <PageTitleHeader title="Product Editor" />
-        <!---------- STATUS ALERT ------------------------------------------------------->
-        <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->
 
         <ContainerPrimary title="Product Setting">
-            <div class="grid gap-6 pt-2 md:grid-cols-2">
-                <div class="space-y-3">
-                    <!---------- Product Images Section ------------------------------------------------------->
-                    <ProductImagesInput
-                        :images="images"
-                        :errors="[form.errors['images.0'], form.errors['images.1'], form.errors['images.2']]"
-                        @changed="handleImagesChange"
-                        :default-images="form.images"
-                        allow-delete
-                    />
+            <!-- Two Column Grid -->
+            <div :class="styleClass.productSettings.grid">
+                <!-- Left Column -->
+                <div :class="styleClass.productSettings.column">
+                    <!-- Product Images -->
+                    <div :class="styleClass.productSettings.imagesSection">
+                        <ProductImagesInput
+                            :images="images"
+                            :errors="[form.errors['images.0'], form.errors['images.1'], form.errors['images.2']]"
+                            @changed="handleImagesChange"
+                            :default-images="form.images"
+                            allow-delete
+                        />
+                    </div>
 
-                    <div class="grid grid-cols-12 gap-2 gap-y-3 pt-2">
-                        <div class="col-span-8">
-                            <TextInputPrimary
-                                v-model="form.size"
-                                :required="false"
-                                label="Size L*W*H, W*H "
-                                placeholder="L*W*H"
-                                variant="secondary"
-                            />
+                    <!-- Size and Unit -->
+                    <div :class="styleClass.sizeUnitGrid">
+                        <div :class="styleClass.sizeInput">
+                            <TextInputPrimary v-model="form.size" :required="false" label="Size L*W*H, W*H" placeholder="L*W*H" variant="secondary" />
                         </div>
-                        <div class="col-span-4">
+                        <div :class="styleClass.unitInput">
                             <Dropdown
                                 allowNull
                                 label="Unit"
@@ -126,6 +152,8 @@ function goBack() {
                             />
                         </div>
                     </div>
+
+                    <!-- Description -->
                     <TextInputPrimary
                         v-model="form.description"
                         :error="form.errors.description"
@@ -136,8 +164,10 @@ function goBack() {
                         variant="secondary"
                     />
                 </div>
-                <!-- Another Column -->
-                <div class="space-y-3">
+
+                <!-- Right Column -->
+                <div :class="styleClass.productSettings.column">
+                    <!-- Product Name -->
                     <TextInputPrimary
                         v-model="form.name"
                         :error="form.errors.name"
@@ -146,7 +176,8 @@ function goBack() {
                         variant="secondary"
                     />
 
-                    <div class="grid gap-2 gap-y-3 sm:grid-cols-2">
+                    <!-- Product Details Grid -->
+                    <div :class="styleClass.rightColumnGrid">
                         <Dropdown
                             :value="form.category"
                             :error="form.errors.category"
@@ -176,6 +207,7 @@ function goBack() {
                             variant="secondary"
                             :options="['single product', 'main product with variant', 'unavailable', 'custom']"
                         />
+
                         <TextInputPrimary
                             v-model="form.stock"
                             :error="form.errors.stock"
@@ -187,17 +219,85 @@ function goBack() {
                     </div>
                 </div>
             </div>
-            <div class="mx-auto grid max-w-3xl gap-3 py-6 pt-8 sm:grid-cols-2 md:grid-cols-4">
-                <PillPrimary :disabled="is_unchanged || form.processing" label="Update product" variant="secondary" type="submit" />
+
+            <!-- Form Actions -->
+            <div :class="styleClass.formActions.container">
                 <PillPrimary
-                    @click="handleDelete"
-                    label="Delete"
-                    variant="outlineSecondary"
-                    :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'"
+                    :disabled="is_unchanged || form.processing"
+                    label="Update product"
+                    variant="secondary"
+                    type="submit"
+                    :class="styleClass.formActions.updateButton"
                 />
-                <PillPrimary @click="resetForm" label="Reset" :disabled="is_unchanged || form.processing" variant="outlineSecondary" />
-                <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" />
+
+                <PillPrimary @click="handleDelete" label="Delete" variant="outlineSecondary" :class="styleClass.formActions.cancelButton" />
+
+                <PillPrimary
+                    @click="resetForm"
+                    label="Reset"
+                    :disabled="is_unchanged || form.processing"
+                    variant="outlineSecondary"
+                    :class="styleClass.formActions.resetButton"
+                />
+
+                <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" :class="styleClass.formActions.cancelButton" />
             </div>
         </ContainerPrimary>
     </form>
 </template>
+
+<style scoped>
+/* Enhanced focus states for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+/* Smooth transitions */
+.pill-primary {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .pill-primary {
+        transition: none;
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .form-actions {
+        grid-template-columns: 1fr;
+        gap: 3;
+    }
+
+    .size-unit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .size-input,
+    .unit-input {
+        grid-column: span 12;
+    }
+
+    .right-column-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+    .delete-button {
+        background: rgba(220, 38, 38, 0.8) !important;
+    }
+
+    .delete-button:hover {
+        background: rgba(220, 38, 38, 0.9) !important;
+    }
+}
+</style>

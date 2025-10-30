@@ -75,66 +75,61 @@ function handleRate() {
     emit('rate', { order: props.order });
 }
 
+// enhance ui to perfection and remove the scale increase at hover
+// the ui looks gigantic make it looks smaller and looks good in small devices
 const styleClass = {
-    // Main container
+    // Main container - more compact
     container:
-        'group animate__animated animate__fadeInUp rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col h-full border-2 border-gray-100 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 hover:border-primary-200 dark:hover:border-primary-700 hover:scale-[1.02]',
+        'group animate__animated animate__fadeInUp rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-primary-300 dark:hover:border-primary-600',
 
-    // Image section
+    // Image section - smaller height
     image: {
         container: 'relative overflow-hidden',
-        image: 'w-full h-72 object-cover group-hover:scale-105 transition-transform duration-700 ease-out',
+        image: 'w-full h-48 object-cover transition-all duration-500 ease-out group-hover:brightness-105',
         overlay:
-            'absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500',
+            'absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300',
     },
 
-    // Label badge
+    // Label badge - smaller and more subtle
     label: {
-        base: 'text-xs absolute top-4 right-4 px-4 py-2 text-white rounded-full font-black uppercase tracking-wide transition-all duration-300 z-10 shadow-lg border-2 border-white/30 backdrop-blur-sm',
-        danger: 'bg-gradient-to-r from-red-500 to-red-600 hover:from-white hover:to-gray-100 hover:text-red-600 hover:border-red-600 hover:scale-105',
-        default:
-            'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-white hover:to-gray-100 hover:text-indigo-600 hover:border-indigo-600 hover:scale-105',
+        base: 'text-xs absolute top-3 right-3 px-2.5 py-1.5 text-white rounded-full font-semibold uppercase tracking-wide transition-colors duration-200 z-10 shadow-md',
+        danger: 'bg-red-500 hover:bg-red-600',
+        default: 'bg-indigo-500 hover:bg-indigo-600',
     },
 
-    // Content section
+    // Content section - reduced padding and spacing
     content: {
-        container: 'px-6 py-5 flex-grow',
-        title: 'text-xl font-black text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300 block mb-3 line-clamp-2',
+        container: 'px-4 py-3 flex-grow space-y-3',
+        title: 'text-base font-bold text-gray-800 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 line-clamp-2 leading-tight',
         price: {
-            container:
-                'flex justify-between items-center mb-4 p-4 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm',
-            amount: 'text-xl font-black bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent',
-            quantity: 'text-sm font-semibold bg-primary-500 text-white px-3 py-1.5 rounded-full border-2 border-white/50 shadow-md',
+            container: 'flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-100 dark:border-gray-600',
+            amount: 'text-lg font-bold text-primary-600 dark:text-primary-400',
+            quantity: 'text-xs font-medium bg-primary-500 text-white px-2 py-1 rounded-full',
         },
         description: {
             container:
-                'text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-100 dark:border-gray-600',
-            ellipsis: 'font-black text-primary-500',
+                'text-gray-600 dark:text-gray-300 text-xs leading-relaxed bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-100 dark:border-gray-600 line-clamp-3',
+            ellipsis: 'font-bold text-primary-500',
         },
     },
 
-    // Rating section
+    // Rating section - smaller stars
     rating: {
-        container: 'px-6 pb-5',
+        container: 'px-4 pb-3',
         stars: {
-            container: 'flex justify-center gap-2 text-2xl',
-            star: 'hover:scale-125 transition-transform duration-300 cursor-pointer drop-shadow-lg',
+            container: 'flex justify-center gap-1 text-lg',
+            star: 'transition-colors duration-200',
             filled: 'text-yellow-400 dark:text-amber-300',
             empty: 'text-gray-300 dark:text-gray-600',
         },
     },
 
-    // Footer section
+    // Footer section - more compact
     footer: {
-        container:
-            'px-6 py-4 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border-t-2 border-gray-200 dark:border-gray-600 flex items-center justify-between',
-        time: 'text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-2 bg-white dark:bg-gray-600 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-500',
-        actions: 'flex gap-3',
+        container: 'px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 flex items-center justify-between',
+        time: 'text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1.5',
+        actions: 'flex gap-2',
     },
-
-    // Additional effects
-    shimmer:
-        'absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000',
 };
 </script>
 
@@ -145,7 +140,6 @@ const styleClass = {
             <a href="#">
                 <img :class="styleClass.image.image" :src="image_url" :alt="name" />
                 <div :class="styleClass.image.overlay"></div>
-                <div :class="styleClass.shimmer"></div>
             </a>
 
             <!-- Label Badge -->
@@ -165,16 +159,17 @@ const styleClass = {
                     {{ Number(amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}
                 </span>
                 <span :class="styleClass.content.price.quantity">
-                    <i class="fa-solid fa-xmark mr-1"></i>
+                    <i class="fa-solid fa-xmark mr-0.5 text-xs"></i>
                     {{ quantity }}
                 </span>
             </div>
 
-            <p :class="styleClass.content.description.container" v-if="description">
-                <span>{{ description.slice(0, 610) }}</span>
-                <span v-if="description.length >= 610" :class="styleClass.content.description.ellipsis">...</span>
+            <p v-if="description" :class="styleClass.content.description.container">
+                <span>{{ description.slice(0, 150) }}</span>
+                <span v-if="description.length >= 150" :class="styleClass.content.description.ellipsis">...</span>
             </p>
         </div>
+
         <!-- Rating Section -->
         <div v-if="props.order.status == 'rated'" :class="styleClass.rating.container">
             <div :class="styleClass.rating.stars.container">
@@ -191,15 +186,64 @@ const styleClass = {
         <!-- Footer Section -->
         <div :class="styleClass.footer.container">
             <span :class="styleClass.footer.time">
-                <i class="bi bi-clock text-primary-500"></i>
+                <i class="bi bi-clock text-primary-500 text-xs"></i>
                 {{ timeAgo }}
             </span>
 
             <div :class="styleClass.footer.actions">
-                <PillPrimary v-if="showCancel" @click="handleCancel" variant="outlineDanger" label="Cancel" />
-                <PillPrimary v-if="showReceived" @click="handleReceived" label="Received" />
-                <PillPrimary v-if="showRate" @click="handleRate" :label="props.order.status == 'received' ? 'Add rating' : 'View Rating'" />
+                <PillPrimary v-if="showCancel" @click="handleCancel" variant="outlineDanger" label="Cancel" size="sm" />
+                <PillPrimary v-if="showReceived" @click="handleReceived" label="Received" size="sm" />
+                <PillPrimary v-if="showRate" @click="handleRate" :label="props.order.status == 'received' ? 'Rate' : 'View'" size="sm" />
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Smooth focus states */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .container,
+    .image img,
+    .image .overlay {
+        transition: none;
+    }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+    .container {
+        border-radius: 8px;
+    }
+
+    .content .title {
+        font-size: 15px;
+    }
+
+    .footer .actions {
+        flex-direction: column;
+        gap: 1px;
+    }
+}
+</style>

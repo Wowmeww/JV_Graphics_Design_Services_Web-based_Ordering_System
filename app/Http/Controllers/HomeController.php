@@ -52,7 +52,8 @@ class HomeController extends Controller
             'customers' => 0,
             'products'  => [],
             'announcements' => [],
-            'visitors' => []
+            'visitors' => [],
+            'revenue' => 0
         ];
 
         $contacts =  User::with(['sentMessages'])
@@ -102,6 +103,11 @@ class HomeController extends Controller
         }
         $announcements = Announcement::with('user')->latest()->take(10)->get();
 
+        $revenue = $revenue = Order::whereIn('status', ['rated', 'received'])
+            ->sum('total_amount');
+
+
+        // dd($revenue);
         return Inertia::render('Dashboard', [
             'user'         => $user,
             'shop'         => $shop,

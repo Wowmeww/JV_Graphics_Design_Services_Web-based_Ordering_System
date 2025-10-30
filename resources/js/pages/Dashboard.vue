@@ -70,7 +70,7 @@ const styleClass = computed(() => ({
 
     // Individual fragment cards
     fragment:
-        'group h-fit overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800 pb-4 px-3 pt-4 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] border border-slate-200 dark:border-slate-600',
+        'group h-fit pt-4 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800 shadow-lg hover:shadow-2xl transition-all duration-500 border border-slate-200 dark:border-slate-600',
 
     // Fragment titles
     fragmentTitle:
@@ -174,6 +174,19 @@ const styleClass = computed(() => ({
                     <Announcement :announcement="announcement" v-for="announcement in announcements" :key="announcement.id" />
                 </div>
             </div>
+
+            <div v-if="user.orders.filter((order) => order.status == 'pending' || order.status == 'processing').length" :class="styleClass.fragment">
+                <p :class="styleClass.fragmentTitle">Orders</p>
+                <div :class="styleClass.scrollContainer">
+                    <div :class="styleClass.grid.container">
+                        <DashboardOrder
+                            v-for="order in user.orders.filter((order) => order.status == 'pending' || order.status == 'processing')"
+                            :key="'order' + order.id"
+                            :order="order"
+                        />
+                    </div>
+                </div>
+            </div>
             <div v-if="user.cart?.items.length" :class="styleClass.fragment">
                 <p :class="styleClass.fragmentTitle">Cart items</p>
                 <div :class="styleClass.scrollContainer">
@@ -187,18 +200,6 @@ const styleClass = computed(() => ({
                 <div :class="styleClass.scrollContainer">
                     <div :class="styleClass.grid.container">
                         <DashboardCartWishlistItem v-for="item of user.wishlist.items" :key="item.id" from="wishlist" :item="item" />
-                    </div>
-                </div>
-            </div>
-            <div v-if="user.orders.filter((order) => order.status == 'pending' || order.status == 'processing').length" :class="styleClass.fragment">
-                <p :class="styleClass.fragmentTitle">Orders</p>
-                <div :class="styleClass.scrollContainer">
-                    <div :class="styleClass.grid.container">
-                        <DashboardOrder
-                            v-for="order in user.orders.filter((order) => order.status == 'pending' || order.status == 'processing')"
-                            :key="'order' + order.id"
-                            :order="order"
-                        />
                     </div>
                 </div>
             </div>

@@ -22,7 +22,7 @@ const settings = computed(() => page.props.settings);
             <hr class="my-6 border-gray-200 md:my-10 dark:border-gray-700" />
 
             <div class="flex flex-col items-center gap-3 px-6 sm:flex-row sm:justify-between">
-                <p class="text-sm text-gray-500 dark:text-gray-300">
+                <p class="text-sm text-gray-500 dark:text-gray-300 text-center lg:text-left">
                     © {{ new Date().getFullYear() }} {{ settings.app_name }}. All rights reserved.
                 </p>
 
