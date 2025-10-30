@@ -14,9 +14,15 @@ const form = useForm({
 });
 
 function submit() {
-    form.post(route('rating.store', { order: props.order.id }), {
-        onFinish: () => emit('closeRatingModal'),
-    });
+    if (props.order.rating) {
+        form.patch(route('rating.update', { order: props.order.id }), {
+            onFinish: () => emit('closeRatingModal'),
+        });
+    } else {
+        form.post(route('rating.store', { order: props.order.id }), {
+            onFinish: () => emit('closeRatingModal'),
+        });
+    }
 }
 </script>
 

@@ -38,4 +38,5 @@ Route::middleware(['auth'])->group(function () {
 
     // RATING
     Route::post('/rating/{order}', [RatingController::class, 'store'])->name('rating.store');
+    Route::patch('/rating/{order}/update', [RatingController::class, 'update'])->name('rating.update');
 });

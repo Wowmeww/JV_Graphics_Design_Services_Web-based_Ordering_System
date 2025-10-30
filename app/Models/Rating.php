@@ -12,7 +12,7 @@ class Rating extends Model
     // one to many - belongs to
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->whereNot('option_id');
     }
     public function option()
     {

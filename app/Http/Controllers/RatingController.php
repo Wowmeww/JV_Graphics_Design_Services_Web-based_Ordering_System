@@ -11,25 +11,39 @@ class RatingController extends Controller
 {
     public function store(Request $request, Order $order)
     {
-        $user = $request->user();
-
         $fields = $request->validate([
             'stars' => ['nullable', 'numeric', 'min:0', 'max:5'],
             'message' => ['nullable', 'string'],
         ]);
 
-        $match = [
-            'user_id'    => $user->id,
+        $order->update(['status' => 'rated']);
+        $order->rating()->create([
+            ...$fields,
+            'user_id' => $order->user_id,
             'product_id' => $order->product_id,
-            'option_id'  => $order->option_id ?? null,
-        ];
+            'option_id' => $order->option_id,
+        ]);
+        // Under Review
+        // Processing
+        // Completed
+        // Canceled
+        // Rate
 
-        $data = [
-            'stars'  => $fields['stars'],
-            'message' => $fields['message'],
-            'order_id' => $order->id
-        ];
+        return to_route('order.index', [
+            'tab' => 'Rate'
+        ])->with('status', [
+            'type' => 'success',
+            'message' => 'Rating and feedback posted',
+        ]);
+    }
 
+    public function update(Request $request, Order $order)
+    {
+
+        $fields = $request->validate([
+            'stars' => ['nullable', 'numeric', 'min:0', 'max:5'],
+            'message' => ['nullable', 'string'],
+        ]);
         if (
             $order?->rating &&
             Carbon::parse($order->rating->created_at)
@@ -44,22 +58,13 @@ class RatingController extends Controller
             ]);
         }
 
-        $rating = Rating::updateOrCreate($match, $data);
-        $order->update([
-            'status' => 'rated',
-            'rating_id' => $rating->id
-        ]);
-        // Under Review
-        // Processing
-        // Completed
-        // Canceled
-        // Rate
+        $order->rating()->update($fields);
 
         return to_route('order.index', [
             'tab' => 'Rate'
         ])->with('status', [
             'type' => 'success',
-            'message' => 'Rating and feedback posted',
+            'message' => 'Rating and feedback updated & posted',
         ]);
     }
 }
