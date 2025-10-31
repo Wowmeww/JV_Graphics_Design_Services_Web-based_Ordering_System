@@ -239,7 +239,6 @@ const styleClass = {
                     variant="outlineSecondary"
                     :class="styleClass.formActions.resetButton"
                 />
-
                 <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" :class="styleClass.formActions.cancelButton" />
             </div>
         </ContainerPrimary>

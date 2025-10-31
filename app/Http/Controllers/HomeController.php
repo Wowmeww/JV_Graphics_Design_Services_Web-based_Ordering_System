@@ -22,10 +22,12 @@ class HomeController extends Controller
 
         $products = Category::with(['products.images', 'products.category'])
             ->get()
-            ->map(function (Category $category) {
-                return $category->products->first();
+            ->flatMap(function (Category $category) {
+                return $category->products->sortByDesc('created_at')->take(2);
             })
-            ->filter(); // removes nulls automatically
+            ->filter()
+            ->values();
+
         return Inertia::render('Welcome', [
             'products' => $products,
         ]);

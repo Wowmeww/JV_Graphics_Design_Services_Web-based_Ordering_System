@@ -36,65 +36,88 @@ class OrderController extends Controller
     }
     public function create(Request $request)
     {
-        // dd($request->all());
-        $request->validate([
+        $validated = $request->validate([
             'items' => ['array', 'nullable'],
             'from' => ['nullable', 'in:cart,wishlist'],
             'item' => ['nullable', 'array'],
             'total_amount' => ['nullable', 'numeric'],
         ]);
-        // 'item.product_id' => ['required', 'numeric'],
-        //     'item.option_id' => ['nullable', 'numeric'],
-        //     'item.quantity' => ['required', 'numeric', 'min:12', 'max:24'],
-        //     'item.total_amount' => ['required', 'numeric'],
 
         $items = collect();
 
-        if ($request->input('from') === 'cart') {
-            $items = CartProduct::whereIn('id', $request->input('items', []))
-                ->with(['product.images', 'option.images'])
-                ->get();
-        } elseif ($request->input('from') === 'wishlist') {
-            $items = WishlistProduct::whereIn('id', $request->input('items', []))
-                ->with(['product.images', 'option.images'])
-                ->get();
-        } else {
-            $attributes = $request->input('item');
+        switch ($validated['from'] ?? null) {
+            case 'cart':
+                $items = CartProduct::whereIn('id', $validated['items'] ?? [])
+                    ->with(['product.images', 'option.images'])
+                    ->get();
+                break;
 
-            $product = Product::with(['images'])->find($attributes['product_id']);
-            $item = [
-                'product' => $product,
-                'product_id' => $attributes['product_id'],
-                'option' => null,
-                'option_id' => null,
-                'quantity' => $attributes['quantity'],
-                'total_amount' => $attributes['total_amount'],
-            ];
-            if ($attributes['option_id']) {
-                $option = $product->options()->with(['images'])->where(['id' => $attributes['option_id']])->first();
-                $item['option'] = $option;
-                $item['option_id'] = $option->id;
-            }
-            if ($request->input('item') && isset($request->input('item')['images'])) {
-                $item['images'] = $request->input('item')['images'];
-            }
-            $items->add($item);
+            case 'wishlist':
+                $items = WishlistProduct::whereIn('id', $validated['items'] ?? [])
+                    ->with(['product.images', 'option.images'])
+                    ->get();
+                break;
+
+            default:
+                $item = $this->buildSingleItem($validated['item'] ?? []);
+                if ($item) {
+                    $items->add($item);
+                }
+                break;
         }
-        foreach ($items as $value) {
-            if ($value['product']['type'] === 'unavailable') {
-                return back()->with('status', [
-                    'type' => 'error',
-                    'message' => 'Sorry, but you are ordering unavailable product',
-                ]);
-            }
+
+        // calculate total and validate
+        $itemsTotalAmount = $items->sum('total_amount');
+
+        if ($items->contains(fn($item) => $item['product']['type'] === 'unavailable')) {
+            return back()->with('status', [
+                'type' => 'error',
+                'message' => 'Sorry, but you are ordering an unavailable product.',
+            ]);
         }
-        // dd($items);
 
         return Inertia::render('shop/order/Create', [
             'items' => $items,
-            'from' => $request->input('from'),
+            'items_total_amount' => $itemsTotalAmount,
+            'from' => $validated['from'] ?? null,
         ]);
     }
+
+    /**
+     * Build single order item manually (not from cart/wishlist)
+     */
+    protected function buildSingleItem(array $attributes): ?array
+    {
+        if (empty($attributes['product_id']) || empty($attributes['quantity'])) {
+            return null;
+        }
+
+        $product = Product::with('images', 'options.images')->find($attributes['product_id']);
+        if (!$product) {
+            return null;
+        }
+
+        $quantity = (int) $attributes['quantity'];
+        $optionId = $attributes['option_id'] ?? null;
+
+        $option = $optionId
+            ? $product->options->firstWhere('id', $optionId)
+            : null;
+
+        $price = $option->price ?? $product->price;
+        $totalAmount = $quantity * (int) $price;
+
+        return [
+            'product' => $product,
+            'product_id' => $product->id,
+            'option' => $option,
+            'option_id' => $option?->id,
+            'quantity' => $quantity,
+            'total_amount' => $totalAmount,
+            'images' => $attributes['images'] ?? [],
+        ];
+    }
+
 
     public function store(Request $request)
     {

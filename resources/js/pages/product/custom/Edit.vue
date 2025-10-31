@@ -245,7 +245,6 @@ const styleClasses = {
                     </div>
                 </div>
             </div>
-
             <form @submit.prevent="handleSubmit" :class="styleClasses.formContent">
                 <!-- Main Form Grid -->
                 <div :class="styleClasses.sectionGrid">

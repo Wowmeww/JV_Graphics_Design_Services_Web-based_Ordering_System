@@ -1,23 +1,18 @@
 <script setup>
-    import Status from '@/components/alert/Status.vue';
-    import ContainerPrimary from '@/components/ContainerPrimary.vue';
-    import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
-    import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
-    import Product from '@/components/ui/card/Product.vue';
-    import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
+import Status from '@/components/alert/Status.vue';
+import ContainerPrimary from '@/components/ContainerPrimary.vue';
+import ProductImagesInput from '@/components/sections/ProductImagesInput.vue';
+import PillPrimary from '@/components/ui/buttons/PillPrimary.vue';
+import Product from '@/components/ui/card/Product.vue';
+import PageTitleHeader from '@/components/ui/PageTitleHeader.vue';
 
-    const props = defineProps({
-        option: Object,
-    });
-
-    function goBack() {
-        window.history.back();
-    }
+const props = defineProps({
+    option: Object,
+});
 </script>
 <template>
-
     <Head title="View Product Variant" />
-    <div class="space-y-3 md:space-y-8 py-10 max-w-7xl mx-auto">
+    <div class="mx-auto max-w-7xl space-y-3 py-10 md:space-y-8">
         <PageTitleHeader title="Variant View" />
         <!---------- STATUS ALERT ------------------------------------------------------->
         <!-- <Status :status="$page.props.status" @close="() => ($page.props.status = null)" /> -->
@@ -47,7 +42,6 @@
                         <p class="form-control form-control-secondary h-fit min-h-26">{{ option.description }}</p>
                     </div>
                 </div>
-
                 <!-- Another Column -->
                 <div class="space-y-3">
                     <div class="form-group flex flex-col">
@@ -85,9 +79,14 @@
                 </div>
             </div>
             <div class="mx-auto grid max-w-3xl grid-cols-2 gap-3 py-6 pt-8">
-                <PillPrimary is="Link" :href="route('product.option.edit', { product: option.product, option })"
-                    label="Edit" variant="secondary" type="button" />
-                <PillPrimary @click="goBack()" label="Back" variant="outlineSecondary" />
+                <PillPrimary
+                    is="Link"
+                    :href="route('product.option.edit', { product: option.product, option })"
+                    label="Edit"
+                    variant="secondary"
+                    type="button"
+                />
+                <PillPrimary is="Link" :href="route('product.show', [option.product.id])" label="Back" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>
     </div>

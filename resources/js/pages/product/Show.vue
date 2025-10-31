@@ -61,7 +61,6 @@ const styleClass = {
 
     <div :class="styleClass.mainContainer">
         <PageTitleHeader title="Product View" />
-
         <ContainerPrimary title="Product Information View">
             <!-- Two Column Grid -->
             <div :class="styleClass.productInfo.grid">
@@ -144,7 +143,6 @@ const styleClass = {
                     </div>
                 </div>
             </div>
-
             <!-- Action Buttons -->
             <div :class="styleClass.actionButtons">
                 <PillPrimary is="Link" :href="route('product.edit', product)" label="Edit" variant="secondary" type="button" />

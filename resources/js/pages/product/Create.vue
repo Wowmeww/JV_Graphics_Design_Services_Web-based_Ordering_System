@@ -96,7 +96,6 @@ const styleClass = {
             <i class="fa-solid fa-circle-plus text-lg"></i>
         </Link>
     </div>
-
     <!-- Main Form -->
     <form :class="styleClass.form" @submit.prevent="submit">
         <PageTitleHeader title="Add new Product" />

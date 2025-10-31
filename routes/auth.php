@@ -2,13 +2,9 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Auth\NewPasswordController;
+
 use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\SystemSettingController;
@@ -67,7 +63,11 @@ Route::middleware(['auth'])->group(function () {
         ->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::get('/password/edit', [ProfileController::class, 'editPassword'])->name('password.edit');
-    Route::patch('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+    Route::patch('/password/update', [ProfileController::class, 'updatePassword'])
+        ->middleware('throttle:5,1') // 5 attempts per minute
+        ->name('password.update');
+
     Route::get('/appearance/edit', [ProfileController::class, 'editAppearance'])->name('appearance.edit');
 });
 

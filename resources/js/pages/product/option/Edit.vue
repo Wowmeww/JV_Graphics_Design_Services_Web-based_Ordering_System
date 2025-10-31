@@ -75,9 +75,6 @@ watch(
         }
     },
 );
-function goBack() {
-    window.history.back();
-}
 </script>
 
 <template>
@@ -192,7 +189,7 @@ function goBack() {
                     :style="'dark:!bg-red-600/70 !bg-red-600/90  hover:!opacity-80 text-white'"
                 />
                 <PillPrimary @click="resetForm" label="Reset" :disabled="is_unchanged" variant="outlineSecondary" />
-                <PillPrimary @click="goBack" label="Cancel" variant="outlineSecondary" />
+                <PillPrimary is="Link" :href="route('product.show', [option.product.id])" label="Cancel" variant="outlineSecondary" />
             </div>
         </ContainerPrimary>
     </form>
