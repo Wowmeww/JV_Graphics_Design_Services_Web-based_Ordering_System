@@ -1,21 +1,18 @@
 <script setup>
-import ThemeToggler from '@/components/ui/navbar/ThemeToggler.vue';
-import DashboardMenuItem from '@/components/ui/card/DashboardMenuItem.vue';
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { Head } from '@inertiajs/vue3';
+import DashboardMenuItem from '@/components/ui/card/DashboardMenuItem.vue';
 import Announcement from '@/components/ui/card/Announcement.vue';
-import DashboardCartWishlistItem from '../components/ui/card/DashboardCartWishlistItem.vue';
-import DashboardOrder from '@/components/ui/card/DashboardOrder.vue';
-import AdminDashboard from '@/components/sections/AdminDashboard.vue';
+import DashboardCartWishlistItem from '@/components/ui/card/DashboardCartWishlistItem.vue';
 import ContainerPrimary from '@/components/ContainerPrimary.vue';
-
-//   import ProductsManagement from '../components/sections/ProductsManagement.vue'
+import DashboardOrder from '@/components/ui/card/DashboardOrder.vue';
 
 const page = usePage();
 
 const props = defineProps({
     user: Object,
-    announcements: Object,
+    announcements: Array,
     shop: Object,
     contacts: Array,
 });
@@ -27,6 +24,7 @@ function openCart() {
         isWishlistOpen: false,
     };
 }
+
 function openWishlist() {
     page.props.shopAside = {
         isOpen: true,
@@ -35,14 +33,9 @@ function openWishlist() {
     };
 }
 
-const orderCount = computed(() => {
-    return props.user.orders.filter((order) => {
-        return order.status === 'pending' || order.status === 'processing';
-    }).length;
-});
+const orderCount = computed(() => props.user.orders.filter((order) => ['pending', 'processing'].includes(order.status)).length);
 
-const styleClass = computed(() => ({
-    // Suspended user banner
+const styleClass = {
     suspendedBanner: {
         container: 'pt-8 animate__animated animate__fadeInDown',
         banner: 'w-full bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg border-b-2 border-red-300',
@@ -50,45 +43,18 @@ const styleClass = computed(() => ({
         iconContainer: 'flex items-center gap-4',
         icon: 'h-7 w-7 fill-current flex-shrink-0 drop-shadow-lg',
         text: 'text-base font-medium leading-relaxed',
-        strong: 'font-bold text-red-100',
     },
-
-    // Page layout
     pageContainer: 'mx-auto max-w-8xl pb-8 px-4 sm:px-6 lg:px-8',
-
-    // Dashboard sections
-    dashboard: {
-        container: 'space-y-8 py-8',
-        menu: {
-            container: 'flex flex-wrap justify-center gap-6 pt-4',
-        },
-    },
-
-    // Fragments grid
-    fragmentsContainer:
-        'px-6 py-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-2xl dark:shadow-2xl border border-gray-200 dark:border-gray-700 grid lg:grid-cols-2 gap-8 gap-y-10 backdrop-blur-sm',
-
-    // Individual fragment cards
+    dashboard: { container: 'space-y-8 py-8', menu: { container: 'flex flex-wrap justify-center gap-6 pt-4' } },
+    fragmentsContainer: 'grid lg:grid-cols-2 gap-y-6 lg:gap-8 lg:gap-y-10',
     fragment:
-        'group h-fit pt-4 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800 shadow-lg hover:shadow-2xl transition-all duration-500 border border-slate-200 dark:border-slate-600',
-
-    // Fragment titles
+        'group h-fit py-4 overflow-hidden rounded-3xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-500 border border-slate-200 dark:border-slate-600',
     fragmentTitle:
         'font-bold text-xl pb-4 text-center text-gray-800 dark:text-white bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent border-b border-slate-300 dark:border-slate-600 mx-4 pb-4',
-
-    // Scrollable content areas
     scrollContainer:
         'h-[70vh] overflow-y-auto px-3 space-y-6 pt-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent hover:scrollbar-thumb-slate-400 dark:hover:scrollbar-thumb-slate-500',
-
-    // Grid layouts for items
-    grid: {
-        container: 'grid justify-center gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2',
-    },
-
-    // Additional effects
-    shimmer:
-        'absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000',
-}));
+    grid: { container: 'grid justify-center gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2' },
+};
 </script>
 
 <template>
@@ -113,11 +79,8 @@ const styleClass = computed(() => ({
         </div>
     </div>
 
-    <!---- ADMIN DASHBOARD ------------------------------------------------------------------------------------------------->
-    <AdminDashboard v-if="user.is_admin" :admin="user" :shop="shop" :contacts="contacts" />
-
     <!-- CUSTOMER -->
-    <div v-else :class="styleClass.pageContainer">
+    <div :class="styleClass.pageContainer">
         <div :class="styleClass.dashboard.container">
             <ContainerPrimary v-if="true" title="Dashboard">
                 <div :class="styleClass.dashboard.menu.container">
@@ -168,13 +131,6 @@ const styleClass = computed(() => ({
                 user.wishlist?.items?.length
             "
         >
-            <div id="announcements" v-if="announcements.length" :class="styleClass.fragment">
-                <p :class="styleClass.fragmentTitle">Announcements</p>
-                <div :class="styleClass.scrollContainer">
-                    <Announcement :announcement="announcement" v-for="announcement in announcements" :key="announcement.id" />
-                </div>
-            </div>
-
             <div v-if="user.orders.filter((order) => order.status == 'pending' || order.status == 'processing').length" :class="styleClass.fragment">
                 <p :class="styleClass.fragmentTitle">Orders</p>
                 <div :class="styleClass.scrollContainer">
@@ -187,6 +143,14 @@ const styleClass = computed(() => ({
                     </div>
                 </div>
             </div>
+
+            <div id="announcements" v-if="announcements.length" :class="styleClass.fragment">
+                <p :class="styleClass.fragmentTitle">Announcements</p>
+                <div :class="styleClass.scrollContainer">
+                    <Announcement :announcement="announcement" v-for="announcement in announcements" :key="announcement.id" />
+                </div>
+            </div>
+
             <div v-if="user.cart?.items.length" :class="styleClass.fragment">
                 <p :class="styleClass.fragmentTitle">Cart items</p>
                 <div :class="styleClass.scrollContainer">

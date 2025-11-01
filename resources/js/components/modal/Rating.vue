@@ -30,7 +30,7 @@ const styleClass = {
 
     // Main form container
     formContainer:
-        'w-full max-w-md mx-4 -translate-y-20 space-y-6 rounded-2xl bg-white p-8 shadow-2xl border border-gray-100 dark:bg-gray-800 dark:border-gray-700',
+        'max-w-full -translate-y-20 space-y-6 rounded-2xl bg-white p-6 shadow-2xl border border-gray-100 dark:bg-gray-800 dark:border-gray-700',
 
     // Title
     title: 'text-center text-2xl font-bold text-gray-800 dark:text-white mb-2',
