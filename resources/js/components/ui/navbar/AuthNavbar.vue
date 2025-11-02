@@ -20,7 +20,6 @@ const emit = defineEmits(['toggle', 'openCart', 'openWishlist']);
 function handleToggle() {
     emit('toggle');
 }
-
 </script>
 
 <template>
@@ -45,7 +44,7 @@ function handleToggle() {
                     </button>
                     <div class="ms-2 flex items-center gap-3 md:me-24">
                         <Link :href="route('dashboard')">
-                            <img class="h-6 w-auto sm:h-7" :src="settings.app_logo" alt="logo" />
+                            <img class="h-6 w-auto rounded-full sm:h-7" :src="settings.app_logo" alt="logo" />
                         </Link>
                         <Link :href="route('home')" class="self-center text-lg font-semibold whitespace-nowrap sm:text-2xl dark:text-white">
                             <span class="hidden md:inline">

@@ -1,207 +1,189 @@
 <script setup>
-    import BackgroundImage from '@/components/ui/BackgroundImage.vue';
-    import ShopItem from '@/components/ui/card/ShopItem.vue';
-    import ShopFilter from '@/components/ui/ShopFilter.vue';
-    import axios from 'axios';
-    import { onMounted, reactive, ref } from 'vue';
+import ShopItem from '@/components/ui/card/ShopItem.vue';
+import ShopFilter from '@/components/ui/ShopFilter.vue';
+import axios from 'axios';
+import { onMounted, reactive, ref } from 'vue';
 
-    const props = defineProps({
-        categories: Array,
-        user: Object,
-        filter: Object,
-    });
+const props = defineProps({
+    categories: Array,
+    user: Object,
+    filter: Object,
+});
 
-    const products = ref([]);
-    const page = ref(1);
-    const perPage = 10;
-    const loading = ref(false);
-    const noMore = ref(false);
-    const scrollArea = ref(null);
+const products = ref([]);
+const page = ref(1);
+const perPage = 10;
+const loading = ref(false);
+const noMore = ref(false);
+const scrollArea = ref(null);
 
-    const filter = reactive({ ...props.filter });
+const filter = reactive({ ...props.filter });
 
-    const fetchProducts = async (filter) => {
-        if (loading.value || noMore.value) return;
-        loading.value = true;
+const fetchProducts = async (filter) => {
+    if (loading.value || noMore.value) return;
+    loading.value = true;
 
-        try {
-            const res = await axios.get(route('shop.fetch'), {
-                params: {
-                    ...filter,
-                    page: page.value,
-                    per_page: perPage,
-                },
-            });
+    try {
+        const res = await axios.get(route('shop.fetch'), {
+            params: {
+                ...filter,
+                page: page.value,
+                per_page: perPage,
+            },
+        });
 
-            const data = res.data;
-            if (data.data.length === 0) {
-                noMore.value = true;
-            } else {
-                products.value.push(...data.data);
-                page.value++;
-            }
-        } catch (err) {
-            console.error('Fetch error:', err);
+        const data = res.data;
+        if (data.data.length === 0) {
+            noMore.value = true;
+        } else {
+            products.value.push(...data.data);
+            page.value++;
         }
-
-        loading.value = false;
-    };
-
-    const onScroll = () => {
-        const el = scrollArea.value;
-        if (el.scrollTop + el.clientHeight >= el.scrollHeight - 10) {
-            fetchProducts(filter);
-        }
-    };
-
-    onMounted(() => {
-        handleFilter(props.filter);
-    });
-
-    function handleFilter(filters) {
-        products.value = [];
-        page.value = 1;
-        noMore.value = false;
-        Object.assign(filter, filters);
-        fetchProducts(filters);
+    } catch (err) {
+        console.error('Fetch error:', err);
     }
+
+    loading.value = false;
+};
+
+const onScroll = () => {
+    const el = scrollArea.value;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 10) {
+        fetchProducts(filter);
+    }
+};
+
+onMounted(() => {
+    handleFilter(props.filter);
+});
+
+function handleFilter(filters) {
+    products.value = [];
+    page.value = 1;
+    noMore.value = false;
+    Object.assign(filter, filters);
+    fetchProducts(filters);
+}
 </script>
 
 <template>
-
     <Head title="Shop" />
 
-    <!-- <BackgroundImage path="/images/background/blob.jpg" class="h-full overflow-y-auto " /> -->
-     <div class="dark:bg-primary/20 bg-primary-800/70 absolute inset-0 -z-10"></div>
-    <div class="flex flex-col lg:flex-row h-full min-h-screen ">
+    <!-- Enhanced Shop Layout -->
+    <div class="flex h-full min-h-screen flex-col bg-gray-50 lg:flex-row dark:bg-gray-900">
+        <!-- Filter Sidebar -->
         <ShopFilter :defaults="filter" :categories="categories" @filter="handleFilter" />
-        <div ref="scrollArea"
-            class="scroll-container  h-full mx-auto grid max-h-screen max-w-7xl flex-1 grid-cols-2 gap-1.5 overflow-y-auto px-2 pt-8 md:grid-cols-3 md:gap-4 xl:grid-cols-4"
-            @scroll.passive="onScroll">
-            <ShopItem :filter="filter" v-for="product in products" :key="product.id" :product="product" />
 
-            <div v-if="loading"
-                class="absolute inset-x-1/2 inset-y-1/2 inline-grid flex-1 place-content-center text-center text-xl text-white">
-                Loading more... <i class="loader-gear"></i>
-            </div>
-            <div v-if="noMore"
-                class="col-span-2 pt-4 pb-8 text-center text-xl text-white/80 md:col-span-3 xl:col-span-4">
-                No more products
-                <i class="fa-solid fa-martini-glass-empty animate-bounce"></i>
+        <!-- Main Content Area -->
+        <div class="flex-1">
+            <!-- Products Grid -->
+            <div ref="scrollArea" class="scroll-container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8" @scroll.passive="onScroll">
+                <!-- Products Grid -->
+                <div class="grid grid-cols-2 gap-4 pt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    <ShopItem
+                        :filter="filter"
+                        v-for="product in products"
+                        :key="product.id"
+                        :product="product"
+                        class="transform transition-all duration-300 hover:scale-105"
+                    />
+                </div>
+
+                <!-- Loading State -->
+                <div v-if="loading" class="mt-12 flex flex-col items-center justify-center space-y-4 py-8">
+                    <!-- Enhanced Loader -->
+                    <div class="relative">
+                        <div
+                            class="border-primary-200 border-t-primary-600 dark:border-primary-800 dark:border-t-primary-400 h-16 w-16 animate-spin rounded-full border-4"
+                        ></div>
+                        <div
+                            class="border-t-secondary-500 absolute inset-0 h-16 w-16 animate-spin rounded-full border-4 border-transparent opacity-70"
+                        ></div>
+                    </div>
+                    <p class="text-lg font-medium text-gray-600 dark:text-gray-300">Loading more products...</p>
+                </div>
+
+                <!-- End of Results -->
+                <div v-if="noMore && products.length > 0" class="mt-12 py-12 text-center">
+                    <div class="inline-flex items-center gap-3 rounded-2xl bg-white px-6 py-4 shadow-sm dark:bg-gray-800">
+                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-lg font-medium text-gray-700 dark:text-gray-300">
+                            You've reached the end! {{ products.length }} products shown.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div v-if="!loading && products.length === 0" class="mt-20 text-center">
+                    <div class="mx-auto max-w-md">
+                        <svg class="mx-auto h-24 w-24 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1"
+                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                            />
+                        </svg>
+                        <h3 class="mt-4 text-xl font-semibold text-gray-900 dark:text-white">No products found</h3>
+                        <p class="mt-2 text-gray-500 dark:text-gray-400">Try adjusting your filters to see more results.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+/* Smooth scrolling */
+.scroll-container {
+    scroll-behavior: smooth;
+}
 
-    /* HTML: <div class="loader"></div> */
-    .loader {
-        width: 100px;
-        aspect-ratio: 1;
-        padding: 10px;
-        box-sizing: border-box;
-        display: grid;
-        background: #fff;
-        filter: blur(3px) contrast(7) hue-rotate(290deg);
-        mix-blend-mode: darken;
+/* Custom scrollbar */
+.scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Dark mode scrollbar */
+@media (prefers-color-scheme: dark) {
+    .scroll-container::-webkit-scrollbar-thumb {
+        background: #4b5563;
     }
 
-    .loader:before {
-        content: '';
-        margin: auto;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        color: #ff0909;
-        background: currentColor;
-        box-shadow:
-            -30px 0,
-            30px 0,
-            0 30px,
-            0 -30px;
-        animation: l6 1s infinite alternate;
+    .scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
     }
+}
 
-    @keyframes l6 {
-
-        90%,
-        100% {
-            box-shadow:
-                -10px 0,
-                10px 0,
-                0 10px,
-                0 -10px;
-            transform: rotate(180deg);
-        }
+/* Fade in animation for new items */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
-
-    .loader-gear {
-        width: 60px;
-        height: 40px;
-        position: relative;
-        display: inline-block;
-        --base-color: #263238;
-        /*use your base color*/
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    .loader-gear::before {
-        content: '';
-        left: 0;
-        top: 0;
-        position: absolute;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background-color: #fff;
-        background-image:
-            radial-gradient(circle 8px at 18px 18px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 18px 0px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 0px 18px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 36px 18px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 18px 36px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 30px 5px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 30px 5px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 30px 30px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 5px 30px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 4px at 5px 5px, var(--base-color) 100%, transparent 0);
-        background-repeat: no-repeat;
-        box-sizing: border-box;
-        animation: rotationBack 3s linear infinite;
-    }
-
-    .loader-gear::after {
-        content: '';
-        left: 35px;
-        top: 15px;
-        position: absolute;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        background-color: #fff;
-        background-image:
-            radial-gradient(circle 5px at 12px 12px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 12px 0px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 0px 12px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 24px 12px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 12px 24px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 20px 3px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 20px 3px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 20px 20px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 3px 20px, var(--base-color) 100%, transparent 0),
-            radial-gradient(circle 2.5px at 3px 3px, var(--base-color) 100%, transparent 0);
-        background-repeat: no-repeat;
-        box-sizing: border-box;
-        animation: rotationBack 4s linear infinite reverse;
-    }
-
-    @keyframes rotationBack {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(-360deg);
-        }
-    }
+/* Apply animation to product items */
+.grid > * {
+    animation: fadeInUp 0.5s ease-out;
+}
 </style>

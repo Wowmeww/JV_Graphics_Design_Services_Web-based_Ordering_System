@@ -23,7 +23,7 @@ const user = computed(() => page.props.auth.user);
         <div class="container mx-auto px-6 py-3 md:flex">
             <div class="flex items-center justify-between pr-6">
                 <Link :href="route('home')">
-                    <img class="h-6 w-auto sm:h-7" :src="settings.app_logo" alt="logo" />
+                    <img class="h-6 w-auto rounded-full sm:h-7" :src="settings.app_logo" alt="logo" />
                 </Link>
                 <MobileMenuButton :isNavigationOpen="isNavigationOpen" @toggleNavigation="toggleNavigation" />
             </div>

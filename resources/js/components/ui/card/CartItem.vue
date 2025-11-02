@@ -12,7 +12,7 @@ const image_url = computed(() => {
     if (src) {
         return src.includes('https') ? src : `/storage/${src}`;
     }
-    return '/images/avatar-placeholder.webp';
+    return '/images/img-placeholder.jpg';
 });
 
 const model = defineModel({

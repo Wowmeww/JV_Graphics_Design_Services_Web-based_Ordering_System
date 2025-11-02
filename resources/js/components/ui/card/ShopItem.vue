@@ -4,160 +4,193 @@ import { computed } from 'vue';
 import Carousel from '../Carousel.vue';
 
 const props = defineProps({
-    product: Object,
+    product: {
+        type: Object,
+        required: true,
+        validator: (product) => product.name && typeof product.price === 'number',
+    },
     filter: Object,
 });
 
 const page = usePage();
 const user = page.props.auth?.user;
 
-// ⭐️ Rating star logic
-
+// Computed properties
 const starIcons = computed(() => {
     const rating = props.product.rating ?? 0;
     const fullStars = Math.floor(rating);
-    const hasHalfStar = rating - fullStars >= 0.5 && rating - fullStars < 0.75;
+    const hasHalfStar = rating - fullStars >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-    return {
-        full: fullStars,
-        half: hasHalfStar,
-        empty: emptyStars,
-    };
+    return { full: fullStars, half: hasHalfStar, empty: emptyStars };
+});
+
+const formattedPrice = computed(() => {
+    return Number(props.product.price).toLocaleString('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+    });
+});
+
+const descriptionSnippet = computed(() => {
+    if (!props.product?.description) return '';
+    return props.product.description.length > 60 ? props.product.description.substring(0, 60) + '...' : props.product.description;
+});
+
+const stockStatus = computed(() => {
+    const stock = props.product.stock || 0;
+    if (stock === 0) return { text: 'Out of stock', class: 'text-red-600' };
+    if (stock < 5) return { text: `Only ${stock} left`, class: 'text-orange-600' };
+    if (stock < 10) return { text: `${stock} left`, class: 'text-yellow-600' };
+    return { text: 'In stock', class: 'text-green-600 dark:text-green-500' };
+});
+
+const isNewProduct = computed(() => {
+    const createdAt = new Date(props.product.created_at);
+    return (Date.now() - createdAt) / (1000 * 60 * 60 * 24) < 7;
 });
 
 function filterCategory() {
-    router.get(route('shop.index'), { filter: { ...props.filter, category: props.product.category.name } });
+    router.get(route('shop.index'), {
+        filter: { ...props.filter, category: props.product.category.name },
+    });
 }
 
-const styleClass = {
-    // Main card container
+// Style object with all Tailwind classes
+const style = {
     card: {
-        base: 'animate__animated animate__fadeIn relative w-full max-w-xs mx-auto space-y-2 rounded-lg border border-white/40 bg-gradient-to-br from-white/20 via-white/15 to-white/10 p-3 text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-white/60 hover:bg-white/25 hover:shadow-xl sm:max-w-72 sm:rounded-xl sm:p-4 sm:backdrop-blur-md md:space-y-3 md:p-5 md:backdrop-blur-lg dark:from-black/25 dark:via-black/20 dark:to-black/15 hover:dark:from-black/30 hover:dark:via-black/25 hover:dark:to-black/20 h-max',
+        base: 'group relative overflow-hidden rounded-lg border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:rounded-2xl sm:duration-500 sm:hover:-translate-y-1 sm:hover:shadow-xl dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700',
     },
-
-    // Category button
     category: {
-        container: 'absolute top-2 right-2 z-20 sm:top-3 sm:right-3 md:top-4 md:right-4',
-        button: 'from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 rounded-lg border border-white/30 bg-gradient-to-r px-2 py-1 text-[9px] font-bold shadow-lg transition-all duration-200 hover:shadow-xl active:scale-95 sm:px-3 sm:py-1 sm:text-[10px] md:px-4 md:py-1.5 md:text-xs',
+        container: 'absolute top-2 right-2 z-20 sm:top-3 sm:right-3',
+        button: 'bg-secondary-600 hover:bg-secondary-700 dark:bg-secondary-700 dark:hover:bg-secondary-600 rounded-lg px-2 py-1 text-[10px] font-medium text-white shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md sm:rounded-xl sm:px-4 sm:py-2 sm:text-xs sm:font-semibold sm:shadow-lg',
     },
-
-    // Image section
     image: {
-        container: 'group h-24 w-full overflow-hidden rounded-md shadow-lg sm:h-28 md:h-32 lg:h-40 xl:h-48 sm:rounded-lg md:rounded-xl',
+        container: 'relative aspect-square overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900',
         overlay:
-            'absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100',
+            'absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 transition-all duration-300 group-hover:opacity-100 sm:from-black/20 sm:duration-500 dark:from-black/30',
+        badgesContainer: 'absolute bottom-2 left-2 flex gap-1 sm:bottom-3 sm:left-3 sm:gap-2',
+        badgeNew:
+            'z-20 rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white shadow sm:px-3 sm:py-1 sm:text-xs sm:shadow-lg dark:bg-green-600',
+        badgeSale:
+            'rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white shadow sm:px-3 sm:py-1 sm:text-xs sm:shadow-lg dark:bg-red-600',
     },
-
-    // Product info section
     productInfo: {
-        container: 'space-y-1.5 sm:space-y-2 md:space-y-3',
-        title: 'bg-gradient-to-r from-white via-gray-100 to-gray-200 bg-clip-text text-xs font-bold tracking-tight text-transparent line-clamp-2 min-h-[2rem] sm:text-sm sm:min-h-[2.5rem] md:text-base lg:text-lg xl:text-xl',
-        size: 'rounded-md bg-gray-800/30 px-1.5 py-0.5 text-[9px] font-medium text-gray-100 sm:px-2 sm:py-1 sm:text-[10px] md:text-xs',
-        description: {
-            container:
-                'line-clamp-2 rounded-md bg-white/10 px-1.5 py-1 text-[10px] leading-tight text-gray-100 backdrop-blur-sm sm:rounded-md sm:px-2 sm:py-1.5 sm:text-xs md:rounded-lg md:px-3 md:py-2 md:text-sm',
-            ellipsis: 'text-primary-200 font-bold',
+        container: 'space-y-3 p-3 sm:space-y-4 sm:p-5',
+        titleSection: 'space-y-2 sm:space-y-3',
+        productTitle: 'line-clamp-2 text-sm leading-tight font-semibold text-gray-900 sm:text-lg sm:font-bold dark:text-white',
+        sizeBadge:
+            'inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 sm:px-3 sm:py-1.5 sm:text-xs sm:font-semibold dark:bg-blue-900/30 dark:text-blue-300',
+        sizeIcon: 'h-3 w-3',
+        productDescription:
+            'line-clamp-2 rounded-lg bg-slate-100/50 p-2 text-xs leading-tight text-gray-600 sm:text-sm dark:bg-slate-100/10 dark:text-gray-300',
+        metaSection: 'flex flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-2',
+        stockStatus: {
+            base: 'inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium sm:px-3 sm:py-1.5 sm:text-xs sm:font-semibold',
+            outOfStock: 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/20',
+            lowStock: 'text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-900/20',
+            mediumStock: 'text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-900/20',
+            inStock: 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/20',
         },
+        statusDot: 'h-1.5 w-1.5 rounded-full bg-current opacity-70',
+        ratingSection: 'flex items-center gap-1.5 sm:gap-2',
+        starsContainer: 'flex text-amber-500 dark:text-amber-400',
+        starIcon: 'text-xs sm:text-sm',
+        ratingScore: 'text-xs font-semibold text-gray-900 sm:text-sm sm:font-bold dark:text-white',
     },
-
-    // Stock and rating section
-    meta: {
-        container: 'flex flex-wrap items-center justify-between gap-1 sm:gap-1.5 md:gap-2',
-        stock: 'rounded-md border border-white/10 bg-gradient-to-r from-gray-800/40 to-gray-900/40 px-1.5 py-0.5 text-[9px] font-bold text-gray-100 sm:px-2 sm:py-1 sm:text-[10px] md:px-3 md:py-1.5 md:text-xs',
-        rating: {
-            container:
-                'flex items-center gap-1 rounded-md border border-white/10 bg-white/15 px-1.5 py-0.5 text-[9px] backdrop-blur-sm sm:gap-1.5 sm:px-2 sm:py-1 sm:text-[10px] md:px-3 md:py-1.5 md:text-xs',
-            stars: 'flex text-yellow-300 drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)] dark:text-amber-200',
-            score: 'font-bold text-white text-[9px] sm:text-[10px] md:text-xs',
-            count: 'font-medium text-gray-100 text-[9px] sm:text-[10px] md:text-xs',
-        },
-    },
-
-    // Price and action section
     action: {
-        container: 'flex items-center justify-between border-t border-white/10 pt-1.5 sm:pt-2 md:pt-3',
-        price: 'bg-gradient-to-r from-white via-gray-100 to-gray-200 bg-clip-text text-xs font-bold tracking-tight text-transparent drop-shadow sm:text-sm md:text-base lg:text-lg xl:text-xl',
-        button: {
-            base: 'group from-secondary-500 to-secondary-600 hover:from-secondary-400 hover:to-secondary-500 relative overflow-hidden rounded-md border border-white/30 bg-gradient-to-r px-2 py-1 text-[9px] font-bold tracking-wide text-white uppercase shadow-lg transition-all duration-300 hover:border-white/50 active:scale-95 sm:rounded-lg sm:px-3 sm:py-1.5 sm:text-[10px] md:px-4 md:py-2 md:text-xs',
-            shimmer:
-                'absolute inset-0 translate-x-[-100%] -skew-x-12 transform bg-gradient-to-r from-white/20 via-transparent to-white/10 transition-transform duration-600 group-hover:translate-x-[100%]',
-            content: 'relative z-10 flex items-center gap-0.5 sm:gap-1',
-            icon: 'h-2 w-2 transition-transform duration-200 group-hover:translate-x-0.5 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3',
-        },
+        container: 'flex items-center justify-between border-t border-gray-100 pt-3 sm:pt-4 dark:border-gray-800',
+        priceSection: 'flex flex-col',
+        currentPrice: 'text-base font-bold text-gray-900 sm:text-xl dark:text-white',
+        originalPrice: 'text-xs text-gray-500 line-through sm:text-sm dark:text-gray-400',
+        viewButton:
+            'bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-600 flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md active:scale-95 sm:gap-2 sm:rounded-xl sm:px-5 sm:py-3 sm:text-sm sm:shadow-lg',
+        buttonIcon: 'h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5 sm:h-4 sm:w-4',
     },
 };
 </script>
 
 <template>
-    <div :class="styleClass.card.base">
-        <!-- Category Button -->
-        <div :class="styleClass.category.container">
-            <button @click="filterCategory" :class="styleClass.category.button">
+    <div :class="style.card.base">
+        <!-- Category Badge -->
+        <div :class="style.category.container">
+            <button @click="filterCategory" :class="style.category.button" :title="`Filter by ${product.category.name}`">
                 {{ product.category.name }}
             </button>
         </div>
 
-        <!-- Product Image Carousel -->
-        <div :class="styleClass.image.container">
+        <!-- Product Image with Enhanced Overlay -->
+        <div :class="style.image.container">
             <Carousel :images-path="product.images.map((e) => e.image_path)" />
-            <div :class="styleClass.image.overlay"></div>
+            <div :class="style.image.overlay"></div>
+            <div :class="style.image.badgesContainer">
+                <span v-if="isNewProduct" :class="style.image.badgeNew">NEW</span>
+                <span v-if="isOnSale" :class="style.image.badgeSale">-{{ discountPercentage }}%</span>
+            </div>
         </div>
 
         <!-- Product Info -->
-        <div :class="styleClass.productInfo.container">
-            <div class="space-y-1 sm:space-y-1.5 md:space-y-2">
-                <!-- Product Title -->
-                <h3 :class="styleClass.productInfo.title">
+        <div :class="style.productInfo.container">
+            <!-- Title & Size -->
+            <div :class="style.productInfo.titleSection">
+                <h3 :class="style.productInfo.productTitle">
                     {{ product.name }}
                 </h3>
-
-                <span v-if="product.show_size" :class="styleClass.productInfo.size">
+                <span v-if="product.show_size" :class="style.productInfo.sizeBadge">
+                    <svg :class="style.productInfo.sizeIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"
+                        />
+                    </svg>
                     {{ product.show_size }}
                 </span>
             </div>
 
-            <!-- Description Snippet -->
-            <p v-if="product?.description" :class="styleClass.productInfo.description.container">
-                {{ product?.description?.substring(0, 50) }}
-                <span v-show="product?.description?.length >= 50" :class="styleClass.productInfo.description.ellipsis"> &hellip; </span>
+            <!-- Description -->
+            <p v-if="product?.description" :class="style.productInfo.productDescription">
+                {{ descriptionSnippet }}
             </p>
 
-            <div :class="styleClass.meta.container">
-                <span :class="styleClass.meta.stock"> {{ product.stock }} left </span>
+            <!-- Stock & Rating -->
+            <div :class="style.productInfo.metaSection">
+                <span :class="[style.productInfo.stockStatus.base, stockStatus.class]">
+                    <span :class="style.productInfo.statusDot"></span>
+                    {{ stockStatus.text }}
+                </span>
 
-                <!-- Rating Stars -->
-                <div :class="styleClass.meta.rating.container">
-                    <div :class="styleClass.meta.rating.stars">
-                        <i v-for="i in starIcons.full" :key="'full-' + i" class="fa-solid fa-star text-[8px] sm:text-[9px] md:text-[10px]"></i>
-                        <i v-if="starIcons.half" class="fa-regular fa-star-half-stroke text-[8px] sm:text-[9px] md:text-[10px]"></i>
-                        <i v-for="i in starIcons.empty" :key="'empty-' + i" class="fa-regular fa-star text-[8px] sm:text-[9px] md:text-[10px]"></i>
+                <div :class="style.productInfo.ratingSection">
+                    <div :class="style.productInfo.starsContainer">
+                        <i v-for="i in starIcons.full" :key="'full-' + i" class="fa-solid fa-star" :class="style.productInfo.starIcon"></i>
+                        <i v-if="starIcons.half" class="fa-regular fa-star-half-stroke" :class="style.productInfo.starIcon"></i>
+                        <i v-for="i in starIcons.empty" :key="'empty-' + i" class="fa-regular fa-star" :class="style.productInfo.starIcon"></i>
                     </div>
-                    <span :class="styleClass.meta.rating.score">
+                    <span :class="style.productInfo.ratingScore">
                         {{ product.rating?.toFixed(1) ?? '0.0' }}
                     </span>
-                    <span v-if="product.ratings?.length" :class="styleClass.meta.rating.count"> ({{ product.ratings.length }}) </span>
                 </div>
             </div>
-        </div>
 
-        <!-- Price and Action -->
-        <div :class="styleClass.action.container">
-            <!-- Price -->
-            <span :class="styleClass.action.price">
-                {{ Number(product.price).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}
-            </span>
+            <!-- Price & Action -->
+            <div :class="style.action.container">
+                <div :class="style.action.priceSection">
+                    <span :class="style.action.currentPrice">
+                        {{ formattedPrice }}
+                    </span>
+                    <span v-if="isOnSale" :class="style.action.originalPrice">
+                        {{ Number(product.original_price).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}
+                    </span>
+                </div>
 
-            <!-- View Product Button -->
-            <Link :href="route('shop.show', { product: product.id, filter: props.filter })" :class="styleClass.action.button.base">
-                <div :class="styleClass.action.button.shimmer"></div>
-                <span :class="styleClass.action.button.content">
-                    View
-                    <svg :class="styleClass.action.button.icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <Link :href="route('shop.show', { product: product.id, filter: props.filter })" :class="style.action.viewButton">
+                    <span>View</span>
+                    <svg :class="style.action.buttonIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
-                </span>
-            </Link>
+                </Link>
+            </div>
         </div>
     </div>
 </template>

@@ -12,9 +12,6 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $products = Product::with(['images', 'category'])
@@ -41,8 +38,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-        // Validate form input
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:products,name'],
             'category' => ['required', 'string'],
@@ -54,8 +49,6 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'], // max:10MB
         ]);
-
-        // Find or create the category
         $category = Category::firstOrCreate([
             'name' => $validated['category']
         ]);
@@ -135,8 +128,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        // sleep(1);
-
         $deleteImages = $request->images;
 
         $request['images'] = array_map(function ($image) {
@@ -167,8 +158,6 @@ class ProductController extends Controller
             'size' => $size,
             'description' => $validated['description'],
         ]);
-
-
 
 
         // Handle deleted images (from frontend 'delete' flags)
@@ -207,7 +196,6 @@ class ProductController extends Controller
                 $product->designs()->create(['image' => $path]);
             }
         }
-        // dd($product->images);
         return redirect()->route('product.show', $product)->with(
             'status',
             [

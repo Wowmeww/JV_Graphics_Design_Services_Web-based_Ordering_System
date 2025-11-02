@@ -121,8 +121,8 @@ const styleClass = {
 
     // Navigation buttons
     navigation: {
-        container: 'z-40 absolute inset-x-0 top-1/2 -translate-y-1/2 grid grid-flow-col px-3 sm:px-4 transition-all duration-300',
-        button: 'bg-white/90 backdrop-blur-sm w-6 h-6  md:h-8  md:w-8 text-center active:bg-white active:scale-105 text-gray-800 rounded-lg  shadow-lg sm:shadow-2xl border border-white/50 transition-all duration-200 active:scale-95 flex items-center justify-center touch-manipulation',
+        container: 'z-20 absolute inset-x-0 top-1/2 -translate-y-1/2 grid grid-flow-col px-3 sm:px-4 transition-all duration-300',
+        button: 'bg-white/90 backdrop-blur-sm w-6 h-6 cursor-pointer  md:h-8  md:w-8 text-center active:bg-white active:scale-105 text-gray-800 rounded-lg  shadow-lg sm:shadow-2xl border border-white/50 transition-all duration-200 active:scale-95 flex items-center justify-center touch-manipulation',
         prev: 'justify-self-start',
         next: 'justify-self-end',
         icon: 'fa-solid text-xs sm:text-base md:text-sm font-bold',
@@ -185,18 +185,18 @@ const styleClass = {
 
         <!-- Navigation buttons - Always visible on mobile -->
         <div v-if="imagesPath?.length > 1" :class="styleClass.navigation.container">
-            <button @click="prevSlide" :class="[styleClass.navigation.button, styleClass.navigation.prev]" aria-label="Previous image">
+            <button @click.prevent="prevSlide" :class="[styleClass.navigation.button, styleClass.navigation.prev]" aria-label="Previous image">
                 <i :class="`${styleClass.navigation.icon} fa-chevron-left`"></i>
             </button>
-            <button @click="nextSlide" :class="[styleClass.navigation.button, styleClass.navigation.next]" aria-label="Next image">
+            <button @click.prevent="nextSlide" :class="[styleClass.navigation.button, styleClass.navigation.next]" aria-label="Next image">
                 <i :class="`${styleClass.navigation.icon} fa-chevron-right`"></i>
             </button>
         </div>
 
         <!-- Mobile touch overlay for swipe areas -->
         <div v-if="imagesPath?.length > 1" :class="styleClass.mobileOverlay.container">
-            <div :class="styleClass.mobileOverlay.left" @click="prevSlide"></div>
-            <div :class="styleClass.mobileOverlay.right" @click="nextSlide"></div>
+            <div :class="styleClass.mobileOverlay.left" @click.prevent="prevSlide"></div>
+            <div :class="styleClass.mobileOverlay.right" @click.prevent="nextSlide"></div>
         </div>
 
         <!-- Image container -->
@@ -227,7 +227,7 @@ const styleClass = {
             <button
                 v-for="(path, i) in imagesPath"
                 :key="'dot-' + i"
-                @click="goToSlide(i)"
+                @click.prevent="goToSlide(i)"
                 :class="[styleClass.indicators.dot, i === currentSlide ? styleClass.indicators.active : styleClass.indicators.inactive]"
                 :aria-label="`Go to slide ${i + 1}`"
                 :aria-current="i === currentSlide"
