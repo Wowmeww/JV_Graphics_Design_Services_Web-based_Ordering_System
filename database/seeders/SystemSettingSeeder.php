@@ -18,8 +18,8 @@ class SystemSettingSeeder extends Seeder
         $settings = [
             ['key' => 'app_name', 'value' => 'JV Graphics Design Services'],
             ['key' => 'app_name_short', 'value' => 'JV Graphics'],
-            ['key' => 'app_email', 'value' => User::first()->email],
-            ['key' => 'app_phone', 'value' => User::first()->phone],
+            ['key' => 'app_email', 'value' => env("EMAIL_ADDRESS")],
+            ['key' => 'app_phone', 'value' => env("PHONE_NUMBER")],
             ['key' => 'app_logo', 'value' => ''],
             ['key' => 'daily_visitors', 'value' => ''],
             ['key' => 'landing_page_title', 'value' => 'Services. Offers. Products'],
@@ -30,8 +30,8 @@ class SystemSettingSeeder extends Seeder
             [
                 'key' => 'app_about',
                 'value' => json_encode([
-                    ['header' => 'Our Story', 'content' => ""],
-                    ['header' => 'Our Mission', 'content' => ""],
+                    ['header' => 'Our Story', 'content' => ''],
+                    ['header' => 'Our Mission', 'content' => ''],
                 ])
             ],
             [

@@ -81,17 +81,16 @@ function changeTab(tab) {
                 <span class="font-semibold transition-colors duration-200">{{ tab.name }}</span>
             </button>
         </div>
-
         <!-- Tab Content -->
-        <div class="h-screen overflow-y-auto bg-gray-50/50 p-6 dark:bg-gray-900/50">
+        <div class="max-h-screen min-h-screen overflow-y-auto bg-gray-50/50 p-6 dark:bg-gray-900/50">
             <transition name="tab-fade" mode="out-in">
-                <div :key="activeTab" class="h-full">
+                <div :key="activeTab" class="h-full pb-6">
                     <!-- Under Review Tab -->
                     <div v-if="activeTab === 'Under Review'" class="h-full">
                         <div class="mb-6 flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-600">
                             <h2 :class="styleClass.tabTitle">Under Review Queue</h2>
 
-                             <span
+                            <span
                                 class="rounded-full bg-amber-50 px-3 py-1 text-sm font-medium text-amber-600 dark:bg-amber-900/20 dark:text-amber-400"
                             >
                                 Cancellation is allowed at this state

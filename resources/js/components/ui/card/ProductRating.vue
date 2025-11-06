@@ -28,7 +28,6 @@ const starIcons = computed(() => {
                 <p class="font-semibold">
                     {{ rating.user.name }}
                 </p>
-
                 <div class="flex items-center gap-4">
                     <div class="text-secondary dark:text-secondary-300">
                         <i v-for="i in starIcons.full" :key="'full-' + i" class="fa-solid fa-star"></i>

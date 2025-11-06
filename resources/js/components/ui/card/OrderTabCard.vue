@@ -28,24 +28,29 @@ const image_url = computed(() => {
 const amount = props.order.total_amount;
 const quantity = props.order.quantity;
 
-const pastDate = new Date(props.order.created_at);
-const now = new Date();
-const diffMs = now - pastDate;
+let timeAgo = getPastTime(props.order.created_at);
+let rateLastUpdate = getPastTime(props.order?.rating?.updated_at);
 
-const minutes = Math.floor(diffMs / 60000);
-const hours = Math.floor(diffMs / 3600000);
-const days = Math.floor(diffMs / 86400000);
+function getPastTime(dateTime) {
+    const pastDate = new Date(dateTime);
+    const now = new Date();
+    const diffMs = now - pastDate;
 
-let timeAgo = '';
+    const minutes = Math.floor(diffMs / 60000);
+    const hours = Math.floor(diffMs / 3600000);
+    const days = Math.floor(diffMs / 86400000);
 
-if (minutes < 1) {
-    timeAgo = 'just now';
-} else if (minutes < 60) {
-    timeAgo = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-} else if (hours < 24) {
-    timeAgo = `${hours} hour${hours > 1 ? 's' : ''} ago`;
-} else {
-    timeAgo = `${days} day${days > 1 ? 's' : ''} ago`;
+    if (!dateTime) return null;
+
+    if (minutes < 1) {
+        return 'just now';
+    } else if (minutes < 60) {
+        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else if (hours < 24) {
+        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else {
+        return `${days} day${days > 1 ? 's' : ''} ago`;
+    }
 }
 
 function handleCancel() {
@@ -185,10 +190,16 @@ const styleClass = {
 
         <!-- Footer Section -->
         <div :class="styleClass.footer.container">
-            <span :class="styleClass.footer.time">
-                <i class="bi bi-clock text-primary-500 text-xs"></i>
-                {{ timeAgo }}
-            </span>
+            <div>
+                <span :class="styleClass.footer.time">
+                    <i class="bi bi-clock text-primary-500 text-xs"></i>
+                    {{ timeAgo }}
+                </span>
+                <span v-if="rateLastUpdate" :class="styleClass.footer.time">
+                    <i class="fa-solid fa-star text-primary-500 text-xs"></i>
+                    {{ rateLastUpdate }}
+                </span>
+            </div>
 
             <div :class="styleClass.footer.actions">
                 <PillPrimary v-if="showCancel" @click="handleCancel" variant="outlineDanger" label="Cancel" size="sm" />

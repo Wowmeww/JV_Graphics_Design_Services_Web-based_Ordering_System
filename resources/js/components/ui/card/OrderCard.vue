@@ -120,7 +120,6 @@ const styleClass = {
                 </div>
             </div>
         </div>
-
         <!-- Mobile Message Input -->
         <div :class="styleClass.mobileInput">
             <TextInputPrimary

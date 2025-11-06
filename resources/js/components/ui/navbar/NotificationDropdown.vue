@@ -26,7 +26,7 @@ useEcho(`new-order-notification.${user.value?.id}`, '.NewOrderNotification', asy
         <!-- Dropdown toggle button -->
         <button
             @click="isOpen = !isOpen"
-            class="focus:ring-opacity-40 dark:focus:ring-opacity-40 relative z-10 block rounded-md border border-transparent bg-white p-2 text-gray-700 focus:border-blue-500 focus:ring focus:ring-blue-300 focus:outline-none dark:bg-gray-800 dark:text-white dark:focus:ring-blue-400"
+            class="focus:ring-opacity-40 dark:focus:ring-opacity-40 focus:border-secondary-500 focus:ring-secondary-300 dark:focus:ring-secondary-400 relative z-10 block rounded-md border border-transparent bg-white p-2 text-gray-700 focus:ring focus:outline-none dark:bg-gray-800 dark:text-white"
         >
             <!-- make a better icon -->
             <svg class="h-5 w-5 text-gray-800 dark:text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,19 +63,26 @@ useEcho(`new-order-notification.${user.value?.id}`, '.NewOrderNotification', asy
                 v-if="isOpen"
                 class="absolute right-0 z-20 mt-2 w-64 origin-top-right overflow-hidden rounded-md bg-white shadow-lg sm:w-80 dark:bg-gray-800"
             >
-                <NotificationDropdownCard
-                    v-for="notification in tempNotifications"
-                    :notification="notification"
-                    :key="`notification-${notification.id}`"
-                />
-                <Link
-                    class="block w-full bg-gray-800 py-2 text-center font-bold text-white hover:underline dark:bg-gray-700"
-                    as="button"
-                    :href="route('notification.index')"
-                    @click="isOpen = false"
-                >
-                    See all notifications
-                </Link>
+                <template v-if="tempNotifications?.length">
+                    <NotificationDropdownCard
+                        v-for="notification in tempNotifications"
+                        :notification="notification"
+                        :key="`notification-${notification.id}`"
+                    />
+                    <Link
+                        class="block w-full bg-gray-800 py-2 text-center font-bold text-white hover:underline dark:bg-gray-700"
+                        as="button"
+                        :href="route('notification.index')"
+                        @click="isOpen = false"
+                    >
+                        See all notifications
+                    </Link>
+                </template>
+
+                <div v-else class="flex flex-col items-center justify-center gap-3 p-4 text-center text-slate-700 dark:text-slate-400">
+                    <span class="text-lg">No notifications</span>
+                    <i class="fa fa-bell-slash text-2xl"></i>
+                </div>
             </div>
         </Transition>
     </div>

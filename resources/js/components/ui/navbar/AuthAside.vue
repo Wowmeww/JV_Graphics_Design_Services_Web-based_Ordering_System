@@ -15,7 +15,7 @@ function close() {
 }
 
 const styleClass = {
-    aside: 'fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700',
+    aside: 'fixed top-0 left-0 z-70 w-64 h-screen pt-20 transition-transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700',
     icon: 'w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white',
 };
 </script>
@@ -23,7 +23,7 @@ const styleClass = {
 <template>
     <div
         v-if="expanded"
-        class="bg-secondary/20 fixed inset-0 z-30 backdrop-blur-xs transition dark:bg-black/30 dark:backdrop-blur-xs"
+        class="bg-secondary/20 fixed inset-0 z-60 backdrop-blur-xs transition dark:bg-black/30 dark:backdrop-blur-xs"
         @click="close"
     ></div>
 

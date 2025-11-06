@@ -302,7 +302,7 @@ const styleClasses = {
     canvasImage: 'relative rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl',
     canvasOverlay: 'absolute inset-0',
     textElement:
-        'cursor-pointer rounded-lg border-2 border-dashed border-transparent px-3 py-1.5 hover:border-indigo-500 hover:shadow-md transition-all duration-200 active:bg-white/80 backdrop-blur-sm',
+        'cursor-pointer rounded-lg border-2 border-dashed border-transparent px-3 py-1.5 hover:border-indigo-500 hover:shadow-md transition-all duration-200 active:bg-white/80',
     toolsPanel: 'flex flex-col gap-6 lg:w-96',
     uploadedImage: 'hover:drop-shadow-2xl p-0 transition-all duration-300 hover:scale-105 cursor-move',
     label: 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1',

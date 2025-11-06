@@ -12,7 +12,7 @@ const props = defineProps({
 
 const products = ref([]);
 const page = ref(1);
-const perPage = 10;
+const perPage = 8;
 const loading = ref(false);
 const noMore = ref(false);
 const scrollArea = ref(null);
@@ -70,22 +70,26 @@ function handleFilter(filters) {
     <Head title="Shop" />
 
     <!-- Enhanced Shop Layout -->
-    <div class="flex h-full min-h-screen flex-col bg-gray-50 lg:flex-row dark:bg-gray-900">
+    <div class="flex max-h-screen flex-col bg-gray-50 lg:flex-row dark:bg-gray-900">
         <!-- Filter Sidebar -->
         <ShopFilter :defaults="filter" :categories="categories" @filter="handleFilter" />
 
         <!-- Main Content Area -->
-        <div class="flex-1">
+        <div class="flex max-h-screen flex-1 overflow-hidden">
             <!-- Products Grid -->
-            <div ref="scrollArea" class="scroll-container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8" @scroll.passive="onScroll">
+            <div
+                ref="scrollArea"
+                class="scroll-container mx-auto max-h-full max-w-7xl overflow-y-auto px-4 py-6 sm:px-6 lg:px-8"
+                @scroll.passive="onScroll"
+            >
                 <!-- Products Grid -->
-                <div class="grid grid-cols-2 gap-4 pt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <div class="grid grid-cols-2 gap-1 pt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4">
                     <ShopItem
                         :filter="filter"
                         v-for="product in products"
                         :key="product.id"
                         :product="product"
-                        class="transform transition-all duration-300 hover:scale-105"
+                        class="transform transition-all duration-300 hover:-translate-y-2"
                     />
                 </div>
 
@@ -104,7 +108,7 @@ function handleFilter(filters) {
                 </div>
 
                 <!-- End of Results -->
-                <div v-if="noMore && products.length > 0" class="mt-12 py-12 text-center">
+                <div v-if="noMore && products.length > 0" class=" py-12 text-center">
                     <div class="inline-flex items-center gap-3 rounded-2xl bg-white px-6 py-4 shadow-sm dark:bg-gray-800">
                         <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -116,7 +120,7 @@ function handleFilter(filters) {
                 </div>
 
                 <!-- Empty State -->
-                <div v-if="!loading && products.length === 0" class="mt-20 text-center">
+                <div v-if="!loading && products.length === 0" class="text-center">
                     <div class="mx-auto max-w-md">
                         <svg class="mx-auto h-24 w-24 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path

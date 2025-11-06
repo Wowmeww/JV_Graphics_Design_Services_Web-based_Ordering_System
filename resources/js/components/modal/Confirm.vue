@@ -24,7 +24,7 @@
     });
 </script>
 <template>
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div class="fixed inset-0 z-80 flex items-center justify-center bg-black/40 backdrop-blur-sm">
         <div class="relative w-full max-w-md max-h-full p-4">
             <div class="relative bg-white dark:bg-gray-700 rounded-lg shadow">
                 <!-- Close Button -->

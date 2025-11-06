@@ -10,7 +10,7 @@ const settings = computed(() => page.props.settings);
 </script>
 
 <template>
-    <footer class="z-40 bg-white shadow-sm dark:bg-gray-900">
+    <footer class="z-60 bg-white shadow-sm dark:bg-gray-900">
         <div class="container mx-auto px-6 py-8">
             <div class="-mx-4 mt-3 flex flex-wrap justify-center">
                 <FooterLink label="Home" :active="component === 'Welcome'" routeName="home" />

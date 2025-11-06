@@ -29,11 +29,6 @@ class ShopController extends Controller
 
     public function show(Request $request, Product $product, ?ProductOption $option = null)
     {
-        // dd('test');
-        // if ($product->type === 'custom') {
-        //     return redirect()->route('designer', $product)->with('status', session('status'));
-        // }
-        // Eager load relationships for the product
         $product->load([
             'images',
             'category',
@@ -62,21 +57,21 @@ class ShopController extends Controller
 
     public function fetch(Request $request)
     {
-        $perPage = $request->get('per_page', 12);
+        $perPage = $request->get('per_page', 8);
         $products = Product::with(['images', 'options.images', 'category'])
-        ->whereNot('type', 'unavailable')
+            ->whereNot('type', 'unavailable')
             ->filter(request(['search', 'category', 'stock', 'sort', 'type']))
             ->paginate($perPage);
         return response()->json($products);
     }
 
 
-    public function addToWishlist(Request $request, Product $product, ?ProductOption $option = null)
-    {
-        dd('wishlist');
-    }
-    public function addToOrder(Request $request, Product $product, ?ProductOption $option = null)
-    {
-        dd('order');
-    }
+    // public function addToWishlist(Request $request, Product $product, ?ProductOption $option = null)
+    // {
+    //     dd('wishlist');
+    // }
+    // public function addToOrder(Request $request, Product $product, ?ProductOption $option = null)
+    // {
+    //     dd('order');
+    // }
 }

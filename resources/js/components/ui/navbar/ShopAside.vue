@@ -118,12 +118,12 @@ function formatCurrency(num) {
 <template>
     <div
         v-if="expanded"
-        class="bg-secondary/20 fixed inset-0 z-20 backdrop-blur-xs transition dark:bg-black/30 dark:backdrop-blur-xs"
+        class="bg-secondary/20 fixed inset-0 z-30 backdrop-blur-xs transition dark:bg-black/30 dark:backdrop-blur-xs"
         @click="close"
     ></div>
     <aside
         :class="[
-            'fixed top-0 right-0 z-30 h-screen w-full border-r border-gray-200 bg-white pt-20 transition-transform sm:w-90 dark:border-gray-700 dark:bg-gray-800',
+            'fixed top-0 right-0 z-50 h-screen w-full border-r border-gray-200 bg-white pt-20 transition-transform sm:w-90 dark:border-gray-700 dark:bg-gray-800',
             expanded ? 'translate-x-0' : 'translate-x-full',
         ]"
         aria-label="Sidebar"

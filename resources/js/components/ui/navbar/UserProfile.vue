@@ -21,7 +21,6 @@ function toggleDropdown() {
     isDropdownOpen.value = !isDropdownOpen.value;
 }
 
-
 function closeDropdown(event) {
     const dropdown = document.getElementById('dropdown-user');
     if (!dropdown || dropdown.contains(event.target)) return;
@@ -79,11 +78,15 @@ const styleClass = {
     <div v-if="user" class="relative">
         <!-- Toggle Button -->
         <div class="flex items-center gap-3">
-            <button @click="openCart" v-if="!user.is_admin">
+            <button
+                @click="openCart"
+                v-if="!user.is_admin"
+                class="focus:ring-opacity-40 dark:focus:ring-opacity-40 focus:border-secondary-500 focus:ring-secondary-300 dark:focus:ring-secondary-400 relative z-10 block rounded-md border border-transparent bg-white p-2 text-gray-700 focus:ring focus:outline-none dark:bg-gray-800 dark:text-white"
+            >
                 <i class="fa-solid fa-cart-shopping"></i>
             </button>
             <!-- --  NotificationDropdown  ------------------------------------------------------------------------------------------------ -->
-            <NotificationDropdown/>
+            <NotificationDropdown />
 
             <!--  -->
             <ThemToggler v-if="false" />
