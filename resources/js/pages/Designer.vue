@@ -182,7 +182,6 @@ const activeView = ref('front');
 
 function updateElement(type, value) {
     const to = activeView.value;
-    console.log(value.from);
     if (type === 'text' && to === value.from) {
         elements[to].texts[value.index] = value;
     } else if (type === 'image' && to === value.from) {
@@ -284,6 +283,11 @@ const totalAmount = computed(() => {
         currency: 'PHP',
     });
 });
+
+function addUpdateDesign(value, to) {
+    selectedElement.design = null;
+    elements[to].design = value;
+}
 
 const styleClasses = {
     container: 'mx-auto max-w-7xl px-4 py-8',
@@ -718,25 +722,25 @@ const styleClasses = {
                     :designs="product.designs"
                     v-show="activeView === 'front'"
                     @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
-                    @add-element:design="({ value }) => (elements.front.design = value)"
+                    @add-element:design="({ value }) => addUpdateDesign(value, 'front')"
                 />
                 <Tools
                     :designs="product.designs"
                     v-show="activeView === 'back'"
                     @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
-                    @add-element:design="({ value }) => (elements.back.design = value)"
+                    @add-element:design="({ value }) => addUpdateDesign(value, 'back')"
                 />
                 <Tools
                     :designs="product.designs"
                     v-show="activeView === 'right'"
                     @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
-                    @add-element:design="({ value }) => (elements.right.design = value)"
+                    @add-element:design="({ value }) => addUpdateDesign(value, 'right')"
                 />
                 <Tools
                     :designs="product.designs"
                     v-show="activeView === 'left'"
                     @add-element="({ value, type }) => (type === 'text' ? addText(value) : addImage(value))"
-                    @add-element:design="({ value }) => (elements.left.design = value)"
+                    @add-element:design="({ value }) => addUpdateDesign(value, 'left')"
                 />
 
                 <form @submit.prevent="addToCart" :class="styleClasses.sectionCard">
@@ -798,3 +802,4 @@ const styleClasses = {
         </div>
     </div>
 </template>
+

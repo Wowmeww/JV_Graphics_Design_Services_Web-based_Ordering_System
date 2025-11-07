@@ -53,7 +53,7 @@ class CartController extends Controller
                 'message' => 'Access denied: Admin accounts are restricted.',
             ]);
         }
-        // dd($request->all());
+        
         if (count($request->files)) {
             foreach ($request->images as $image) {
 

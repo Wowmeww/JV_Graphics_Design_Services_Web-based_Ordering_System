@@ -68,12 +68,10 @@ function handleFilter(filters) {
 
 <template>
     <Head title="Shop" />
-
     <!-- Enhanced Shop Layout -->
-    <div class="flex max-h-screen flex-col bg-gray-50 lg:flex-row dark:bg-gray-900">
+    <div class="relative flex min-h-screen flex-col bg-gray-50 lg:flex-row dark:bg-gray-900">
         <!-- Filter Sidebar -->
         <ShopFilter :defaults="filter" :categories="categories" @filter="handleFilter" />
-
         <!-- Main Content Area -->
         <div class="flex max-h-screen flex-1 overflow-hidden">
             <!-- Products Grid -->
@@ -108,7 +106,7 @@ function handleFilter(filters) {
                 </div>
 
                 <!-- End of Results -->
-                <div v-if="noMore && products.length > 0" class=" py-12 text-center">
+                <div v-if="noMore && products.length > 0" class="py-12 text-center">
                     <div class="inline-flex items-center gap-3 rounded-2xl bg-white px-6 py-4 shadow-sm dark:bg-gray-800">
                         <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

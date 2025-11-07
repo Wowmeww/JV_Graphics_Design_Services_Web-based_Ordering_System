@@ -31,7 +31,6 @@ class SystemSettingSeeder extends Seeder
                 'key' => 'app_about',
                 'value' => json_encode([
                     ['header' => 'Our Story', 'content' => ''],
-                    ['header' => 'Our Mission', 'content' => ''],
                 ])
             ],
             [

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class PasswordResetController extends Controller
 {
@@ -37,7 +38,7 @@ class PasswordResetController extends Controller
     {
         return Inertia::render('auth/ResetPassword', [
             'token' =>  $request->route('token'),
-            'email' => $request->email
+            'email' => $request->string('email')
         ]);
     }
 
@@ -47,7 +48,7 @@ class PasswordResetController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'password' => ['required', 'confirmed', RulesPassword::min(8)->letters()->numbers()],
         ]);
 
         $status = Password::reset(

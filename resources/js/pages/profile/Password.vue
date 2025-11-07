@@ -66,7 +66,6 @@
                 }">
                     Password strength: {{ passwordStrength }}
                 </p>
-
                 <TextInputPrimary label="Confirm New Password" type="password" v-model="form.password_confirmation"
                     :error="form.errors.password_confirmation" placeholder="Re-enter your new password" />
 

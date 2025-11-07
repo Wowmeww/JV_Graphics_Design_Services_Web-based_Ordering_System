@@ -1,92 +1,87 @@
 function initializeDragAndDrop(event) {
     event.preventDefault();
 
-    const element = event.currentTarget;
-    if (element.getAttribute("draggable") === "false") return;
+    const el = event.currentTarget;
+    if (el.getAttribute("draggable") === "false") return;
 
-    // Ensure element is absolutely positioned
-    if (getComputedStyle(element).position === "static") {
-        element.style.position = "absolute";
+    // Ensure absolute positioning
+    if (getComputedStyle(el).position === "static") {
+        el.style.position = "absolute";
     }
 
-    const parentRect = element.parentElement.getBoundingClientRect();
-    const elementRect = element.getBoundingClientRect();
+    const parent = el.parentElement;
+    const parentRect = parent.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
 
-    const startX = ("touches" in event ? event.touches[0].clientX : event.clientX);
-    const startY = ("touches" in event ? event.touches[0].clientY : event.clientY);
+    const isTouch = event.type.startsWith("touch");
+    const startX = isTouch ? event.touches[0].clientX : event.clientX;
+    const startY = isTouch ? event.touches[0].clientY : event.clientY;
 
-    const offsetX = startX - elementRect.left;
-    const offsetY = startY - elementRect.top;
+    const offsetX = startX - elRect.left;
+    const offsetY = startY - elRect.top;
 
-    let newX = element.offsetLeft;
-    let newY = element.offsetTop;
-    let isDragging = true;
+    let newX = el.offsetLeft;
+    let newY = el.offsetTop;
+    let dragging = true;
 
-    element.style.cursor = "grabbing";
-    element.style.transition = "none"; // disable animation while dragging
+    el.style.cursor = "grabbing";
+    el.style.transition = "none";
 
-    // Smooth updates via RAF
-    function updatePosition() {
-        if (!isDragging) return;
-        element.style.left = `${newX}px`;
-        element.style.top = `${newY}px`;
-        requestAnimationFrame(updatePosition);
-    }
+    // Pointer position updater
+    const moveHandler = (e) => {
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    function moveHandler(e) {
-        const clientX = e.type.startsWith("touch")
-            ? e.touches[0].clientX
-            : e.clientX;
-        const clientY = e.type.startsWith("touch")
-            ? e.touches[0].clientY
-            : e.clientY;
+        newX = clientX - offsetX - parentRect.left;
+        newY = clientY - offsetY - parentRect.top;
 
-        const bounds = element.parentElement.getBoundingClientRect();
+        // Optional boundaries:
+        // const w = el.offsetWidth;
+        // const h = el.offsetHeight;
+        // newX = Math.max(0, Math.min(newX, parentRect.width - w));
+        // newY = Math.max(0, Math.min(newY, parentRect.height - h));
+    };
 
-        newX = clientX - offsetX - bounds.left;
-        newY = clientY - offsetY - bounds.top;
-
-        // Optional boundaries
-        // const width = element.offsetWidth;
-        // const height = element.offsetHeight;
-        // newX = Math.max(0, Math.min(newX, bounds.width - width));
-        // newY = Math.max(0, Math.min(newY, bounds.height - height));
-    }
-
-    function endHandler() {
-        isDragging = false;
-        element.style.cursor = "";
-        element.style.transition = "all 0.18s ease";
+    const endHandler = () => {
+        dragging = false;
+        el.style.cursor = "";
+        el.style.transition = "all 0.18s ease";
 
         document.removeEventListener("mousemove", moveHandler);
         document.removeEventListener("mouseup", endHandler);
         document.removeEventListener("touchmove", moveHandler);
         document.removeEventListener("touchend", endHandler);
 
-        element.dispatchEvent(
+        el.dispatchEvent(
             new CustomEvent("drag-end", {
                 detail: {
-                    x: parseInt(element.style.left, 10) || 0,
-                    y: parseInt(element.style.top, 10) || 0,
+                    x: parseInt(el.style.left) || 0,
+                    y: parseInt(el.style.top) || 0,
                 },
             })
         );
-    }
+    };
 
-    // Listeners for both mouse + touch
+    // Movement loop
+    const tick = () => {
+        if (!dragging) return;
+        el.style.left = `${newX}px`;
+        el.style.top = `${newY}px`;
+        requestAnimationFrame(tick);
+    };
+
+    // Listeners
     document.addEventListener("mousemove", moveHandler, { passive: false });
     document.addEventListener("mouseup", endHandler, { once: true });
     document.addEventListener("touchmove", moveHandler, { passive: false });
     document.addEventListener("touchend", endHandler, { once: true });
 
-    requestAnimationFrame(updatePosition);
+    requestAnimationFrame(tick);
 
-    element.dispatchEvent(
+    // Fire drag-start
+    el.dispatchEvent(
         new CustomEvent("drag-start", {
-            detail: {
-                x: element.offsetLeft,
-                y: element.offsetTop,
-            },
+            detail: { x: el.offsetLeft, y: el.offsetTop },
         })
     );
 }

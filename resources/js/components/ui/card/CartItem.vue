@@ -12,7 +12,7 @@ const image_url = computed(() => {
     if (src) {
         return src.includes('https') ? src : `/storage/${src}`;
     }
-    return '/images/img-placeholder.jpg';
+    return props.item.product?.images[0]?.image_path ? `/storage/${props.item.product?.images[0]?.image_path}` : '/images/img-placeholder.jpg';
 });
 
 const model = defineModel({

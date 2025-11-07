@@ -58,7 +58,7 @@ const avatarUrl = computed(() => {
 
             <!-- Notification content -->
             <div class="flex-1">
-                <p class="flex flex-wrap text-sm text-gray-700 dark:text-gray-200">
+                <p class="flex flex-col  text-sm text-gray-700 dark:text-gray-200">
                     <span class="text-gray-900 dark:text-white">
                         {{ notification.from.name }}
                     </span>

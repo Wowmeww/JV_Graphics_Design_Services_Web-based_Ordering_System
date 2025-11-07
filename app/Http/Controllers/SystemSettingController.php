@@ -6,6 +6,7 @@ use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Illuminate\Validation\Rule;
 
 class SystemSettingController extends Controller
 {
@@ -21,12 +22,14 @@ class SystemSettingController extends Controller
     }
     public function update(Request $request)
     {
-        // dd($request->all());
+        $user = $request->user();
         $withLogo = $request->hasFile('app_logo');
         $validated = $request->validate([
             'app_name' => ['required', 'string', 'max:255'],
             'app_name_short' => ['required', 'string', 'max:255'],
             'app_logo' => ['required', $withLogo ? 'image' : 'string', 'max:1024'],
+            'app_email' => ['required', 'email', 'lowercase', 'max:200', Rule::unique('users', 'email')->ignore($user->id)],
+            'app_phone' => ['required', 'string', 'regex:/^(\+?63|0)?9\d{9}$/'],
             'landing_page_title' => ['required', 'string', 'max:255'],
             'landing_page_subtitle' => ['nullable', 'string', 'max:255'],
             'app_about' => ['nullable', 'string'],
