@@ -81,8 +81,8 @@ function orderNow() {
 }
 
 function goBack() {
-    window.history.back();
-    // router.get(route('shop.index'), { filter: props.filter });
+    // window.history.back();
+    router.get(route('shop.index'), { filter: props.filter });
 }
 
 function image_url(src) {
