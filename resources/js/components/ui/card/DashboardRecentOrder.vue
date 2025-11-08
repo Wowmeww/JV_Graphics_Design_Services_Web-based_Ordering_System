@@ -34,7 +34,7 @@ defineProps({
                 <span class="text-sm text-gray-500 dark:text-slate-200">Total:</span>
                 <span class="font-bold text-green-600">
                     {{
-                        order.total_amount.toLocaleString('en-PH', {
+                        Number(order.total_amount).toLocaleString('en-PH', {
                             style: 'currency',
                             currency: 'PHP',
                         })

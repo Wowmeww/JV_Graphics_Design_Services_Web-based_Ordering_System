@@ -82,6 +82,8 @@ function handleRate() {
 
 // enhance ui to perfection and remove the scale increase at hover
 // the ui looks gigantic make it looks smaller and looks good in small devices
+
+const showFullDescription = ref(false);
 const styleClass = {
     // Main container - more compact
     container:
@@ -113,7 +115,7 @@ const styleClass = {
         },
         description: {
             container:
-                'text-gray-600 dark:text-gray-300 text-xs leading-relaxed bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-100 dark:border-gray-600 line-clamp-3',
+                'text-gray-600 dark:text-gray-300 text-xs leading-relaxed bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-100 dark:border-gray-600 ',
             ellipsis: 'font-bold text-primary-500',
         },
     },
@@ -170,8 +172,14 @@ const styleClass = {
             </div>
 
             <p v-if="description" :class="styleClass.content.description.container">
-                <span>{{ description.slice(0, 150) }}</span>
-                <span v-if="description.length >= 150" :class="styleClass.content.description.ellipsis">...</span>
+                <span>{{ showFullDescription ? description : description.slice(0, 100) }}</span>
+                <span v-if="description.length >= 100 && !showFullDescription" :class="styleClass.content.description.ellipsis">...</span>
+                <button
+                    @click="() => (showFullDescription = !showFullDescription)"
+                    class="text-primary-500 dark:text-primary-400 ms-1 inline-block cursor-pointer"
+                >
+                    {{ showFullDescription ? 'hide' : 'show' }}
+                </button>
             </p>
         </div>
 

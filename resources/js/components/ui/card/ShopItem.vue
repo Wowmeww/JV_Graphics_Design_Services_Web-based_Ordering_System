@@ -1,6 +1,6 @@
 <script setup>
 import { router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import Carousel from '../Carousel.vue';
 
 const props = defineProps({
@@ -108,6 +108,8 @@ const style = {
         buttonIcon: 'h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5 sm:h-4 sm:w-4',
     },
 };
+
+const showFullDescription = ref(false);
 </script>
 
 <template>
@@ -148,10 +150,16 @@ const style = {
                     {{ product.show_size }}
                 </span>
             </div>
-
             <!-- Description -->
             <p v-if="product?.description" :class="style.productInfo.productDescription">
-                {{ descriptionSnippet }}
+                {{ showFullDescription ? product?.description : descriptionSnippet }}
+                <button
+                    v-if="product?.description?.length > 60"
+                    @click="() => (showFullDescription = !showFullDescription)"
+                    class="text-primary-500 dark:text-primary-400 ms-1 inline-block cursor-pointer"
+                >
+                    {{ showFullDescription ? 'hide full' : 'show full' }}
+                </button>
             </p>
 
             <!-- Stock & Rating -->
