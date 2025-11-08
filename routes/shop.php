@@ -21,6 +21,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/shop-cart/item/{cartItem?}', [CartController::class, 'destroy'])->name('cart.destroy');
     // WISHLIST ROUTES
     Route::post('/shop-wishlist/{product}/{option?}', [WishlistController::class, 'store'])->name('wishlist.store');
+    Route::post('/shop-wishlist', [WishlistController::class, 'addToCart'])->name('wishlist.add.cart');
     Route::get('/shop-wishlist/item/{wishlistItem}/edit', [WishlistController::class, 'edit'])->name('wishlist.edit');
     Route::patch('/shop-wishlist/item/{wishlistItem}/update', [WishlistController::class, 'update'])->name('wishlist.update');
     Route::delete('/shop-wishlist/item/{wishlistItem?}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');

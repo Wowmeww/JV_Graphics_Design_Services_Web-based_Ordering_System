@@ -29,9 +29,34 @@ class SystemSettingSeeder extends Seeder
             ],
             [
                 'key' => 'app_about',
-                'value' => json_encode([
-                    ['header' => 'Our Story', 'content' => ''],
-                ])
+                'value' => json_encode(
+                    [
+                        [
+                            "header" => "Mission",
+                            "content" => "To make clients INVALUABLE",
+                        ],
+
+                        [
+                            "header" => "Who We Are",
+                            "content" => "JV Graphics Design Services is a trusted printing business based in Zone 8, Bulan, Sorsogon, providing high-quality and customized printing services for over 13 years.",
+                        ],
+
+                        [
+                            "header" => "What We Do",
+                            "content" => "We specialize in t-shirt and jersey printing, as well as other personalized items. Our focus is on delivering creative, durable, and meaningful designs that bring our clients’ ideas to life.",
+                        ],
+
+                        [
+                            "header" => "Our Commitment",
+                            "content" => "With four branches working together under one mission—to make clients invaluable—we are committed to excellence, integrity, and customer satisfaction. As the first Atexco user in Sorsogon, equipped with the country’s most powerful sublimation printer, we ensure every print meets the highest standards.",
+                        ],
+
+                        [
+                            "header" => "Why We Matter",
+                            "content" => "At JV Graphics Design Services, we combine passion, technology, and experience to produce prints that make a lasting impression. Whether for personal use, business branding, or special events, we help clients stand out with designs that truly represent them.",
+                        ],
+                    ]
+                )
             ],
             [
                 'key' => 'facebook_page',
@@ -41,7 +66,7 @@ class SystemSettingSeeder extends Seeder
 
         foreach ($settings as $setting) {
             SystemSetting::updateOrCreate(
-                ['key' => $setting['key']],  // prevent duplicates
+                ['key' => $setting['key']],
                 ['value' => $setting['value']]
             );
         }

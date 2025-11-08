@@ -84,7 +84,7 @@ const styleClass = {
             <div :class="styleClass.footer.container">
                 <span :class="styleClass.footer.price">
                     {{
-                        order.total_amount.toLocaleString('en-PH', {
+                        Number(order.total_amount).toLocaleString('en-PH', {
                             style: 'currency',
                             currency: 'PHP',
                         })

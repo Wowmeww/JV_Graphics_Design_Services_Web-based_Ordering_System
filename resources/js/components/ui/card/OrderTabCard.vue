@@ -172,9 +172,10 @@ const styleClass = {
             </div>
 
             <p v-if="description" :class="styleClass.content.description.container">
-                <span>{{ showFullDescription ? description : description.slice(0, 100) }}</span>
-                <span v-if="description.length >= 100 && !showFullDescription" :class="styleClass.content.description.ellipsis">...</span>
+                <span>{{ showFullDescription ? description : description?.slice(0, 100) }}</span>
+                <span v-if="description?.length >= 100 && !showFullDescription" :class="styleClass.content.description.ellipsis">...</span>
                 <button
+                    v-if="description?.length > 100"
                     @click="() => (showFullDescription = !showFullDescription)"
                     class="text-primary-500 dark:text-primary-400 ms-1 inline-block cursor-pointer"
                 >

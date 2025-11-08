@@ -44,7 +44,7 @@ const styleClass = {
         title: 'text-base font-bold text-gray-800 dark:text-white flex justify-between items-center hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200',
         quantity: 'text-xs font-semibold bg-primary-500 text-white px-2 py-1 rounded-full shadow-sm',
         description:
-            'mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2 bg-gray-50 dark:bg-gray-700/30 rounded-lg px-3 py-2 border border-gray-100 dark:border-gray-600',
+            'mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-700/30 rounded-lg px-3 py-2 border border-gray-100 dark:border-gray-600',
         ellipsis: 'font-bold text-primary-500 dark:text-primary-400',
     },
 

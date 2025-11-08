@@ -55,8 +55,8 @@ function handleCheckout() {
         );
     }
     if (open.value.wishlist && selectedWishlistItems.value) {
-        router.get(
-            route('order.create', {
+        router.post(
+            route('wishlist.add.cart', {
                 items: selectedWishlistItems.value.map((item) => item.id),
                 from: 'wishlist',
             }),
@@ -202,7 +202,7 @@ function formatCurrency(num) {
                         v-if="open.wishlist"
                         :withSpinner="false"
                         :disable="!selectedWishlistItems.length"
-                        label="Checkout"
+                        label="Add to cart"
                         variant="secondary"
                         @click="handleCheckout"
                     />

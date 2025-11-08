@@ -108,4 +108,30 @@ class WishlistController extends Controller
             ? redirect()->route('shop.index')->with($with)
             : redirect()->route('dashboard')->with($with);
     }
+
+    public function addToCart(Request $request)
+    {
+        $user = $request->user();
+        $cart = $user->cart;;
+        if (! $cart) {
+            // Optionally create a cart if missing
+            $cart = $user->cart()->create(); // or Cart::create(['user_id' => $user->id])
+        }
+        $items = WishlistProduct::find($request->array('items'));
+
+        $items->map(function (WishlistProduct $item) use ($cart) {
+            $cart->addItem($item->product, $item->option, $item->quantity);
+            $item->delete();
+        });
+
+        return redirect()->back()->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Wishlist item/s added to cart.'
+            ],
+            'isCartOpen' => false,
+            'isWishlistOpen' => true,
+            'shopAsideOpen' => true
+        ]);
+    }
 }

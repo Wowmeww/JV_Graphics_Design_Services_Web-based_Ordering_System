@@ -22,8 +22,8 @@ const styleClass = {
     hero: 'w-full h-80 object-cover',
 
     // Content
-    content: 'p-10 space-y-10',
-    section: 'group p-8 rounded-2xl transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/50',
+    content: 'p-10 space-y-1',
+    section: 'group p-3 rounded-2xl transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/50',
     sectionTitle: 'text-2xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-3',
     sectionIcon: 'text-primary-600 dark:text-primary-400 text-xl transition-transform duration-300 group-hover:scale-110',
     sectionText: 'text-gray-600 dark:text-gray-300 leading-relaxed text-lg',

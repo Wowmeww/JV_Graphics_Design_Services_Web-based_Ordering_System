@@ -11,42 +11,44 @@
 
 > Professional web-based ordering system that streamlines graphics design service requests and order management.
 
-
 ### ✨ Key Features
 
 ### 👤 Client Features
+
 - 🔐 Secure user authentication (registration/login)
 - 🖼️ Intuitive order submission with file uploads
 - 📊 Real-time order status tracking
 - 💬 Integrated messaging system
 
-
-
 ### 👨‍💼 Admin Features
+
 - 🎛️ Comprehensive dashboard with analytics
 - 📝 Order management tools
 - 👥 Client management portal
 
+## 💻 Live Demo
 
+👉 [Visit the live project here https://jvgdss.webs.vc](https://jvgdss.webs.vc)
 
 ## 🛠 Tech Stack
 
 ### Backend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Laravel | 12 | MVC Framework |
-| PHP | 8.2+ | Server-side logic |
-| MySQL | 8.0 | Primary database |
-| Sqlite | latest | Database during development |
+
+| Technology | Version | Purpose                     |
+| ---------- | ------- | --------------------------- |
+| Laravel    | 12      | MVC Framework               |
+| PHP        | 8.2+    | Server-side logic           |
+| MySQL      | 8.0     | Primary database            |
+| Sqlite     | latest  | Database during development |
 
 ### Frontend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Vue.js | 3 | Reactive UI |
-| TailwindCSS | 4.1 | Utility-first CSS |
-| Inertia.js | latest | SPA-like experience |
-| Vite | latest | Build tool |
 
+| Technology  | Version | Purpose             |
+| ----------- | ------- | ------------------- |
+| Vue.js      | 3       | Reactive UI         |
+| TailwindCSS | 4.1     | Utility-first CSS   |
+| Inertia.js  | latest  | SPA-like experience |
+| Vite        | latest  | Build tool          |
 
 ### 🖼️ Icons & Fonts
 
@@ -63,16 +65,17 @@
 - [Figma](https://www.figma.com/) — Collaborative interface design and prototyping tool.
 - [Docker](https://www.docker.com) — A platform for containerizing applications (note: the description seems incorrect; it’s not for design but for DevOps).
 
-
 ## 🚀 Quick Start, Installation guide
 
 ### Clone the Repository
+
 ```bash
 git clone https://github.com/Wowmeww/JV_Graphics_Design_Services_Web-based_Ordering_System.git
 cd JV_Graphics_Design_Services_Web-based_Ordering_System
 ```
 
 ### Traditional Installation
+
 ```bash
 composer install
 npm install
@@ -84,19 +87,21 @@ composer run dev #this should run (npm run dev, php artisan serve, php artisan q
 ```
 
 ### With Docker (Recommended)
+
 ```bash
 # Build and launch containers
 docker compose up -d --build
 # docker compose up -d    # if built
-# docker exec -it <container_name> bash 
+# docker exec -it <container_name> bash
 # Replace <container_name> with your actual container name
 docker exec -it capstone-app bash
 npm run build
 ```
 
-
 ### Database preparation
+
 ##### Configure your database in .env file:
+
 ```bash
 # traditional
 DB_CONNECTION=mysql
@@ -106,6 +111,7 @@ DB_DATABASE=jv_graphics_design_services
 DB_USERNAME=root
 DB_PASSWORD=
 ```
+
 ```bash
 # docker
 DB_CONNECTION=mysql
@@ -115,29 +121,38 @@ DB_DATABASE=jv_graphics_design_services
 DB_USERNAME=root
 DB_PASSWORD=
 ```
+
 ```bash
 # for sqlite
 DB_CONNECTION=sqlite
 ```
+
 ##### Create database structure
+
 ```bash
 php artisan migrate
 ```
+
 ##### Create structure with sample data
+
 ```bash
 php artisan migrate --seed
 ```
+
 ##### Reset entire database (DANGER: destroys all data)
+
 ```bash
 php artisan migrate:fresh
 ```
+
 ##### Reset and repopulate with sample data
+
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-
 ### 📂 Project Structure
+
 ```bash
 ├── app/               # Application core
 ├── assets/            # Uploaded resource by developer
@@ -161,29 +176,18 @@ Support: [nicobernardfirmanes@gmail.com ](https://github.com/Wowmeww)
 
 Thanks to [ChatGPT](https://chatgpt.com/), [GitHub Copilot](https://github.com/features/copilot) and [DeepSeek](https://chat.deepseek.com) for assisting in code generation and project planning.
 
-
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
 
-
-
-<!--
-## 🚀 Live Demo
-
-👉 [Visit the live project here](https://your-live-demo-link.com) *(update link)*
-
-
----
-
 ## 📸 Screenshots
 
-| Home Page | Login Page |
-|:---------:|:---------------:|
+|                      Home Page                       |                        Login Page                        |
+| :--------------------------------------------------: | :------------------------------------------------------: |
 | ![Home Screenshot](./assets/screenshots/landing.png) | ![Login Page Screenshot](./assets/screenshots/login.png) |
 
-| Customer Dashboard | Admin Dashboard |
-|:---------:|:---------------:|
+|                          Customer Dashboard                          |                          Admin Dashboard                          |
+| :------------------------------------------------------------------: | :---------------------------------------------------------------: |
 | ![Dashboard Screenshot](./assets/screenshots/customer_dashboard.png) | ![Dashboard Screenshot](./assets/screenshots/admin_dashboard.png) |
 
 ---
