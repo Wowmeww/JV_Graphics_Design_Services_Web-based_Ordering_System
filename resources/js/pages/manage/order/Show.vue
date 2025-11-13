@@ -1,8 +1,8 @@
 <script setup>
 import { router, usePage } from '@inertiajs/vue3';
-import OrderStatus from '../../../components/modal/OrderStatus.vue';
+import OrderStatus from '@/components/modal/OrderStatus.vue';
 import { computed, ref } from 'vue';
-import OrderResource from '../../../components/ui/card/OrderResource.vue';
+import OrderResource from '@/components/ui/card/OrderResource.vue';
 const props = defineProps({
     order: Object,
     searches: Object,
@@ -87,7 +87,7 @@ const image_url = computed(() => {
 
 <template>
     <Head title="Manage Order" />
-    <div class="px-2 py-3">
+    <div class="px-2 py-3 relative">
         <div class="mx-auto max-w-7xl px-4 py-8">
             <div class="container-secondary flex items-center justify-between">
                 <div>
@@ -164,7 +164,10 @@ const image_url = computed(() => {
                                                 >
                                                     {{ (order.option || order.product)?.name }}
                                                 </Link>
-                                                <p v-if="(order.option || order.product)?.show_size" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                <p
+                                                    v-if="(order.option || order.product)?.show_size"
+                                                    class="mt-1 text-sm text-gray-500 dark:text-gray-400"
+                                                >
                                                     <i class="fas fa-tag mr-1 text-xs"></i>
                                                     {{ (order.option || order.product)?.show_size }}
                                                 </p>
@@ -304,6 +307,5 @@ const image_url = computed(() => {
             </div>
         </div>
     </div>
-
     <OrderStatus :status="order.status" @updateStatus="handleUpdateStatus" v-if="modalIsOpen" @close="modalIsOpen = false" />
 </template>

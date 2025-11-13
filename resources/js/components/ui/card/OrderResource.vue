@@ -15,8 +15,8 @@ const showResource = ref(false);
 </script>
 <template>
     <!-- Overlay with perfect image styling -->
-    <div v-if="showResource"  class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="relative max-w-4xl p-4" >
+    <div v-if="showResource" class="fixed inset-0 z-80 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="relative max-w-4xl p-4">
             <!-- Close button -->
             <button
                 @click="showResource = false"
@@ -28,10 +28,9 @@ const showResource = ref(false);
             <!-- Image container with perfect styling -->
             <div class="relative overflow-hidden rounded-xl shadow-2xl">
                 <img :src="image_src(resource.image)" :alt="resource.label" class="max-h-[90vh] w-full object-contain" loading="lazy" />
-
                 <!-- Image info footer -->
                 <div class="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white">
-                    <h3 class="text-lg font-semibold capitalize">{{ resource.label }}</h3>
+                    <h3 class="text-lg font-semibold capitalize text-white">{{ resource.label }}</h3>
                     <p class="text-sm text-white/80" v-if="resource.description">{{ resource.description }}</p>
                 </div>
             </div>
