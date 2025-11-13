@@ -214,7 +214,7 @@ const styleClass = {
                                 />
                             </div>
 
-                            <TextInputPrimary v-model="form.email" label="Your email" :error="form.errors.email" placeholder="your.email@mail.com" />
+                            <TextInputPrimary v-model="form.email" label="Email" :error="form.errors.email" placeholder="your.email@mail.com" />
 
                             <TextInputPrimary
                                 v-model="form.phone"

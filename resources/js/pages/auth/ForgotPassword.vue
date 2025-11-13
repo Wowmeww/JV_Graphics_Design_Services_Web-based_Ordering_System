@@ -26,7 +26,7 @@
             lead="Enter a valid email to receive instructions on how to reset your password.">
             <form class="pt-6 space-y-6" @submit.prevent="submit">
                 <div>
-                    <TextInputPrimary label="Email" :error="form.errors.email" type="email" v-model="form.email" />
+                    <TextInputPrimary placeholder="your@email.com" label="Email" :error="form.errors.email" type="email" v-model="form.email" />
                     <small v-if="props.status" class="text-xs font-semibold text-green-700 dark:text-green-600">{{ props.status }}</small>
                 </div>
                 <ButtonPrimary :disabled="form.processing" type="submit" label="Reset Password" as="submit" />
