@@ -24,7 +24,7 @@ class ProductOptionController extends Controller
     {
         // Validate form input
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:product_options,name'],
+            'name' => ['required', 'string', 'max:255'],
             'category' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'type' => ['required', 'string'],

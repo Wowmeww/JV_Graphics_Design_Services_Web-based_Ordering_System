@@ -271,7 +271,7 @@ const styleClass = {
                                     </div>
                                 </div>
 
-                                <div :class="styleClass.ratingContainer">
+                                <div v-if="tempProduct.ratings?.length" :class="styleClass.ratingContainer">
                                     <p :class="styleClass.ratingBadge">
                                         <span class="text-base">
                                             {{ Number(tempProduct.rating || 0).toFixed(2) }}
