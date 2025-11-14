@@ -6,7 +6,7 @@
 
 <template>
     <Navbar />
-    <main class="min-h-screen relative">
+    <main class="min-h-screen relative px-1.5">
         <slot />
     </main>
     <Footer />
