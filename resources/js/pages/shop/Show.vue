@@ -137,7 +137,7 @@ const styleClass = {
     stockBadge: 'rounded-full px-2 py-1 text-sm font-semibold',
     stockIn: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
     stockLow: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
-    categoryBadge: 'rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400',
+    categoryBadge: 'rounded-full bg-slate-100 px-3 w-max py-1 text-sm font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400',
     description: 'line-clamp-3',
     sizeInfo: 'flex gap-3 font-semibold text-slate-700 dark:text-slate-300',
     sizeValue: 'text-secondary dark:text-secondary-300',
@@ -237,7 +237,7 @@ const styleClass = {
                                         {{ product.category.name }}
                                     </span>
                                 </div>
-                                <p :class="[styleClass.text, styleClass.description]">{{ tempProduct.description }}</p>
+                                <p :class="[styleClass.text]">{{ tempProduct.description }}</p>
                                 <div :class="styleClass.sizeInfo" v-if="tempProduct.show_size">
                                     <span>Size:</span>
                                     <p :class="styleClass.sizeValue">{{ tempProduct.show_size }}</p>

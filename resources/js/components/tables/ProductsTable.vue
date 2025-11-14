@@ -71,7 +71,7 @@ const styleClass = {
         cell: {
             base: 'text-gray-600 dark:text-gray-400',
             image: 'flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-600 dark:bg-gray-700',
-            name: 'font-medium text-gray-800 dark:text-gray-200',
+            name: 'font-medium  text-gray-800 dark:text-gray-200',
             stock: {
                 base: '',
                 high: 'text-green-600 dark:text-green-400',
