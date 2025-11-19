@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/shop-wishlist/item/{wishlistItem?}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 
     // ORDER ROUTES
-    Route::get('/shop-orders', [OrderController::class, 'index'])->middleware('can:not.suspended')->name('order.index');
+    Route::get('/shop-orders', [OrderController::class, 'index'])->middleware(['can:not.suspended', 'can:accessAsCustomer'])->name('order.index');
     Route::middleware(['can:not.suspended', UserVerified::class, 'verified'])->group(function () {
         Route::get('/shop-orders/create', [OrderController::class, 'create'])->name('order.create');
         Route::get('/shop-orders/{order}', [OrderController::class, 'show'])->name('order.show');

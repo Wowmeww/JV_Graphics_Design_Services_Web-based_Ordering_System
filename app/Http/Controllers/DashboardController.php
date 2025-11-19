@@ -33,6 +33,7 @@ class DashboardController extends Controller
         $contacts = $this->loadContacts($user);
         $announcements = Announcement::with('user')->latest()->take(10)->get();
 
+        // dd($shop['products']);
         if ($user->is_admin) {
             return Inertia::render('auth/dashboard/Admin', [
                 'contacts' => $contacts,
@@ -84,11 +85,14 @@ class DashboardController extends Controller
                 'revenue' => 0
             ];
         }
-
+        $products = [
+            ...Product::with('images')->get()->where(fn($b) => $b->rating)->toArray(),
+            ...ProductOption::with('images')->get()->where(fn($b) => $b->rating)->toArray()
+        ];
         return [
             'orders' => Order::with(['user', 'product.category', 'option'])->latest()->get(),
             'customers' => User::where('role', 'customer')->count(),
-            'products' => Product::with('images')->get()->merge(ProductOption::with('images')->get()),
+            'products' => $products,
             'announcements' => Announcement::with('user')->latest()->get(),
             'messages' => Message::where('seen', false)->where('receiver_id', $user->id)->count(),
             'visitors' => json_decode(SystemSetting::where('key', 'daily_visitors')->value('value'), true),
